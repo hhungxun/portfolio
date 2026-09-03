@@ -14,6 +14,8 @@ const site = process.env.SITE_URL ?? 'https://hhungxun.example';
 export default defineConfig({
   site,
   trailingSlash: 'never',
+  // /poetry -> dist/poetry.html so the static server needs no trailing-slash redirects
+  build: { format: 'file' },
   // keep whitespace between inline elements (Astro 7 defaults to JSX-style stripping)
   compressHTML: true,
   integrations: [react(), mdx(), sitemap()],
