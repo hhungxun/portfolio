@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import QuantumWalk from '../components/QuantumWalk.tsx';
 import { site } from '../data/site';
 import { cv } from '../data/cv';
 import { getProjects } from '../lib/content';
@@ -16,6 +17,10 @@ const projects = await getProjects();
     <a href={cv.pdf} class="text-accent no-underline hover:underline">CV as PDF</a> ·
     <a href={site.github} class="text-accent no-underline hover:underline">GitHub</a>
   </p>
+
+  <section class="mt-12" aria-label="Quantum walk animation">
+    <QuantumWalk client:visible steps={40} height={210} caption="A Hadamard quantum walk spreads ballistically, σ ∝ t, while a classical random walk diffuses, σ ∝ √t. From my project on quantum random walks." />
+  </section>
 
   <section class="mt-12">
     <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted">Projects &amp; write-ups</h2>

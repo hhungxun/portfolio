@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import QuantumWalk from '../components/QuantumWalk.tsx';
 import PostCard from '../components/PostCard.astro';
 import { site } from '../data/site';
 import { getPoems, getPosts, getProjects, formatDate } from '../lib/content';
@@ -19,10 +18,6 @@ const [posts, poems, projects] = await Promise.all([getPosts(), getPoems(), getP
       mathematical physics, and a Chinese-language poet published in Sin Chew Daily’s <span class="font-tc">文藝春秋</span>.
       This site keeps both halves in one place.
     </p>
-  </section>
-
-  <section class="mt-12 sm:mt-14" aria-label="Quantum walk animation">
-    <QuantumWalk client:visible steps={40} height={210} caption="A Hadamard quantum walk spreads ballistically, σ ∝ t, while a classical random walk diffuses, σ ∝ √t. From my project on quantum random walks." />
   </section>
 
   <div class="mt-14 grid gap-12 sm:grid-cols-2 sm:gap-10">
