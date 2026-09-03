@@ -23,14 +23,14 @@ const projects = await getProjects();
   </section>
 
   <section class="mt-12">
-    <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted">Projects &amp; write-ups</h2>
+    <h2 class="label">Projects &amp; write-ups</h2>
     <div class="mt-2">
       {projects.map((p) => <ProjectCard project={p} full />)}
     </div>
   </section>
 
   <section class="mt-12">
-    <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted">Current directions</h2>
+    <h2 class="label">Current directions</h2>
     <ul class="mt-4 space-y-5">
       {
         cv.directions.map((d) => (
@@ -53,7 +53,7 @@ const projects = await getProjects();
   </section>
 
   <section class="mt-12">
-    <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted">Community &amp; talks</h2>
+    <h2 class="label">Community &amp; talks</h2>
     <ul class="mt-4 space-y-5">
       {
         cv.activities.map((a) => (

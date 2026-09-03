@@ -8,7 +8,7 @@ import { site } from '../data/site';
 
   <div class="mt-8 grid gap-10 sm:grid-cols-[1fr_1fr]">
     <section>
-      <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted">As a physicist</h2>
+      <h2 class="label">As a physicist</h2>
       <p class="mt-3 text-ink-2 leading-relaxed">{site.physicsBioEn}</p>
       <p class="mt-3 text-ink-2 leading-relaxed">
         Outside coursework I serve as Vice President of the Physics Student Council and the Astronomy Club, and I
@@ -22,7 +22,7 @@ import { site } from '../data/site';
     </section>
 
     <section>
-      <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted">As a poet <span class="font-tc text-[1rem] ml-1">連宏勛</span></h2>
+      <h2 class="label">As a poet <span class="font-tc text-[1rem] ml-1">連宏勛</span></h2>
       <p class="mt-3 text-ink-2 leading-relaxed">{site.poetBioEn}</p>
       <p class="mt-3 text-ink-2 leading-relaxed font-tc" lang="zh-Hant">{site.poetBioZh}</p>
       <p class="mt-4 text-[0.9rem]">
@@ -32,19 +32,21 @@ import { site } from '../data/site';
   </div>
 
   <section class="mt-14">
-    <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted">Contact</h2>
+    <h2 class="label">Contact</h2>
     <p class="mt-3 text-ink-2">
       Email <a href={`mailto:${site.email}`} class="text-accent">{site.email}</a> or find me on
       <a href={site.github} class="text-accent">GitHub</a>.
     </p>
   </section>
 
-  <section class="mt-14 text-[0.85rem] text-muted leading-relaxed">
-    <h2 class="text-[0.8rem] uppercase tracking-[0.18em]">Colophon</h2>
-    <p class="mt-2">
-      Built with Astro and React, typeset in Newsreader, Noto Serif TC, and JetBrains Mono. Math by KaTeX; Traditional
-      to Simplified conversion by OpenCC. Poems are stored in Traditional Chinese and were first published in Simplified
-      Chinese by <span class="font-tc">星洲日報</span>.
+  <section class="mt-14 text-ink-2 leading-relaxed">
+    <h2 class="label">Elsewhere on this site</h2>
+    <p class="mt-3 text-[0.95rem]">
+      <a href="/now" class="text-accent">What I am doing now</a>, the
+      <a href="/uses" class="text-accent">tools I use</a>, a
+      <a href="/blogroll" class="text-accent">blogroll</a>, and a
+      <a href="/colophon" class="text-accent">colophon</a> explaining how the site is built, what it is set in, and what
+      the red seal beside the poems means.
     </p>
   </section>
 </Base>

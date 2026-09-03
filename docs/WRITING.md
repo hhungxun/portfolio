@@ -89,6 +89,49 @@ Edit `src/data/cv.ts`; the `/cv` page is generated from it. Replace `public/cv.p
 
 `src/data/site.ts`.
 
+## The small pages
+
+Four pages are driven entirely by data files, so you edit the file and never
+touch the template:
+
+| Page | Edit |
+|---|---|
+| `/now` | `src/data/now.ts` — bump `updated` when you change it; the page prints that date |
+| `/uses` | `src/data/uses.ts` |
+| `/blogroll` | `src/data/blogroll.ts` |
+| `/colophon` | `src/pages/colophon.astro` — prose, so it lives in the page |
+
+Entries in `now.ts` accept `*emphasis*` between asterisks and inline HTML, which
+is how the Chinese in the writing section is wrapped in `.font-tc`.
+
+## Doodles and the hamster
+
+`src/components/Doodle.astro` holds every hand-drawn accent as an inline SVG
+path: `underline`, `underline-double`, `circle`, `arrow`, `squiggle`, `star`,
+`strike`. They inherit `currentColor`, so colour them with a text class:
+
+    <Doodle kind="arrow" class="w-12 h-6 text-pencil/70" />
+
+An `underline` placed inside an element with `class="doodle-underline"` is
+positioned and drawn on hover automatically. Add `data-always` to keep it drawn
+(that is how the current nav item is marked). Every path carries
+`pathLength="1"`, so the draw animation stays exact however the SVG is stretched
+— do not remove it.
+
+`src/components/Hamster.astro` is the site's small resident. It appears in the
+footer, on the 404 page, on the colophon, and runs across the screen if someone
+enters the Konami code (`↑↑↓↓←→←→BA`). It is deliberately unnamed on the page:
+there is a hamster elegy in the poems, and the doodle should not make a joke of
+it.
+
+## Layout width
+
+`src/layouts/Base.astro` computes one `shell` value and passes it to the header,
+the main column and the footer, so all three always line up. Change it there and
+the whole site follows. Long-form text caps itself at 74 characters a line via
+`.prose { max-width }` in `global.css`, so a wider shell gives the grids more
+room without stretching body copy.
+
 ## Deploying
 
 ```bash

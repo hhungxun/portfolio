@@ -1,17 +1,59 @@
 ---
 import { site } from '../data/site';
+import Hamster from '../components/Hamster.astro';
+
+interface Props {
+  /** content-column width classes, passed down from Base so the three align */
+  shell?: string;
+}
+const { shell = 'max-w-4xl lg:max-w-5xl' } = Astro.props;
 const year = new Date().getFullYear();
+
+const elsewhere = [
+  { href: '/now', label: 'Now' },
+  { href: '/uses', label: 'Uses' },
+  { href: '/blogroll', label: 'Blogroll' },
+  { href: '/colophon', label: 'Colophon' },
+];
 ---
 
-<footer class="w-full max-w-3xl mx-auto px-5 sm:px-8 pb-10 pt-8 mt-8 border-t border-line text-[0.85rem] text-muted">
-  <div class="flex flex-wrap justify-between gap-x-6 gap-y-2">
-    <p>
-      © {year} {site.nameEn} <span class="font-tc">連宏勛</span>
-    </p>
-    <p class="flex gap-x-4">
-      <a href={site.github} class="hover:text-accent no-underline" rel="me">GitHub</a>
-      <a href={`mailto:${site.email}`} class="hover:text-accent no-underline">Email</a>
-      <a href="/rss.xml" class="hover:text-accent no-underline">RSS</a>
+<footer class:list={['w-full mx-auto px-5 sm:px-8 pb-10 pt-8 mt-12 text-[0.85rem] text-muted', shell]}>
+  <div class="border-t border-dashed border-line pt-6">
+    <div class="flex flex-wrap justify-between gap-x-6 gap-y-3">
+      <p class="flex items-center gap-2">
+        © {year} {site.nameEn} <span class="font-tc">連宏勛</span>
+      </p>
+      <p class="flex flex-wrap gap-x-4 gap-y-1">
+        <a href={site.github} class="hover:text-accent no-underline" rel="me">GitHub</a>
+        <a href={`mailto:${site.email}`} class="hover:text-accent no-underline">Email</a>
+        <a href="/rss.xml" class="hover:text-accent no-underline">RSS</a>
+      </p>
+    </div>
+
+    <div class="mt-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+      <p class="flex flex-wrap gap-x-4 gap-y-1">
+        {
+          elsewhere.map((l) => (
+            <a href={l.href} class="hover:text-accent no-underline">
+              {l.label}
+            </a>
+          ))
+        }
+      </p>
+
+      <p class="flex items-center gap-3">
+        <span class="font-mono text-[0.7rem] uppercase tracking-[0.14em]">steal this →</span>
+        <a href="/colophon" class="no-underline" title="88×31, as is traditional">
+          <img src="/buttons/hhungxun.svg" alt="Heah Hung Xun · 連宏勛 — 88 by 31 web button" class="button88" width="88" height="31" />
+        </a>
+      </p>
+    </div>
+
+    <p class="mt-6 flex items-end gap-3 text-muted/70">
+      <span class="text-accent/60 shrink-0 wiggle-hover"><Hamster size={40} /></span>
+      <span class="aside-hand text-pencil/80 pb-1">
+        hand-made, hand-typed.<br />no analytics, no cookie banner, no newsletter pop-up.
+      </span>
     </p>
   </div>
 </footer>

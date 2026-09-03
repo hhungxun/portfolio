@@ -17,14 +17,37 @@ const years = [...new Set(poems.map((p) => p.data.date.getFullYear()))].sort((a,
     <span class="seal shrink-0 mt-2" aria-hidden="true">連宏勛</span>
   </div>
 
-  <div class="mt-6">
+  <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-3">
     <PoemControls showDirection={false} />
+    <button
+      id="random-poem"
+      type="button"
+      class="toggle-btn font-tc"
+      data-poems={JSON.stringify(poems.map((p) => `/poetry/${p.id}`))}
+    >
+      隨機一首 ✦
+    </button>
   </div>
+
+  <script>
+    const btn = document.getElementById('random-poem');
+    btn?.addEventListener('click', () => {
+      let urls: string[] = [];
+      try {
+        urls = JSON.parse(btn.dataset.poems ?? '[]');
+      } catch {}
+      // Don't land on the page you are already looking at.
+      const here = location.pathname.replace(/\/$/, '');
+      const pool = urls.filter((u) => u !== here);
+      const pick = (pool.length ? pool : urls)[Math.floor(Math.random() * (pool.length || urls.length))];
+      if (pick) location.href = pick;
+    });
+  </script>
 
   {
     years.map((year) => (
       <section class="mt-10">
-        <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted font-mono">{year}</h2>
+        <h2 class="label">{year}</h2>
         <ul class="mt-3 divide-y divide-line">
           {poems
             .filter((p) => p.data.date.getFullYear() === year)

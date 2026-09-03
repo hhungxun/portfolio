@@ -1,0 +1,67 @@
+---
+/**
+ * Hand-drawn accents, as inline SVG paths. No image files, no library — they
+ * inherit `currentColor`, so they work in both themes for free.
+ *
+ * `underline` is meant to sit inside an `.doodle-underline` element, which
+ * positions it and animates the stroke on hover. The rest are standalone.
+ */
+interface Props {
+  kind?: 'underline' | 'underline-double' | 'circle' | 'arrow' | 'squiggle' | 'star' | 'strike';
+  class?: string;
+  'aria-hidden'?: boolean;
+}
+const { kind = 'underline', class: className, ...rest } = Astro.props;
+
+// Deliberately imperfect paths: the control points do not line up, and the
+// ends overshoot slightly, the way a real pen does.
+const paths: Record<NonNullable<Props['kind']>, string[]> = {
+  underline: ['M3 7.4 C 58 1.8, 121 2.6, 178 5.4 S 292 9.6, 357 4.1'],
+  'underline-double': [
+    'M3 5.6 C 58 0.9, 121 1.8, 178 4.6 S 292 8.4, 357 3.2',
+    'M9 9.9 C 66 6.1, 128 6.9, 184 8.4 S 288 11.6, 351 8.1',
+  ],
+  circle: [
+    'M96 8 C 42 6, 6 20, 7 33 C 8 47, 52 58, 100 57 C 148 56, 187 45, 186 31 C 185 17, 143 6, 88 9',
+  ],
+  arrow: [
+    'M4 30 C 22 10, 58 4, 86 12 C 110 19, 118 34, 108 44',
+    'M96 36 L 108 45 L 112 31',
+  ],
+  squiggle: ['M2 8 C 12 1, 22 15, 32 8 S 52 1, 62 8 S 82 15, 92 8 S 112 1, 122 8'],
+  star: ['M14 2 L 16.4 10.6 L 25 13 L 16.4 15.4 L 14 24 L 11.6 15.4 L 3 13 L 11.6 10.6 Z'],
+  strike: ['M2 9 C 60 4, 130 13, 196 6'],
+};
+
+const viewBoxes: Record<NonNullable<Props['kind']>, string> = {
+  underline: '0 0 360 12',
+  'underline-double': '0 0 360 14',
+  circle: '0 0 193 64',
+  arrow: '0 0 120 52',
+  squiggle: '0 0 124 16',
+  star: '0 0 28 26',
+  strike: '0 0 198 16',
+};
+
+const isUnderline = kind === 'underline' || kind === 'underline-double' || kind === 'strike';
+---
+
+<svg
+  viewBox={viewBoxes[kind]}
+  class={className}
+  preserveAspectRatio={isUnderline ? 'none' : 'xMidYMid meet'}
+  fill="none"
+  stroke="currentColor"
+  stroke-width={kind === 'star' ? 1.6 : 2.4}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  {...rest}
+>
+  {/*
+    pathLength normalises every path to 1 user unit, so the stroke-dasharray
+    used for the draw-on-hover animation is exact. Without it the underlines
+    stretch with preserveAspectRatio="none" and the dashes leak into view.
+  */}
+  {paths[kind].map((d) => <path d={d} pathLength="1" />)}
+</svg>

@@ -3,6 +3,7 @@ import '../styles/global.css';
 import 'katex/dist/katex.min.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Hamster from '../components/Hamster.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -16,6 +17,14 @@ interface Props {
 }
 
 const { title, description = site.description, side = 'both', lang = 'en', width = 'narrow' } = Astro.props;
+
+/**
+ * One source of truth for the content column, shared by the header, the main
+ * column and the footer so the three always line up. Prose keeps its own
+ * measure cap in global.css, so widening the shell gives the grids and cards
+ * more room without stretching body copy past a comfortable line length.
+ */
+const shell = width === 'wide' ? 'max-w-6xl' : 'max-w-4xl lg:max-w-5xl';
 const fullTitle = title ? `${title} · ${side === 'poetry' ? site.nameZh : site.nameEn}` : site.name;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -36,8 +45,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:url" content={canonical} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <!--
+      Bricolage Grotesque for display, Fraunces for body (SOFT/WONK axes are
+      pushed off their defaults in global.css), Caveat for scrawled asides.
+    -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Noto+Serif+TC:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&family=Caveat:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <!--
+      LXGW WenKai TC 霞鶩文楷 — a kai face derived from Fontworks' Klee One.
+      This build is split into 134 unicode-range subsets, so a page only
+      downloads the glyph chunks it actually uses.
+    -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-tc-web@1.522.0/lxgwwenkaitc-regular/result.css"
       rel="stylesheet"
     />
     <script is:inline>
@@ -51,15 +74,37 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </script>
   </head>
   <body class="min-h-screen bg-paper text-ink font-serif antialiased flex flex-col">
-    <Header side={side} />
-    <main
-      class:list={[
-        'flex-1 w-full mx-auto px-5 sm:px-8 py-10 sm:py-14',
-        width === 'wide' ? 'max-w-5xl' : 'max-w-3xl',
-      ]}
-    >
+    <Header side={side} shell={shell} />
+    <main class:list={['flex-1 w-full mx-auto px-5 sm:px-8 py-10 sm:py-14', shell]}>
       <slot />
     </main>
-    <Footer />
+    <Footer shell={shell} />
+
+    <!-- ↑↑↓↓←→←→BA -->
+    <div id="hamster-cage" hidden>
+      <div class="hamster-run text-accent">
+        <Hamster size={48} />
+      </div>
+    </div>
+
+    <script>
+      // Konami code. Releases the hamster; press again to put it back.
+      const SEQ = [
+        'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
+        'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
+        'b', 'a',
+      ];
+      let at = 0;
+      addEventListener('keydown', (e) => {
+        const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        at = key === SEQ[at] ? at + 1 : key === SEQ[0] ? 1 : 0;
+        if (at !== SEQ.length) return;
+        at = 0;
+        const cage = document.getElementById('hamster-cage');
+        if (!cage) return;
+        cage.hidden = !cage.hidden;
+        if (!cage.hidden) console.log('🐹 倉鼠出逃了。Press it again to catch him.');
+      });
+    </script>
   </body>
 </html>

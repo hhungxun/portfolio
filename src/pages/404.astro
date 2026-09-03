@@ -1,12 +1,26 @@
 ---
 import Base from '../layouts/Base.astro';
+import Hamster from '../components/Hamster.astro';
+import Doodle from '../components/Doodle.astro';
 ---
 
 <Base side="both" title="Not found">
-  <p class="text-[0.8rem] uppercase tracking-[0.18em] text-muted">404</p>
-  <h1 class="mt-2 text-[2rem] font-medium tracking-tight">Nothing at this address.</h1>
-  <p class="mt-3 text-ink-2 font-tc" lang="zh-Hant">此頁不存在。</p>
-  <p class="mt-6">
-    <a href="/" class="text-accent no-underline hover:underline">← Home</a>
+  <p class="label">Error 404</p>
+  <h1 class="mt-3 text-[2rem] font-bold tracking-tight">Nothing at this address.</h1>
+  <p class="mt-3 text-ink-2 font-tc text-[1.05rem]" lang="zh-Hant">此頁不存在。</p>
+
+  <div class="mt-10 flex items-end gap-4">
+    <span class="text-accent/70 shrink-0 wiggle-hover"><Hamster size={92} /></span>
+    <p class="aside-hand pb-2">
+      he has not seen it either,<br />and he has looked everywhere.
+    </p>
+  </div>
+
+  <p class="mt-10 flex items-center gap-2">
+    <Doodle kind="arrow" class="w-9 h-5 shrink-0 rotate-180 text-accent/70" />
+    <a href="/" class="doodle-underline text-accent no-underline">
+      Back to the front page
+      <Doodle kind="underline" />
+    </a>
   </p>
 </Base>

@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import PostCard from '../components/PostCard.astro';
+import Doodle from '../components/Doodle.astro';
 import { site } from '../data/site';
 import { getPoems, getPosts, getProjects, formatDate } from '../lib/content';
 
@@ -8,30 +9,41 @@ const [posts, poems, projects] = await Promise.all([getPosts(), getPoems(), getP
 ---
 
 <Base side="both">
-  <section class="max-w-2xl">
-    <h1 class="text-[2rem] sm:text-[2.4rem] font-medium leading-[1.15] tracking-tight text-balance">
+  <section class="max-w-2xl relative">
+    <h1 class="text-[2.1rem] sm:text-[2.7rem] font-bold leading-[1.1] tracking-tight text-balance">
       Physics by day.<br />
-      <span class="font-tc tracking-[0.06em]">詩</span>, the rest of the time.
+      <span class="relative inline-block">
+        <span class="font-tc tracking-[0.06em]">詩</span>, the rest of the time.
+        <Doodle kind="underline-double" class="absolute -bottom-2 left-0 w-full h-3 text-accent/70" />
+      </span>
     </h1>
-    <p class="mt-5 text-[1.1rem] text-ink-2 leading-relaxed">
+
+    <p class="mt-7 text-[1.08rem] text-ink-2 leading-[1.7]">
       I am a third-year physics undergraduate at Xiamen University Malaysia working on quantum foundations and
-      mathematical physics, and a Chinese-language poet published in Sin Chew Daily’s <span class="font-tc">文藝春秋</span>.
-      This site keeps both halves in one place.
+      mathematical physics, and a Chinese-language poet published in Sin Chew Daily's <span class="font-tc"
+        >文藝春秋</span
+      >. This site keeps <span class="marker">both halves in one place</span>.
+    </p>
+
+    <p class="mt-4 aside-hand flex items-start gap-2">
+      <Doodle kind="arrow" class="w-12 h-6 shrink-0 mt-0.5 -scale-y-100 text-pencil/70" />
+      <span>the two do talk to each other more than you'd think</span>
     </p>
   </section>
 
-  <div class="mt-14 grid gap-12 sm:grid-cols-2 sm:gap-10">
-    <section>
-      <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted">Physics</h2>
-      <p class="mt-3 text-ink-2">{site.physicsBioEn}</p>
+  <div class="mt-14 grid gap-10 sm:grid-cols-2">
+    <section class="hand-box tilt-l p-5 bg-paper/70">
+      <h2 class="label">Physics</h2>
+      <p class="mt-3 text-ink-2 text-[0.97rem] leading-relaxed">{site.physicsBioEn}</p>
       <ul class="mt-5 space-y-3">
         {
           projects.slice(0, 3).map((p) => (
             <li>
-              <a href={p.data.pdf ?? '/physics'} class="no-underline text-ink hover:text-accent font-medium">
+              <a href={p.data.pdf ?? '/physics'} class="doodle-underline no-underline text-ink hover:text-accent font-medium">
                 {p.data.title}
+                <Doodle kind="underline" />
               </a>
-              <span class="block text-[0.82rem] text-muted font-mono">{p.data.period}</span>
+              <span class="block text-[0.8rem] text-muted font-mono">{p.data.period}</span>
             </li>
           ))
         }
@@ -39,17 +51,22 @@ const [posts, poems, projects] = await Promise.all([getPosts(), getPoems(), getP
       <a href="/physics" class="inline-block mt-5 text-accent no-underline hover:underline">All physics →</a>
     </section>
 
-    <section lang="zh-Hant">
-      <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted"><span class="font-tc text-[1rem] tracking-[0.3em]">詩</span> Poetry</h2>
-      <p class="mt-3 text-ink-2 font-tc leading-[1.9]" data-cc>{site.poetBioZh}</p>
+    <section class="hand-box-alt tilt-r p-5 bg-paper/70" lang="zh-Hant">
+      <h2 class="label"><span class="font-tc text-[1rem] tracking-[0.3em]">詩</span> Poetry</h2>
+      <p class="mt-3 text-ink-2 font-tc leading-[1.9] text-[0.97rem]" data-cc>{site.poetBioZh}</p>
       <ul class="mt-5 space-y-3">
         {
           poems.slice(0, 3).map((p) => (
             <li>
-              <a href={`/poetry/${p.id}`} class="no-underline text-ink hover:text-accent font-medium font-tc tracking-[0.04em]" data-cc>
+              <a
+                href={`/poetry/${p.id}`}
+                class="doodle-underline no-underline text-ink hover:text-accent font-medium font-tc tracking-[0.04em]"
+                data-cc
+              >
                 {p.data.title}
+                <Doodle kind="underline" />
               </a>
-              <span class="block text-[0.82rem] text-muted font-mono">{formatDate(p.data.date, 'en')}</span>
+              <span class="block text-[0.8rem] text-muted font-mono">{formatDate(p.data.date, 'en')}</span>
             </li>
           ))
         }
@@ -61,7 +78,7 @@ const [posts, poems, projects] = await Promise.all([getPosts(), getPoems(), getP
   {
     posts.length > 0 && (
       <section class="mt-14">
-        <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted">Latest writing</h2>
+        <h2 class="label">Latest writing</h2>
         <div class="mt-5 space-y-7">
           {posts.slice(0, 3).map((post) => (
             <PostCard post={post} />

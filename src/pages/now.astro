@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import Doodle from '../components/Doodle.astro';
+import { now } from '../data/now';
+import { formatDate } from '../lib/content';
+---
+
+<Base
+  side="both"
+  title="Now"
+  description="What Heah Hung Xun is working on, reading, and stuck on at the moment."
+>
+  <h1 class="text-[2rem] font-bold tracking-tight">
+    <span class="relative inline-block">
+      Now
+      <Doodle kind="underline" class="absolute -bottom-1.5 left-0 w-full h-2.5 text-accent/70" />
+    </span>
+  </h1>
+
+  <p class="mt-4 text-ink-2 leading-relaxed max-w-2xl">
+    A <a href="https://nownownow.com/about" class="text-accent">now page</a>: not a blog, not a CV, just what has my
+    attention this month. Written on {formatDate(now.updated, 'en')} and true only for about as long as that implies.
+  </p>
+
+  {
+    now.sections.map((s) => (
+      <section class="mt-10">
+        <h2 class="label">{s.heading}</h2>
+        <ul class="mt-4 space-y-3">
+          {s.items.map((item) => (
+            <li class="flex gap-3 text-ink-2 leading-relaxed">
+              <span class="text-accent/60 shrink-0 select-none font-mono text-[0.9rem] pt-0.5">▸</span>
+              <span set:html={item.replace(/\*(.+?)\*/g, '<em>$1</em>')} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+
+  <p class="mt-12 aside-hand flex items-start gap-2">
+    <Doodle kind="arrow" class="w-12 h-6 shrink-0 mt-0.5 -scale-y-100 text-pencil/70" />
+    <span>if this page is more than six months stale, assume I am fine and just busy.</span>
+  </p>
+</Base>

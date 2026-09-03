@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import Doodle from '../components/Doodle.astro';
+import { blogroll } from '../data/blogroll';
+---
+
+<Base side="both" title="Blogroll" description="Places on the web worth visiting, kept by hand.">
+  <h1 class="text-[2rem] font-bold tracking-tight">
+    <span class="relative inline-block">
+      Blogroll
+      <Doodle kind="underline" class="absolute -bottom-1.5 left-0 w-full h-2.5 text-accent/70" />
+    </span>
+  </h1>
+
+  <p class="mt-4 text-ink-2 leading-relaxed max-w-2xl">
+    Links kept by a person, not a recommendation engine. It is short on purpose and it grows slowly.
+  </p>
+
+  {
+    blogroll.map((group) => (
+      <section class="mt-10">
+        <h2 class="label">{group.heading}</h2>
+        <ul class="mt-4 space-y-5">
+          {group.links.map((l) => (
+            <li>
+              <a href={l.href} class="doodle-underline no-underline text-ink hover:text-accent font-medium">
+                {l.title}
+                <Doodle kind="underline" />
+              </a>
+              <span class="text-muted ml-1.5 text-[0.8rem]">↗</span>
+              <p class="text-[0.92rem] text-ink-2 mt-0.5 leading-snug">{l.note}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+
+  <section class="mt-14 hand-box p-5 bg-paper/70">
+    <h2 class="label">Trade buttons?</h2>
+    <p class="mt-3 text-ink-2 text-[0.95rem] leading-relaxed">
+      If you keep a personal site, take the button and I will happily link back. Email is on the
+      <a href="/about" class="text-accent">about page</a>.
+    </p>
+    <p class="mt-4 flex items-center gap-3">
+      <img
+        src="/buttons/hhungxun.svg"
+        alt="Heah Hung Xun · 連宏勛 — 88 by 31 web button"
+        class="button88"
+        width="88"
+        height="31"
+      />
+      <code class="text-[0.72rem] text-muted font-mono break-all">/buttons/hhungxun.svg</code>
+    </p>
+  </section>
+</Base>

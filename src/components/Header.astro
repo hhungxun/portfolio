@@ -1,25 +1,28 @@
 ---
 import { site } from '../data/site';
+import Doodle from './Doodle.astro';
 
 interface Props {
   side?: 'physics' | 'poetry' | 'both';
+  /** content-column width classes, passed down from Base so the three align */
+  shell?: string;
 }
-const { side = 'both' } = Astro.props;
+const { side = 'both', shell = 'max-w-4xl lg:max-w-5xl' } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 
-<header class="w-full max-w-3xl mx-auto px-5 sm:px-8 pt-6 sm:pt-8">
+<header class:list={['w-full mx-auto px-5 sm:px-8 pt-6 sm:pt-8', shell]}>
   <div class="flex items-center justify-between gap-4">
     <a href="/" class="no-underline text-ink hover:text-accent transition-colors">
-      {side === 'physics' && <span class="text-lg font-medium tracking-tight">{site.nameEn}</span>}
-      {side === 'poetry' && <span class="text-lg font-tc font-medium tracking-[0.08em]">{site.nameZh}</span>}
+      {side === 'physics' && <span class="text-xl font-semibold tracking-tight">{site.nameEn}</span>}
+      {side === 'poetry' && <span class="text-xl font-tc font-medium tracking-[0.08em]">{site.nameZh}</span>}
       {
         side === 'both' && (
-          <span class="text-lg font-medium tracking-tight">
+          <span class="text-xl font-semibold tracking-tight">
             {site.nameEn}
-            <span class="text-muted mx-1.5 font-normal">·</span>
-            <span class="font-tc tracking-[0.08em]">{site.nameZh}</span>
+            <span class="text-accent mx-1.5 font-normal">·</span>
+            <span class="font-tc tracking-[0.08em] font-medium">{site.nameZh}</span>
           </span>
         )
       }
@@ -27,34 +30,44 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     <button
       id="theme-toggle"
       type="button"
-      class="shrink-0 size-8 rounded-full border border-line text-ink-2 hover:text-accent hover:border-accent transition-colors grid place-items-center"
+      class="shrink-0 size-9 border-[1.5px] border-line text-ink-2 hover:text-accent hover:border-accent transition-colors grid place-items-center wiggle-hover"
+      style="border-radius: 14px 5px 16px 6px / 6px 15px 5px 14px;"
       aria-label="Toggle dark mode"
       title="Toggle dark mode"
     >
-      <svg class="size-4 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <svg class="size-4 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
         <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" stroke-linejoin="round"></path>
       </svg>
-      <svg class="size-4 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <svg class="size-4 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
         <circle cx="12" cy="12" r="4"></circle>
         <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke-linecap="round"></path>
       </svg>
     </button>
   </div>
-  <nav aria-label="Primary" class="mt-4 flex flex-wrap items-baseline gap-x-5 gap-y-1 text-[0.92rem] border-b border-line pb-3">
+
+  <nav
+    aria-label="Primary"
+    class="mt-4 flex flex-wrap items-baseline gap-x-5 gap-y-2 text-[0.95rem] border-b border-dashed border-line pb-3"
+  >
     {
-      site.nav.map((item) => (
-        <a
-          href={item.href}
-          aria-current={isActive(item.href) ? 'page' : undefined}
-          class:list={[
-            'no-underline transition-colors',
-            isActive(item.href) ? 'text-accent' : 'text-ink-2 hover:text-accent',
-          ]}
-        >
-          {item.label}
-          {'zh' in item && item.zh && <span class="font-tc text-muted ml-1 text-[0.85em]">{item.zh}</span>}
-        </a>
-      ))
+      site.nav.map((item) => {
+        const active = isActive(item.href);
+        return (
+          <a
+            href={item.href}
+            aria-current={active ? 'page' : undefined}
+            data-always={active ? '' : undefined}
+            class:list={[
+              'doodle-underline no-underline transition-colors',
+              active ? 'text-accent' : 'text-ink-2 hover:text-accent',
+            ]}
+          >
+            {item.label}
+            {'zh' in item && item.zh && <span class="font-tc text-muted ml-1 text-[0.85em]">{item.zh}</span>}
+            <Doodle kind="underline" />
+          </a>
+        );
+      })
     }
   </nav>
 </header>

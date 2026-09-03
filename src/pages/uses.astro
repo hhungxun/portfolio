@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import Doodle from '../components/Doodle.astro';
+import { uses } from '../data/uses';
+---
+
+<Base side="both" title="Uses" description="The software and tools Heah Hung Xun actually uses.">
+  <h1 class="text-[2rem] font-bold tracking-tight">
+    <span class="relative inline-block">
+      Uses
+      <Doodle kind="underline" class="absolute -bottom-1.5 left-0 w-full h-2.5 text-accent/70" />
+    </span>
+  </h1>
+
+  <p class="mt-4 text-ink-2 leading-relaxed max-w-2xl">
+    A <a href="https://uses.tech/" class="text-accent">uses page</a>. No affiliate links, no &ldquo;top 10 tools that
+    changed my life&rdquo; — just what is open on the machine most days.
+  </p>
+
+  <div class="mt-10 grid gap-8 sm:grid-cols-2">
+    {
+      uses.map((group, i) => (
+        <section class:list={['p-5 bg-paper/70', i % 2 === 0 ? 'hand-box tilt-l' : 'hand-box-alt tilt-r']}>
+          <h2 class="label">{group.heading}</h2>
+          <dl class="mt-4 space-y-3.5">
+            {group.items.map((item) => (
+              <div>
+                <dt class="font-medium text-ink">{item.name}</dt>
+                <dd class="text-[0.92rem] text-ink-2 leading-snug mt-0.5">{item.note}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ))
+    }
+  </div>
+
+  <p class="mt-12 aside-hand flex items-start gap-2">
+    <Doodle kind="arrow" class="w-12 h-6 shrink-0 mt-0.5 -scale-y-100 text-pencil/70" />
+    <span>the Vim and Emacs entries are aspirational and we both know it</span>
+  </p>
+</Base>

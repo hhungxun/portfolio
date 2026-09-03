@@ -1,0 +1,125 @@
+---
+import Base from '../layouts/Base.astro';
+import Doodle from '../components/Doodle.astro';
+import Hamster from '../components/Hamster.astro';
+import { site } from '../data/site';
+---
+
+<Base side="both" title="Colophon" description="How this site is built, and what it is set in.">
+  <h1 class="text-[2rem] font-bold tracking-tight">
+    <span class="relative inline-block">
+      Colophon
+      <Doodle kind="underline" class="absolute -bottom-1.5 left-0 w-full h-2.5 text-accent/70" />
+    </span>
+  </h1>
+
+  <p class="mt-4 text-ink-2 leading-relaxed max-w-2xl">
+    Every book used to end with a note about how it was made. This is that note.
+  </p>
+
+  <section class="mt-10">
+    <h2 class="label">Set in</h2>
+    <dl class="mt-4 space-y-4">
+      <div>
+        <dt class="font-medium text-ink font-display text-[1.15rem]">Bricolage Grotesque</dt>
+        <dd class="text-[0.95rem] text-ink-2 mt-0.5 leading-relaxed">
+          Headings. A variable grotesque whose narrow weights are frankly a bit anxious, which felt right.
+        </dd>
+      </div>
+      <div>
+        <dt class="font-medium text-ink text-[1.15rem]">Fraunces</dt>
+        <dd class="text-[0.95rem] text-ink-2 mt-0.5 leading-relaxed">
+          Body text, with its <code class="font-mono text-[0.85em]">SOFT</code> and
+          <code class="font-mono text-[0.85em]">WONK</code> axes turned away from their sensible defaults. That is where the
+          slightly wobbly serifs come from.
+        </dd>
+      </div>
+      <div>
+        <dt class="font-medium text-ink font-tc text-[1.2rem]">LXGW WenKai TC 霞鶩文楷</dt>
+        <dd class="text-[0.95rem] text-ink-2 mt-0.5 leading-relaxed">
+          All Chinese text, including every poem. A kai face derived from Fontworks&rsquo; Klee One — it looks written
+          rather than set, which matters more on this site than anywhere else.
+        </dd>
+      </div>
+      <div>
+        <dt class="font-medium text-ink aside-hand text-[1.4rem]">Caveat</dt>
+        <dd class="text-[0.95rem] text-ink-2 mt-0.5 leading-relaxed">The margin scrawls, in biro blue.</dd>
+      </div>
+      <div>
+        <dt class="font-medium text-ink font-mono text-[1rem]">JetBrains Mono</dt>
+        <dd class="text-[0.95rem] text-ink-2 mt-0.5 leading-relaxed">Dates, code, and the small capital labels.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="label">Built with</h2>
+    <p class="mt-4 text-ink-2 leading-relaxed">
+      Astro, with React only for the one canvas animation on the physics page. Tailwind plus a hand-written stylesheet.
+      Math by KaTeX. Traditional-to-Simplified conversion by OpenCC, in the browser, so the poems ship once and convert
+      on demand.
+    </p>
+    <p class="mt-3 text-ink-2 leading-relaxed">
+      The ruled paper, the red margin line and the wobbly boxes are all CSS — gradients and an abused
+      <code class="font-mono text-[0.85em]">border-radius</code>. The doodles are inline SVG paths with deliberately
+      misaligned control points. No illustration files, nothing to load.
+    </p>
+    <p class="mt-3 text-ink-2 leading-relaxed">
+      It builds to static files and is copied to a small VPS over SSH by a shell script, where Caddy serves it. There is
+      no CI, no platform, and no database. Source is on <a href={site.github} class="text-accent">GitHub</a>.
+    </p>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="label">The seal</h2>
+    <p class="mt-4 text-ink-2 leading-relaxed flex flex-wrap items-center gap-x-3 gap-y-2">
+      <span class="seal" aria-hidden="true">連宏勛</span>
+      <span
+        >The red block beside the poems is a name seal, <span class="font-tc">印章</span>. Printed collections carry one
+        in vermilion seal paste; here it is just a border and a colour, which is cheating, but the colour is right.</span
+      >
+    </p>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="label">What this site does not do</h2>
+    <ul class="mt-4 space-y-2.5 text-ink-2">
+      {
+        [
+          'No analytics. I do not know you are here.',
+          'No cookies, so no cookie banner.',
+          'No newsletter modal, no “subscribe to keep reading”.',
+          'No fonts or scripts beyond the two font CDNs listed above.',
+          'No AI-generated text or images anywhere in the poems, the physics, or the prose.',
+        ].map((line) => (
+          <li class="flex gap-3">
+            <span class="text-accent/60 shrink-0 select-none font-mono text-[0.9rem] pt-0.5">▸</span>
+            <span>{line}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="label">Take the button</h2>
+    <p class="mt-4 flex flex-wrap items-center gap-4">
+      <img
+        src="/buttons/hhungxun.svg"
+        alt="Heah Hung Xun · 連宏勛 — 88 by 31 web button"
+        class="button88"
+        width="88"
+        height="31"
+      />
+      <code class="text-[0.75rem] text-muted font-mono">88 × 31, as is traditional</code>
+    </p>
+    <p class="mt-3 text-[0.92rem] text-ink-2">
+      Hotlinking is fine, but a copy on your own server is kinder to both of us.
+    </p>
+  </section>
+
+  <p class="mt-14 flex items-end gap-3">
+    <span class="text-accent/60 shrink-0 wiggle-hover"><Hamster size={52} /></span>
+    <span class="aside-hand pb-1">↑↑↓↓←→←→BA, if you are curious.</span>
+  </p>
+</Base>

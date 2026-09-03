@@ -15,7 +15,7 @@ const { tag, posts } = Astro.props;
 ---
 
 <Base side="both" title={`#${tag}`} description={`Posts tagged ${tag}`}>
-  <p class="text-[0.8rem] uppercase tracking-[0.18em] text-muted">Tag</p>
+  <p class="label">Tag</p>
   <h1 class="mt-1 text-[2rem] font-medium tracking-tight">#{tag}</h1>
   <div class="mt-10 space-y-8">
     {posts.map((post) => <PostCard post={post} showTags={false} />)}
