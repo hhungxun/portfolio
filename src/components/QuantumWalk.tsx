@@ -145,7 +145,8 @@ export default function QuantumWalk({
 
       const q = data.quantum[t], c = data.classical[t];
       const { N, off } = data;
-      const padX = 8, padTop = 26, padBot = 22;
+      const narrow = W < 560;
+      const padX = 8, padTop = narrow ? 40 : 26, padBot = 22;
       const plotH = H - padTop - padBot;
       const xOf = (x: number) => padX + (x / (N - 1)) * (W - 2 * padX);
       let maxP = 1e-9;
@@ -186,9 +187,16 @@ export default function QuantumWalk({
       ctx.fillText('■ Hadamard quantum walk', padX, 4);
       ctx.fillStyle = muted;
       ctx.fillText('■ classical random walk', padX + 176, 4);
-      ctx.textAlign = 'right'; ctx.fillStyle = ink;
+      ctx.fillStyle = ink;
       const sq = sigma(q, off).toFixed(1), sc = sigma(c, off).toFixed(1);
-      ctx.fillText(`t = ${String(t).padStart(String(steps).length, ' ')}   σq = ${sq}   σc = ${sc}`, W - padX, 4);
+      const stats = `t = ${String(t).padStart(String(steps).length, ' ')}   σq = ${sq}   σc = ${sc}`;
+      if (narrow) {
+        ctx.textAlign = 'left';
+        ctx.fillText(stats, padX, 20);
+      } else {
+        ctx.textAlign = 'right';
+        ctx.fillText(stats, W - padX, 4);
+      }
       // axis ticks
       ctx.fillStyle = muted; ctx.textAlign = 'center';
       for (const x of [-steps, -steps / 2, 0, steps / 2, steps]) {

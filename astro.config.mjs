@@ -14,6 +14,8 @@ const site = process.env.SITE_URL ?? 'https://hhungxun.example';
 export default defineConfig({
   site,
   trailingSlash: 'never',
+  // keep whitespace between inline elements (Astro 7 defaults to JSX-style stripping)
+  compressHTML: true,
   integrations: [react(), mdx(), sitemap()],
   markdown: {
     // remark/rehype pipeline so LaTeX ($...$ and $$...$$) renders via KaTeX in .md and .mdx
