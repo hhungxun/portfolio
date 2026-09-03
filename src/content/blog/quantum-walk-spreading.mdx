@@ -1,0 +1,54 @@
+---
+title: Why a quantum walk spreads faster than a random one
+description: A short note on ballistic versus diffusive spreading, with an interactive simulation.
+date: 2026-09-03
+tags: [quantum walks, notes]
+lang: en
+side: physics
+sample: true
+---
+
+import QuantumWalk from '../../components/QuantumWalk.tsx';
+
+This is a sample post. It exists to show that a physics post here can carry equations, code, and a live component. Replace it with something real.
+
+A classical random walker on a line flips a coin and steps left or right. After $t$ steps the position distribution is binomial, and its width grows as
+
+$$
+\sigma_{\text{classical}}(t) = \sqrt{t}.
+$$
+
+The discrete-time quantum walk replaces the coin with a two-level system. Write the state as $|\psi\rangle = \sum_{x,c} \psi_{x,c}\,|x\rangle\otimes|c\rangle$ and apply one step $U = S\,(I\otimes H)$, where $H$ is the Hadamard coin
+
+$$
+H = \frac{1}{\sqrt 2}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}
+$$
+
+and $S$ shifts the walker left if the coin reads $|0\rangle$ and right if it reads $|1\rangle$. Because amplitudes rather than probabilities add, paths interfere: the central region cancels and the probability piles up at two fronts moving at constant speed, so that
+
+$$
+\sigma_{\text{quantum}}(t) \propto t.
+$$
+
+The simulation below runs both walks side by side from the same starting site. Drag the slider to change the number of steps and watch the ratio $\sigma_q/\sigma_c$ grow.
+
+<QuantumWalk client:visible interactive steps={40} height={240} caption="Solid vermilion: Hadamard walk with the symmetric initial coin (|0⟩ + i|1⟩)/√2. Grey: classical random walk. Only sites of the right parity are reachable at each step, so the curves connect every second site." />
+
+The computation is a few lines. For each site keep the two coin amplitudes, apply the Hadamard mixing, then shift:
+
+```python
+import numpy as np
+
+def hadamard_walk(steps):
+    N = 2 * steps + 1
+    psi = np.zeros((N, 2), dtype=complex)
+    psi[steps] = [1, 1j] / np.sqrt(2)          # symmetric start
+    H = np.array([[1, 1], [1, -1]]) / np.sqrt(2)
+    for _ in range(steps):
+        psi = psi @ H.T                          # coin
+        left, right = np.roll(psi[:, 0], -1), np.roll(psi[:, 1], 1)
+        psi = np.stack([left, right], axis=1)    # shift
+    return (np.abs(psi) ** 2).sum(axis=1)       # probability per site
+```
+
+The full derivation, the continuous-time walk, and the algorithmic applications are in my [quantum random walks report](/papers/quantum-random-walks.pdf).

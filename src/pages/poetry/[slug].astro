@@ -1,0 +1,77 @@
+---
+import Base from '../../layouts/Base.astro';
+import PoemBody from '../../components/PoemBody.astro';
+import PoemControls from '../../components/PoemControls.astro';
+import { getPoems, formatDate } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const poems = await getPoems();
+  return poems.map((poem, i) => ({
+    params: { slug: poem.id },
+    props: { poem, newer: poems[i - 1] ?? null, older: poems[i + 1] ?? null },
+  }));
+}
+
+const { poem, newer, older } = Astro.props;
+const { title, dedication, date, venue, source, feature, note, translation } = poem.data;
+const description = `${title}${dedication ? ' ' + dedication : ''} — ${venue ?? ''} ${formatDate(date, 'zh')}`;
+---
+
+<Base side="poetry" lang="zh" title={title} description={description} width="wide">
+  <article class="max-w-3xl mx-auto">
+    <header>
+      <h1 class="text-[2rem] sm:text-[2.3rem] font-tc font-medium tracking-[0.08em] leading-tight" data-cc>
+        {title}
+      </h1>
+      {dedication && <p class="mt-2 text-[1.05rem] text-ink-2 font-tc tracking-[0.05em]" data-cc>{dedication}</p>}
+      <p class="mt-4 text-[0.85rem] text-muted flex flex-wrap items-center gap-x-3 gap-y-1">
+        <time datetime={date.toISOString()} class="font-tc" data-cc>{formatDate(date, 'zh')}</time>
+        {venue && <span class="font-tc" data-cc>{venue}</span>}
+        {feature && <span class="font-tc text-accent" data-cc>{feature}</span>}
+        {
+          source && (
+            <a href={source} class="text-accent no-underline hover:underline font-tc" rel="noopener" data-cc>
+              原文 ↗
+            </a>
+          )
+        }
+      </p>
+      <div class="mt-5 pb-5 border-b border-line">
+        <PoemControls />
+      </div>
+    </header>
+
+    <div class="mt-8">
+      <PoemBody body={poem.body ?? ''} translationLang={translation} />
+    </div>
+
+    {
+      note && (
+        <p class="mt-10 text-[0.9rem] text-muted font-tc leading-[1.9] border-t border-line pt-5" data-cc>
+          ※ {note}
+        </p>
+      )
+    }
+
+    <nav class="mt-14 flex justify-between gap-6 text-[0.9rem] font-tc" aria-label="Poem navigation">
+      <span>
+        {
+          older && (
+            <a href={`/poetry/${older.id}`} class="no-underline text-ink-2 hover:text-accent">
+              ← <span data-cc>{older.data.title}</span>
+            </a>
+          )
+        }
+      </span>
+      <span class="text-right">
+        {
+          newer && (
+            <a href={`/poetry/${newer.id}`} class="no-underline text-ink-2 hover:text-accent">
+              <span data-cc>{newer.data.title}</span> →
+            </a>
+          )
+        }
+      </span>
+    </nav>
+  </article>
+</Base>

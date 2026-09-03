@@ -1,0 +1,79 @@
+---
+import Base from '../layouts/Base.astro';
+import QuantumWalk from '../components/QuantumWalk.tsx';
+import PostCard from '../components/PostCard.astro';
+import { site } from '../data/site';
+import { getPoems, getPosts, getProjects, formatDate } from '../lib/content';
+
+const [posts, poems, projects] = await Promise.all([getPosts(), getPoems(), getProjects()]);
+---
+
+<Base side="both">
+  <section class="max-w-2xl">
+    <h1 class="text-[2rem] sm:text-[2.4rem] font-medium leading-[1.15] tracking-tight text-balance">
+      Physics by day.<br />
+      <span class="font-tc tracking-[0.06em]">詩</span>, the rest of the time.
+    </h1>
+    <p class="mt-5 text-[1.1rem] text-ink-2 leading-relaxed">
+      I am a third-year physics undergraduate at Xiamen University Malaysia working on quantum foundations and
+      mathematical physics, and a Chinese-language poet published in Sin Chew Daily’s <span class="font-tc">文藝春秋</span>.
+      This site keeps both halves in one place.
+    </p>
+  </section>
+
+  <section class="mt-12 sm:mt-14" aria-label="Quantum walk animation">
+    <QuantumWalk client:visible steps={40} height={210} caption="A Hadamard quantum walk spreads ballistically, σ ∝ t, while a classical random walk diffuses, σ ∝ √t. From my project on quantum random walks." />
+  </section>
+
+  <div class="mt-14 grid gap-12 sm:grid-cols-2 sm:gap-10">
+    <section>
+      <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted">Physics</h2>
+      <p class="mt-3 text-ink-2">{site.physicsBioEn}</p>
+      <ul class="mt-5 space-y-3">
+        {
+          projects.slice(0, 3).map((p) => (
+            <li>
+              <a href={p.data.pdf ?? '/physics'} class="no-underline text-ink hover:text-accent font-medium">
+                {p.data.title}
+              </a>
+              <span class="block text-[0.82rem] text-muted font-mono">{p.data.period}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <a href="/physics" class="inline-block mt-5 text-accent no-underline hover:underline">All physics →</a>
+    </section>
+
+    <section lang="zh-Hant">
+      <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted"><span class="font-tc text-[1rem] tracking-[0.3em]">詩</span> Poetry</h2>
+      <p class="mt-3 text-ink-2 font-tc leading-[1.9]" data-cc>{site.poetBioZh}</p>
+      <ul class="mt-5 space-y-3">
+        {
+          poems.slice(0, 3).map((p) => (
+            <li>
+              <a href={`/poetry/${p.id}`} class="no-underline text-ink hover:text-accent font-medium font-tc tracking-[0.04em]" data-cc>
+                {p.data.title}
+              </a>
+              <span class="block text-[0.82rem] text-muted font-mono">{formatDate(p.data.date, 'en')}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <a href="/poetry" class="inline-block mt-5 text-accent no-underline hover:underline font-tc">全部詩作 →</a>
+    </section>
+  </div>
+
+  {
+    posts.length > 0 && (
+      <section class="mt-14">
+        <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted">Latest writing</h2>
+        <div class="mt-5 space-y-7">
+          {posts.slice(0, 3).map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+        <a href="/blog" class="inline-block mt-6 text-accent no-underline hover:underline">All posts →</a>
+      </section>
+    )
+  }
+</Base>

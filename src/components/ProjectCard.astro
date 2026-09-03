@@ -1,0 +1,36 @@
+---
+import type { Project } from '../lib/content';
+import { render } from 'astro:content';
+
+interface Props {
+  project: Project;
+  /** render the markdown body below the summary */
+  full?: boolean;
+}
+const { project, full = false } = Astro.props;
+const { title, subtitle, period, summary, pdf, repo, tags } = project.data;
+const { Content } = full ? await render(project) : { Content: null };
+---
+
+<article class="py-6 border-b border-line last:border-b-0">
+  <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+    <h3 class="text-[1.15rem] font-medium leading-snug">
+      {pdf ? <a href={pdf} class="no-underline text-ink hover:text-accent transition-colors">{title}</a> : title}
+    </h3>
+    <span class="text-[0.82rem] text-muted font-mono">{period}</span>
+  </div>
+  {subtitle && <p class="text-ink-2 italic mt-0.5">{subtitle}</p>}
+  <p class="mt-2 text-ink-2">{summary}</p>
+  {
+    full && Content && (
+      <div class="prose mt-4 text-[1rem]">
+        <Content />
+      </div>
+    )
+  }
+  <p class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.85rem]">
+    {pdf && <a href={pdf} class="text-accent no-underline hover:underline">Read the PDF ↗</a>}
+    {repo && <a href={repo} class="text-accent no-underline hover:underline">Code ↗</a>}
+    {tags.map((t) => <span class="text-muted">#{t}</span>)}
+  </p>
+</article>

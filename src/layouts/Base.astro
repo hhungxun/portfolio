@@ -1,0 +1,65 @@
+---
+import '../styles/global.css';
+import 'katex/dist/katex.min.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** which name leads in the masthead */
+  side?: 'physics' | 'poetry' | 'both';
+  lang?: 'en' | 'zh';
+  /** narrow (default) or wide content column */
+  width?: 'narrow' | 'wide';
+}
+
+const { title, description = site.description, side = 'both', lang = 'en', width = 'narrow' } = Astro.props;
+const fullTitle = title ? `${title} · ${side === 'poetry' ? site.nameZh : site.nameEn}` : site.name;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<html lang={lang === 'zh' ? 'zh-Hant' : 'en'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Noto+Serif+TC:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          var dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (dark) document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen bg-paper text-ink font-serif antialiased flex flex-col">
+    <Header side={side} />
+    <main
+      class:list={[
+        'flex-1 w-full mx-auto px-5 sm:px-8 py-10 sm:py-14',
+        width === 'wide' ? 'max-w-5xl' : 'max-w-3xl',
+      ]}
+    >
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

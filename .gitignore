@@ -1,0 +1,23 @@
+# build
+dist/
+.astro/
+node_modules/
+
+# secrets: never commit these
+secrets.tar.gz.gpg
+*.gpg
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+deploy.local.json
+
+# os / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# local tooling
+.claude/

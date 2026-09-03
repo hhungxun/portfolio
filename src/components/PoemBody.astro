@@ -1,0 +1,37 @@
+---
+import { parsePoem } from '../lib/content';
+
+interface Props {
+  body: string;
+  /** BCP-47 code of the translation section, if any (e.g. "ms") */
+  translationLang?: string;
+}
+const { body, translationLang = 'en' } = Astro.props;
+const { stanzas, translation } = parsePoem(body);
+---
+
+<div class="poem" data-poem data-dir="horizontal" lang="zh-Hant">
+  {
+    stanzas.map((st) => (
+      <div class="stanza" data-cc>
+        {st.map((line) => (
+          <p class="line">{line}</p>
+        ))}
+      </div>
+    ))
+  }
+  {
+    translation && (
+      <div class="translation" lang={translationLang}>
+        <h2>{translation.title}</h2>
+        {translation.stanzas.map((st) => (
+          <div class="stanza">
+            {st.map((line) => (
+              <p class="line">{line}</p>
+            ))}
+          </div>
+        ))}
+      </div>
+    )
+  }
+</div>

@@ -1,0 +1,74 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getPosts, formatDate, readingTime, tagSlug } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1] ?? null, older: posts[i + 1] ?? null },
+  }));
+}
+
+const { post, newer, older } = Astro.props;
+const { title, description, date, updated, tags, lang, side, sample } = post.data;
+const { Content } = await render(post);
+const minutes = readingTime(post.body ?? '');
+const headerSide = side === 'physics' ? 'physics' : side === 'poetry' ? 'poetry' : 'both';
+---
+
+<Base side={headerSide} lang={lang} title={title} description={description}>
+  <article>
+    <header class="max-w-2xl">
+      {
+        sample && (
+          <p class="mb-3 text-[0.75rem] uppercase tracking-wider text-muted">
+            Sample post shipped with the site scaffold. Delete or replace it.
+          </p>
+        )
+      }
+      <h1 class:list={['text-[2rem] sm:text-[2.3rem] font-medium leading-tight tracking-tight text-balance', lang === 'zh' && 'font-tc tracking-[0.03em]']}>
+        {title}
+      </h1>
+      {description && <p class:list={['mt-3 text-[1.1rem] text-ink-2', lang === 'zh' && 'font-tc']}>{description}</p>}
+      <p class="mt-4 text-[0.85rem] text-muted flex flex-wrap gap-x-3 gap-y-1">
+        <time datetime={date.toISOString()}>{formatDate(date, lang)}</time>
+        {updated && <span>updated {formatDate(updated, lang)}</span>}
+        <span>{minutes} min read</span>
+        {
+          tags.map((t) => (
+            <a href={`/blog/tags/${tagSlug(t)}`} class="no-underline hover:text-accent">
+              #{t}
+            </a>
+          ))
+        }
+      </p>
+    </header>
+
+    <div class="prose mt-10" lang={lang === 'zh' ? 'zh-Hant' : 'en'}>
+      <Content />
+    </div>
+
+    <nav class="mt-16 pt-6 border-t border-line flex justify-between gap-6 text-[0.9rem]" aria-label="Post navigation">
+      <span>
+        {
+          older && (
+            <a href={`/blog/${older.id}`} class="no-underline text-ink-2 hover:text-accent">
+              ← {older.data.title}
+            </a>
+          )
+        }
+      </span>
+      <span class="text-right">
+        {
+          newer && (
+            <a href={`/blog/${newer.id}`} class="no-underline text-ink-2 hover:text-accent">
+              {newer.data.title} →
+            </a>
+          )
+        }
+      </span>
+    </nav>
+  </article>
+</Base>

@@ -1,0 +1,65 @@
+---
+import Base from '../../layouts/Base.astro';
+import PoemControls from '../../components/PoemControls.astro';
+import { site } from '../../data/site';
+import { getPoems, formatDate } from '../../lib/content';
+
+const poems = await getPoems();
+const years = [...new Set(poems.map((p) => p.data.date.getFullYear()))].sort((a, b) => b - a);
+---
+
+<Base side="poetry" lang="zh" title="詩" description={site.poetBioEn}>
+  <div class="flex items-start justify-between gap-6">
+    <div>
+      <h1 class="text-[2.2rem] font-tc font-medium tracking-[0.15em]">詩</h1>
+      <p class="mt-4 text-[1.05rem] text-ink-2 font-tc leading-[1.95] max-w-2xl" data-cc>{site.poetBioZh}</p>
+    </div>
+    <span class="seal shrink-0 mt-2" aria-hidden="true">連宏勛</span>
+  </div>
+
+  <div class="mt-6">
+    <PoemControls showDirection={false} />
+  </div>
+
+  {
+    years.map((year) => (
+      <section class="mt-10">
+        <h2 class="text-[0.8rem] uppercase tracking-[0.18em] text-muted font-mono">{year}</h2>
+        <ul class="mt-3 divide-y divide-line">
+          {poems
+            .filter((p) => p.data.date.getFullYear() === year)
+            .map((p) => (
+              <li class="py-3.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <span>
+                  <a
+                    href={`/poetry/${p.id}`}
+                    class="text-[1.15rem] font-tc no-underline text-ink hover:text-accent tracking-[0.04em] transition-colors"
+                    data-cc
+                  >
+                    {p.data.title}
+                  </a>
+                  {p.data.dedication && (
+                    <span class="ml-2 text-[0.9rem] text-muted font-tc" data-cc>
+                      {p.data.dedication}
+                    </span>
+                  )}
+                  {p.data.feature && (
+                    <span class="ml-2 text-[0.72rem] text-accent border border-accent/40 rounded px-1.5 py-0.5 font-tc align-middle" data-cc>
+                      {p.data.feature}
+                    </span>
+                  )}
+                </span>
+                <time class="text-[0.82rem] text-muted font-mono" datetime={p.data.date.toISOString()}>
+                  {formatDate(p.data.date, 'en')}
+                </time>
+              </li>
+            ))}
+        </ul>
+      </section>
+    ))
+  }
+
+  <p class="mt-12 text-[0.9rem] text-muted font-tc" data-cc>
+    以上作品均首刊於《星洲日報・文藝春秋》，各詩頁附原文連結。
+  </p>
+</Base>

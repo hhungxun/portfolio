@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---- design tokens ---------------------------------------------------- */
+:root {
+  --paper: #faf8f3;
+  --paper-2: #f2efe7;
+  --ink: #1c1b18;
+  --ink-2: #4a4741;
+  --muted: #7a766d;
+  --line: #e4e0d5;
+  --accent: #b83a2a;        /* seal-paste vermilion 印泥紅 */
+  --accent-soft: #f3ddd7;
+  color-scheme: light;
+}
+.dark {
+  --paper: #141311;
+  --paper-2: #1c1b18;
+  --ink: #ebe7df;
+  --ink-2: #c9c4b9;
+  --muted: #8f8a7f;
+  --line: #2b2925;
+  --accent: #e0553f;
+  --accent-soft: #3a201b;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+
+  --font-serif: "Newsreader", "Noto Serif TC", "Songti TC", "PMingLiU", Georgia, serif;
+  --font-tc: "Noto Serif TC", "Newsreader", "Songti TC", "PMingLiU", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Menlo, monospace;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body { font-feature-settings: "kern", "liga", "onum"; }
+::selection { background: var(--accent-soft); }
+
+a { text-decoration-thickness: from-font; text-underline-offset: 0.15em; }
+
+/* Chinese text */
+:lang(zh-Hant), :lang(zh-Hans), :lang(zh), .font-tc { font-family: var(--font-tc); }
+
+/* ---- prose (blog posts, project bodies) -------------------------------- */
+.prose {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--ink);
+}
+.prose > * + * { margin-block-start: 1.1em; }
+.prose h2, .prose h3, .prose h4 { font-weight: 500; letter-spacing: -0.005em; line-height: 1.25; margin-block-start: 2em; }
+.prose h2 { font-size: 1.5rem; }
+.prose h3 { font-size: 1.2rem; }
+.prose h4 { font-size: 1.05rem; color: var(--ink-2); }
+.prose a { color: var(--accent); text-decoration: underline; }
+.prose a:hover { text-decoration-thickness: 2px; }
+.prose strong { font-weight: 600; }
+.prose ul, .prose ol { padding-inline-start: 1.4em; }
+.prose ul { list-style: disc; }
+.prose ol { list-style: decimal; }
+.prose li + li { margin-block-start: 0.35em; }
+.prose blockquote { border-inline-start: 2px solid var(--accent); padding-inline-start: 1em; color: var(--ink-2); font-style: italic; }
+.prose hr { border: 0; border-top: 1px solid var(--line); margin-block: 2.5em; }
+.prose img { max-width: 100%; height: auto; border-radius: 4px; }
+.prose figure figcaption { font-size: 0.875rem; color: var(--muted); text-align: center; margin-block-start: 0.5em; }
+.prose table { width: 100%; border-collapse: collapse; font-size: 0.95em; }
+.prose th, .prose td { border-bottom: 1px solid var(--line); padding: 0.5em 0.6em; text-align: start; }
+.prose th { font-weight: 600; }
+.prose code { font-family: var(--font-mono); font-size: 0.875em; background: var(--paper-2); padding: 0.1em 0.35em; border-radius: 3px; }
+.prose pre { font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.6; padding: 1em 1.2em; border-radius: 6px; overflow-x: auto; border: 1px solid var(--line); }
+.prose pre code { background: transparent; padding: 0; font-size: inherit; }
+.prose .katex-display { overflow-x: auto; overflow-y: hidden; padding-block: 0.25em; }
+.prose:lang(zh-Hant), .prose:lang(zh-Hans) { line-height: 1.95; letter-spacing: 0.01em; }
+
+/* Shiki dual theme */
+.astro-code, .astro-code span { color: var(--shiki-light); background-color: var(--shiki-light-bg); }
+.dark .astro-code, .dark .astro-code span { color: var(--shiki-dark); background-color: var(--shiki-dark-bg); }
+
+/* ---- poems ------------------------------------------------------------ */
+.poem {
+  font-family: var(--font-tc);
+  font-size: 1.125rem;
+  line-height: 2.05;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+.poem .stanza + .stanza { margin-block-start: 1.6em; }
+.poem .line { margin: 0; text-wrap: pretty; }
+.poem .translation { margin-block-start: 2.5em; padding-block-start: 1.5em; border-block-start: 1px solid var(--line); font-family: var(--font-serif); font-style: italic; }
+.poem .translation h2 { font-size: 1rem; font-style: normal; color: var(--muted); letter-spacing: 0.04em; margin-block-end: 1em; }
+
+/* vertical, right-to-left, like a printed collection */
+.poem[data-dir="vertical"] {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  block-size: min(72vh, 36rem);
+  inline-size: auto;
+  max-inline-size: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.25rem 1rem;
+  scrollbar-width: thin;
+}
+.poem[data-dir="vertical"] .line { line-height: 2.3; }
+/* keep Latin translations horizontal even when the poem is vertical */
+.poem[data-dir="vertical"] .translation {
+  writing-mode: horizontal-tb;
+  margin-block-start: 0;
+  margin-inline-start: 2.5em;   /* to the left of the last column */
+  padding-block-start: 0;
+  border-block-start: 0;
+  padding-inline-start: 1.5em;
+  border-inline-start: 1px solid var(--line);
+  max-width: 22rem;
+  height: 100%;
+  overflow-y: auto;
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* small "seal" accent used next to the poet name */
+.seal {
+  display: inline-block;
+  font-family: var(--font-tc);
+  font-size: 0.7rem;
+  line-height: 1;
+  padding: 0.25em 0.3em;
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+  writing-mode: vertical-rl;
+  vertical-align: middle;
+}
+
+/* ---- misc ------------------------------------------------------------- */
+.toggle-btn {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-2);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
+.toggle-btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

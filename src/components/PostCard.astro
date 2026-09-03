@@ -1,0 +1,38 @@
+---
+import type { Post } from '../lib/content';
+import { formatDate, readingTime, tagSlug } from '../lib/content';
+
+interface Props {
+  post: Post;
+  showTags?: boolean;
+}
+const { post, showTags = true } = Astro.props;
+const { title, description, date, tags, lang, sample } = post.data;
+const minutes = readingTime(post.body ?? '');
+---
+
+<article class="group">
+  <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+    <a
+      href={`/blog/${post.id}`}
+      class:list={['text-[1.1rem] font-medium no-underline text-ink group-hover:text-accent transition-colors', lang === 'zh' && 'font-tc']}
+      lang={lang === 'zh' ? 'zh-Hant' : undefined}
+    >
+      {title}
+    </a>
+    {sample && <span class="text-[0.7rem] uppercase tracking-wider text-muted border border-line rounded px-1.5 py-0.5">sample</span>}
+  </div>
+  {description && <p class:list={['mt-1 text-ink-2', lang === 'zh' && 'font-tc']} lang={lang === 'zh' ? 'zh-Hant' : undefined}>{description}</p>}
+  <p class="mt-1.5 text-[0.82rem] text-muted flex flex-wrap gap-x-3 gap-y-0.5">
+    <time datetime={date.toISOString()}>{formatDate(date, 'en')}</time>
+    <span>{minutes} min</span>
+    {
+      showTags &&
+        tags.map((t) => (
+          <a href={`/blog/tags/${tagSlug(t)}`} class="no-underline hover:text-accent">
+            #{t}
+          </a>
+        ))
+    }
+  </p>
+</article>

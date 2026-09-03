@@ -1,0 +1,30 @@
+---
+/**
+ * Toggle bar for poems: 繁/简 script and 直排/橫排 direction.
+ * State is persisted in localStorage; logic lives in src/scripts/poem-toggles.ts
+ */
+interface Props {
+  showDirection?: boolean;
+}
+const { showDirection = true } = Astro.props;
+---
+
+<div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm" data-poem-controls>
+  <div class="flex items-center gap-1.5" role="group" aria-label="Chinese script">
+    <button type="button" class="toggle-btn font-tc" data-script-btn="tw" aria-pressed="true">繁</button>
+    <button type="button" class="toggle-btn font-tc" data-script-btn="cn" aria-pressed="false">简</button>
+  </div>
+  {
+    showDirection && (
+      <div class="flex items-center gap-1.5" role="group" aria-label="Text direction">
+        <button type="button" class="toggle-btn font-tc" data-dir-btn="vertical" aria-pressed="false">直排</button>
+        <button type="button" class="toggle-btn font-tc" data-dir-btn="horizontal" aria-pressed="true">橫排</button>
+      </div>
+    )
+  }
+</div>
+
+<script>
+  import { init } from '../scripts/poem-toggles';
+  init();
+</script>
