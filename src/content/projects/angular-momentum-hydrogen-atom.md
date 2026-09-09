@@ -10,3 +10,5 @@ order: 7
 ---
 
 Starting from rotations as a physical symmetry and their infinitesimal generators, the notes develop the commutation relations, the ladder-operator construction of irreducible representations, and the addition of spin and orbital angular momentum. The hydrogen atom is then solved by exploiting this structure directly, with the emphasis on why each rule holds rather than on postulating it.
+
+[Read the companion note](/blog/so3-su2-angular-momentum).

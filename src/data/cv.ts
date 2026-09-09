@@ -16,8 +16,8 @@ export const cv = {
       period: 'Unpublished draft',
       link: '/blog/gershgorin-cassini-weyl-matrix',
       bullets: [
-        'Applied Gershgorin circles and Brauer Cassini ovals to eigenvalue localisation for the structured Weyl matrix in the Newman–Penrose formalism.',
-        'Introduced a candidate radiation-asymmetry invariant σ; its invariance properties and interpretation remain under investigation.',
+        'Apply Gershgorin discs and Brauer Cassini ovals to eigenvalue localisation for a structured Newman–Penrose Weyl matrix.',
+        'The matrix convention, frame dependence, and proposed radius functional still require a complete invariant audit.',
       ],
     },
     {
@@ -33,22 +33,25 @@ export const cv = {
       period: 'Ongoing undergraduate research',
       bullets: [
         'Supervised by Prof. Tomasz Paterek; use covariance-matrix and symplectic methods, Floquet theory, logarithmic negativity, and periodic Riccati integration.',
-        'Independently reproduced the numerical behaviour in Poddubny et al., Fig. 2, as a validation benchmark.',
+        'Within the audited quadratic model, constructed a finite-time entangling quench giving Eₙ = 0.3625 bits at n̄ = 0.05; identified sub-phonon preparation, microhertz trapping, and about 54.5 minutes of coherence as limiting requirements.',
+        'Independently reproduced the numerical behaviour in Poddubny et al., Fig. 2, before extending the model.',
       ],
     },
     {
       title: 'Quantum Mechanics over Non-Complex Number Systems',
       period: 'Self-study note',
       bullets: [
-        'Compare real and quaternionic division-algebra formulations with completions of Q, including p-adic models, to isolate the algebraic and topological assumptions used by standard quantum theory.',
+        'Survey real, complex, and quaternionic Hilbert-space formulations from the division-algebra trichotomy through modern network no-go results.',
+        'Isolate the tensor-product composition rule as the central assumption in the real-versus-complex debate.',
       ],
     },
     {
-      title: 'Lorentz–Abraham–Dirac to Landau–Lifshitz Deviation',
-      period: 'Course term paper',
+      title: 'A Gaussian-Pulse Benchmark for Landau–Lifshitz Accuracy',
+      period: 'PHY204 term paper · coauthored',
       link: '/blog/lad-ll-singular-limit',
       bullets: [
-        'Treated the order reduction as a singular perturbation because τ₀ multiplies the highest derivative, and studied the resulting deviation numerically.',
+        'With Xu Ya-Xuan, compared the exact future-weighted non-runaway Abraham–Lorentz acceleration with the first local Landau–Lifshitz reduction for a smooth Gaussian pulse.',
+        'Derived Dᵣₘₛ = (√3/2)ε²[1 − ε² + O(ε⁴)] and verified the O(ε²) law by quadrature and convergence tests over ε ∈ [0.01, 1]. AI assistance is disclosed in the manuscript.',
       ],
     },
   ],
@@ -82,7 +85,7 @@ export const cv = {
   skills: [
     {
       area: 'Mathematical methods',
-      text: 'Gershgorin and Cassini eigenvalue localisation; symplectic and covariance-matrix methods; Floquet theory; Hamilton–Jacobi and Madelung formulations; differential geometry, frame bundles, holonomy, Lie groups, spherical harmonics; singular perturbation theory; division algebras and p-adic analysis',
+      text: 'Gershgorin and Cassini eigenvalue localisation; symplectic and covariance-matrix methods; Floquet theory; Hamilton–Jacobi and Madelung formulations; differential geometry, frame bundles, holonomy, Lie groups, spherical harmonics; singular perturbation theory; real and quaternionic Hilbert spaces',
     },
     {
       area: 'Scientific computing',

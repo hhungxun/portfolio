@@ -1,39 +1,66 @@
 ---
-title: Why the Landau–Lifshitz Reduction Is a Singular Limit
-description: The small radiation-reaction time multiplies the highest derivative, so order reduction changes the solution space.
+title: A Gaussian-Pulse Benchmark for Landau–Lifshitz Accuracy
+description: An exact non-runaway Abraham–Lorentz solution turns order reduction into a calibrated error problem.
 date: 2026-09-09
-tags: [singular perturbations, electrodynamics, research notes]
+tags: [singular perturbations, electrodynamics, numerical validation]
 lang: en
 side: physics
 draft: false
 ---
 
-In a regular perturbation problem, setting a small parameter to zero leaves the
-order of the differential equation unchanged. Radiation reaction has a more
-delicate structure. Schematically, the Lorentz–Abraham–Dirac equation contains
+*This note summarizes a PHY204 term paper written with Xu Ya-Xuan. The
+manuscript discloses the use of an AI writing tool; the authors checked and
+approved its calculations, citations, and final claims.*
+
+The phrase "Landau–Lifshitz breakdown" can hide two different questions. Does
+the Landau–Lifshitz (LL) reduction accurately track the physical classical
+branch of Lorentz–Abraham–Dirac dynamics? And does a deterministic classical
+emission model remain valid once quantum recoil matters? The paper constructs
+a benchmark that keeps those questions separate.
+
+In the nonrelativistic, one-dimensional Abraham–Lorentz limit,
 
 $$
-m a = F_{\mathrm{ext}} + \tau_0\,\dot a + \text{relativistic corrections},
+a(t)=\frac{F(t)}m+\tau_e\dot a(t),
 $$
 
-so the small time $\tau_0$ multiplies the highest derivative. Setting
-$\tau_0=0$ lowers the order of the equation. Initial data that are independent
-for the higher-order dynamics can no longer be prescribed independently after
-reduction.
+the higher derivative introduces a runaway mode. Imposing the non-runaway
+future condition selects the exact physical acceleration
 
-That loss of order is the signature of a **singular perturbation**. It explains
-why a small coefficient does not automatically imply a uniformly small change
-to every solution: fast modes can live on the scale $t/\tau_0$, and eliminating
-them selects a reduced branch of the full dynamics.
+$$
+a_{\mathrm{LAD}}(t)=\frac1m\int_0^\infty e^{-u}F(t+\tau_e u)\,du.
+$$
 
-The Landau–Lifshitz equation performs an order reduction by replacing the
-radiation-reaction term with the derivative of the leading-order Lorentz-force
-acceleration. The useful numerical question is therefore not simply whether
-$\tau_0$ is small. It is where the reduced trajectory stays close to the
-selected physical branch of the higher-order equation, and how that deviation
-depends on forcing and initial data.
+Expanding the shifted force shows that LL is the first local truncation,
 
-This framing guided my course term paper and its computations. It also dictates
-the validation strategy: resolve the fast scale with a stiff solver when
-necessary, compare on matched initial data, and report the regime in which the
-order-reduced model agrees rather than treating the approximation as uniform.
+$$
+a_{\mathrm{LL}}(t)=\frac1m\bigl(F(t)+\tau_e\dot F(t)\bigr).
+$$
+
+For a Gaussian force and $\epsilon=\tau_e/T$, the omitted term begins at
+$O(\epsilon^2)$. Gaussian moments give the normalized root-mean-square error
+
+$$
+D_{\rm rms}=\frac{\sqrt3}{2}\epsilon^2
+\left[1-\epsilon^2+O(\epsilon^4)\right],
+\qquad D_{\max}\sim\epsilon^2.
+$$
+
+Direct composite-Simpson quadrature over $\epsilon\in[0.01,1]$ recovers the
+coefficient $\sqrt3/2\approx0.866$ and the first correction. Two convergence
+reruns test the quadrature cutoff and time grid; the reported $D_{\rm rms}$
+changes by less than $4\times10^{-18}$ and $2\times10^{-11}$ respectively.
+
+The second parameter is the strong-field quantum nonlinearity $\chi_e$.
+Within this linear benchmark, pulse duration controls $\epsilon$, while field
+amplitude controls $\chi_e$ and cancels from the normalized LL–LAD error. The
+paper therefore plots a diagnostic map in $(\epsilon,\chi_e)$: horizontal
+motion changes classical order-reduction error; vertical motion changes the
+validity of classical emission physics.
+
+For femtosecond pulses, $\epsilon\sim10^{-9}$, so the benchmarked LL truncation
+error is of order $10^{-18}$. A laboratory discrepancy in that regime is much
+more plausibly a quantum-emission, beam, field, or detector-modelling issue
+than failure of this classical order reduction.
+
+[Read the full term paper (PDF)](/papers/landau-lifshitz-gaussian-benchmark.pdf).

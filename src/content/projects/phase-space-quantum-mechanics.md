@@ -10,3 +10,5 @@ order: 6
 ---
 
 The monograph builds the Weyl–Wigner correspondence that maps operators to phase-space symbols, derives the Moyal ⋆-product and Moyal bracket, and shows explicitly how the bracket reduces to the Poisson bracket in the semiclassical limit. The quantum–classical transition is analysed through coarse-graining, interpreting classicality as information loss. The treatment connects naturally to deformation quantization and semiclassical analysis.
+
+[Read the companion note](/blog/weyl-wigner-moyal-classical-limit).

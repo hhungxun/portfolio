@@ -9,4 +9,4 @@ tags: [quantum walks, quantum algorithms, numerics]
 order: 8
 ---
 
-The report derives the classical diffusion limit and contrasts it with the ballistic spreading of the Hadamard walk, reviews algorithmic constructions (SKW, Szegedy) and open problems in mixing and state transfer, and implements the dynamics numerically with NumPy, QuTiP, and Matplotlib. The animation on the home page is a direct descendant of that code.
+The report derives the classical diffusion limit and contrasts it with the ballistic spreading of the Hadamard walk, reviews algorithmic constructions (SKW, Szegedy) and open problems in mixing and state transfer, and implements the dynamics numerically with NumPy, QuTiP, and Matplotlib. The animation on the home page is a direct descendant of that code. [Read the accompanying note and interactive comparison.](/blog/quantum-walk-spreading)

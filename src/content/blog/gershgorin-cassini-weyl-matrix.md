@@ -35,8 +35,7 @@ complex matrix whose eigenvalue degeneracies encode the Petrov classification.
 This makes localisation more than a generic numerical bound: the shape and
 overlap of the regions can be compared with algebraically special limits.
 
-My draft asks whether the resulting spectral asymmetry can be summarized by a
-scalar $\sigma$ that behaves sensibly across examples. The next checks are
-concrete: compute the regions for canonical Petrov types, test tetrad and scale
-dependence, compare with exact spectra, and identify counterexamples before
-assigning a physical interpretation.
+The next checks are concrete: verify the matrix convention from the self-dual
+bivector construction, compute the regions for canonical Petrov types, test
+tetrad and scale dependence, compare with exact spectra, and identify
+counterexamples before assigning an invariant or physical interpretation.
