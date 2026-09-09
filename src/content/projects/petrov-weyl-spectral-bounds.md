@@ -1,4 +1,5 @@
 ---
+note: gershgorin-cassini-weyl-matrix
 title: Petrov–Weyl Spectral Bounds
 subtitle: Independent work · unpublished draft
 period: Current

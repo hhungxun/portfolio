@@ -1,4 +1,5 @@
 ---
+note: quantum-walk-spreading
 title: "Quantum Random Walks: Theory and Developments"
 subtitle: Discrete- and continuous-time quantum walks, with numerics
 period: 2025/04 – 2025/09

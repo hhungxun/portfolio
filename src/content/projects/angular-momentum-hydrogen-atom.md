@@ -1,4 +1,5 @@
 ---
+note: so3-su2-angular-momentum
 title: Angular Momentum to the 3D Hydrogen Atom
 subtitle: Angular momentum algebra and representation theory
 period: 2025/12

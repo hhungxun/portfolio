@@ -21,11 +21,12 @@ export const cv = {
       ],
     },
     {
-      title: 'Anisotropic Kernel Control on the Oriented Frame Bundle of S²',
-      period: 'AI-assisted exploratory draft',
+      title: 'From a WGS84 Lollipop to Frame-Aware Control on S²',
+      period: 'Research note · revised September 2026',
+      link: '/blog/anisotropic-kernels-frame-bundle',
       bullets: [
-        'Developed five propositions, one theorem, three conjectures, and two algorithms connecting differential geometry, Lie groups, geometric control, and approximation on manifolds.',
-        'Numerically verified the predicted holonomy at θ₀ = π/4; conjectural statements remain unproved and the manuscript is not submitted.',
+        'Modelled localized removal using anisotropic kernels on the oriented frame bundle; derived an exact overlap formula and the leading response to weak anisotropy.',
+        'Checked holonomy by step-refined integration, the overlap formula by independent quadrature, and finite non-negative fitting by optimality and grid-refinement checks.',
       ],
     },
     {
@@ -79,6 +80,23 @@ export const cv = {
       details: 'GPA 3.75 / 4.00',
       coursework:
         'Quantum Mechanics I, Electrodynamics, Mathematical Methods, Theoretical Mechanics, Linear Algebra, Differential Equations, Numerical Methods, Optics',
+    },
+  ],
+
+  activities: [
+    {
+      title: 'Vice President, Physics Student Council',
+      period: 'September 2025 – present',
+      bullets: [
+        'Coordinate academic events and peer mentoring; founded and host the departmental Physics Forum student journal club.',
+        'Delivered the departmental talk A Year in Physics; preparing a workshop on LaTeX and Git.',
+      ],
+      link: 'https://forum.physicsxmum.my/',
+    },
+    {
+      title: 'Vice President, Astronomy Club',
+      period: 'September 2025 – present',
+      bullets: ['Organise telescope sessions and member-led knowledge sharing.'],
     },
   ],
 

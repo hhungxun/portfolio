@@ -9,6 +9,11 @@ import { getPosts, getProjects } from '../lib/content';
 
 const [projects, posts] = await Promise.all([getProjects(), getPosts()]);
 const physicsPosts = posts.filter((post) => post.data.side === 'physics' && !post.data.sample);
+const linkedNotes = new Set(projects.map((project) => project.data.note).filter(Boolean));
+for (const id of linkedNotes) {
+  if (!physicsPosts.some((post) => post.id === id)) throw new Error(`Missing published physics note: ${id}`);
+}
+const otherNotes = physicsPosts.filter((post) => !linkedNotes.has(post.id));
 ---
 
 <Base side="physics" title="Physics" description={site.physicsBioEn}>
@@ -25,9 +30,10 @@ const physicsPosts = posts.filter((post) => post.data.side === 'physics' && !pos
   </section>
 
   <section class="mt-12">
-    <h2 class="label">Projects &amp; write-ups</h2>
+    <h2 class="label">Projects &amp; research notes</h2>
+    <p class="mt-3 text-ink-2">Each project brings together an explanation, the technical paper, and its source repository.</p>
     <div class="mt-2">
-      {projects.map((p) => <ProjectCard project={p} full />)}
+      {projects.map((p) => <ProjectCard project={p} />)}
     </div>
   </section>
 
@@ -40,15 +46,15 @@ const physicsPosts = posts.filter((post) => post.data.side === 'physics' && !pos
     </p>
   </section>
 
-  <section class="mt-12">
+  {otherNotes.length > 0 && <section class="mt-12">
     <div class="flex flex-wrap items-baseline justify-between gap-3">
-      <h2 class="label">Research notes</h2>
+      <h2 class="label">Further reading</h2>
       <a href="https://github.com/hhungxun/physics-writeups" class="text-[0.85rem] text-accent no-underline hover:underline">
         PDF write-ups repository ↗
       </a>
     </div>
     <div class="mt-5 space-y-8">
-      {physicsPosts.map((post) => <PostCard post={post} />)}
+      {otherNotes.map((post) => <PostCard post={post} />)}
     </div>
-  </section>
+  </section>}
 </Base>

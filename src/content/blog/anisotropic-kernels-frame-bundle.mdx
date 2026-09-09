@@ -1,0 +1,460 @@
+---
+title: What a Lollipop Taught Me About Geometry
+description: From shaping a sphere to an exact formula for how a transported elliptical footprint changes, with derivations, numerical experiments, and checkpoints.
+date: 2026-09-08
+updated: 2026-09-10
+tags: [differential geometry, holonomy, geometric control]
+lang: en
+side: physics
+draft: false
+---
+
+import Quiz from '../../components/Quiz.tsx';
+
+This started with a lollipop. Suppose it is perfectly spherical, and suppose we
+want to lick it into the shape of the Earth. More precisely, we want the
+flattening of the WGS84 reference ellipsoid, scaled down to the candy.
+
+How much do we remove? Where do we remove it? And does it matter which way a
+lick points?
+
+The first question is a volume calculation. The second becomes an approximation
+problem. The third takes us to the geometry of tangent frames and to a rather
+surprising fact: you can carry a direction around a sphere, never deliberately
+twisting it, and come back pointing somewhere else.
+
+This note follows that chain all the way to a formula for the change in the
+removal footprint. It explains the [technical paper](/papers/anisotropic-kernel-control-s2.pdf);
+the [source and experiments](https://github.com/hhungxun/physics-writeups/tree/main/sources/anisotropic-kernel-control-s2)
+let you reproduce the numbers. The model describes small, additive radial
+removal on a fixed sphere. Actual candy dissolution would need its own
+experimental contact law.
+
+## The first answer is correct, but incomplete
+
+The flattening of an ellipsoid is the fractional difference between its
+equatorial and polar radii:
+
+$$
+f=\frac{a_E-b_E}{a_E}.
+$$
+
+WGS84 specifies an inverse flattening of 298.257223563. Keep the lollipop's
+equatorial radius equal to its original radius and shorten the polar radius
+by this fraction. The sphere and the target spheroid then differ in volume by
+
+$$
+\Delta V=\frac{4\pi}{3}R_0^3f.
+$$
+
+That tells us the total amount of candy. It cannot tell us a licking strategy.
+Removing that amount uniformly simply gives a smaller sphere. Removing more
+near the equator makes the shape change in the wrong direction.
+
+We need a *field*: an amount to remove at every surface point.
+
+Let the colatitude be the angle measured down from the north pole. The target
+spheroid has radial coordinate
+
+$$
+r_f(\theta)=R_0
+\left(\sin^2\theta+\frac{\cos^2\theta}{(1-f)^2}\right)^{-1/2}.
+$$
+
+Expand in the small flattening. To first order, the desired removal is
+
+$$
+\delta_\star(\theta)=R_0f\cos^2\theta.
+$$
+
+At a pole the cosine squared is one. At the equator it is zero. The geometry
+now tells us where the mass calculation was silent.
+
+This distinction matters later: the cosine-squared field is the **first-order
+target**, rather than the exact radial difference for the ellipsoid. At second
+order, a term proportional to cosine to the fourth power appears.
+
+<Quiz client:load title="Start with the shape" questions={[
+  { prompt: 'You remove the correct total volume, uniformly over the sphere. What shape results?', choices: ['The desired oblate spheroid', 'A smaller sphere', 'A prolate spheroid'], answer: 1, explanation: 'Uniform radial removal preserves rotational symmetry. Total volume alone cannot encode the desired flattening.' },
+  { prompt: 'Where should the first-order WGS84 target remove the most material?', choices: ['At the equator', 'Uniformly everywhere', 'Near the poles'], answer: 2, explanation: 'Colatitude is zero at the north pole, so cos²θ is maximal there and vanishes at the equator.' }
+]} />
+
+## A complicated-looking shape with only two harmonic degrees
+
+Spherical harmonics play the role on the sphere that Fourier modes play on a
+circle. They separate a field into angular patterns of increasing complexity.
+
+Our target has an especially short expansion. The second Legendre polynomial
+satisfies
+
+$$
+P_2(t)=\frac{3t^2-1}{2},
+\qquad
+\cos^2\theta=\frac13+\frac23P_2(\cos\theta).
+$$
+
+The constant belongs to harmonic degree zero. The second term belongs to
+degree two. There are no other degrees in the linearized target.
+
+This does not make the whole problem trivial. A localized lick is a narrow
+patch and generally contains many harmonic degrees. Several patches must add
+up to approximate a very simple global shape. Good approximation means both
+building the desired low-degree pattern and controlling the unwanted
+high-degree content.
+
+The coefficients also have a physical restriction: a lick removes candy.
+It cannot add candy back to cancel an earlier mistake. This is why the
+coefficients in our model must be non-negative.
+
+## A lick needs more than a location
+
+Begin with a circular contact patch. To place it on the sphere, we need its
+centre and its size. Rotating it around its centre changes nothing.
+
+Now stretch it into an ellipse. Two patches can have the same centre and the
+same widths, while one points north–south and the other east–west. They remove
+different fields. The contact point has stopped being a complete state.
+
+At a point on the sphere, choose two perpendicular unit tangent vectors.
+Together with the outward unit normal, they make a three-dimensional rotation
+matrix:
+
+$$
+R=[e_1\ e_2\ x]\in \operatorname{SO}(3).
+$$
+
+The first two columns specify the contact axes; the last specifies its centre.
+The set of all such choices is the oriented orthonormal frame bundle.
+
+The identification with the rotation group is concrete. Every rotation matrix
+has three orthonormal columns, and its first two columns lie in the tangent
+plane at its third column. Conversely, a positively oriented tangent basis and
+its normal produce exactly such a matrix.
+
+If we forget the tangent axes, all rotations of those axes represent the same
+centre. This is the meaning of
+
+$$
+S^2\cong\operatorname{SO}(3)/\operatorname{SO}(2).
+$$
+
+There is one subtlety. An ellipse does not distinguish an axis from its
+reverse. Turning it through 180 degrees gives the same patch. A full frame
+therefore contains a little more information than the footprint needs. Keeping
+that redundant frame is convenient because transport acts on frames directly.
+
+<Quiz client:load title="What counts as a different contact?" questions={[
+  { prompt: 'Why is a centre on the sphere insufficient for an elliptical footprint?', choices: ['Its tangent orientation affects the removal field', 'The sphere needs a fourth spatial coordinate', 'Its total integral must be negative'], answer: 0, explanation: 'The centre fixes the tangent plane but does not fix the direction of the ellipse within that plane.' },
+  { prompt: 'Which rotation always leaves a fixed elliptical footprint unchanged?', choices: ['45 degrees', '90 degrees', '180 degrees'], answer: 2, explanation: 'A half-turn reverses both principal axes. An ellipse has no arrow attached to either axis, so the footprint is identical.' }
+]} />
+
+## Put a Gaussian in the tangent plane
+
+To make the contact precise, take a nearby surface point and map it back into
+the tangent plane using the logarithm map. Its tangent coordinates are a
+two-component vector, whose length is the spherical distance from the contact
+centre.
+
+In polar tangent coordinates, the kernel is
+
+$$
+K(r,\phi)=\frac{\chi(r)}{Z_{a,b}}
+\exp\left[-\frac{r^2}{2}\big(a+b\cos 2\phi\big)\right],
+\qquad a>|b|.
+$$
+
+The two precision eigenvalues are a plus b and a minus b. Precision is inverse
+covariance: increasing precision narrows a Gaussian along that axis. The
+parameter a sets a mean inverse squared width, while b controls the contrast
+between the axes.
+
+At zero b, the angular term disappears and the footprint becomes circular.
+For nonzero b, it becomes direction-sensitive.
+
+The cutoff keeps the kernel inside a cap smaller than the antipodal distance.
+This avoids ambiguity in the logarithm map at the opposite pole. We use a
+smooth cutoff rather than an abrupt edge:
+
+$$
+\chi(r)=\exp\left[-\frac{r^2}{r_c^2-r^2}\right]
+\quad (r<r_c),
+$$
+
+with zero value outside. Its rapid decay makes the boundary smooth.
+
+The normalization makes the integral over the sphere equal to one. It must use
+the spherical area element,
+
+$$
+dA=\sin r\,dr\,d\phi,
+$$
+
+rather than the planar element. Otherwise the removal strength would depend on
+an incorrect mass normalization.
+
+The Gaussian is specified relative to the chosen frame. Rotating the frame
+while holding its principal-axis matrix fixed rotates the physical footprint.
+Rotating the coordinates and transforming the matrix at the same time would
+merely describe the same footprint in a different basis.
+
+## Carrying a direction without twisting it
+
+Imagine sliding an arrow along the sphere. At each instant, keep the arrow
+tangent and change it only as much as necessary to remain tangent. This is
+parallel transport.
+
+For a unit sphere embedded in ordinary three-dimensional space, the equation
+is particularly simple:
+
+$$
+\dot v=-(v\cdot\dot x)x.
+$$
+
+The derivative points along the normal. Its tangential component is zero,
+which expresses the absence of an imposed in-plane twist. Differentiating
+the dot product of the arrow and the normal shows that tangency is preserved.
+The arrow's length is preserved too.
+
+Now take it around a closed latitude. The arrow returns to the same point,
+but generally at a different angle. Gauss–Bonnet relates this holonomy to
+the enclosed area. On a unit sphere,
+
+$$
+\psi=2\pi(1-\cos\theta_0)\pmod{2\pi}.
+$$
+
+At a colatitude of 45 degrees the answer is approximately 1.840302369021
+radians, or 105.44 degrees.
+
+The phrase “without twisting” is local. It says how the arrow moves over an
+infinitesimal segment. It does not imply that the complete trip has zero
+rotation. Curvature prevents those local choices from agreeing globally.
+
+## From a rotated arrow to a measurable removal difference
+
+Holonomy tells us an angle. We still need to know what that angle does to the
+footprint.
+
+Compare the initial kernel with the kernel rotated by that angle, at the same
+centre. Measure the difference by its squared integral:
+
+$$
+D_\psi^2=\int_{S^2}(K-K_\psi)^2\,dA.
+$$
+
+A useful route is to calculate their overlap first:
+
+$$
+C(\psi)=\int_{S^2}K K_\psi\,dA.
+$$
+
+Rotation preserves the norm, so the mismatch is twice the difference between
+self-overlap and rotated overlap.
+
+The angular dependence looks awkward until we multiply the two Gaussians.
+Their exponent contains two cosine terms, which combine through
+
+$$
+\cos(2\phi)+\cos(2\phi-2\psi)
+=2\cos\psi\cos(2\phi-\psi).
+$$
+
+The remaining angular integral is exactly the integral defining the modified
+Bessel function of order zero. That reduces the overlap to one radial integral:
+
+$$
+C(\psi)=\frac{2\pi}{Z_{a,b}^2}
+\int_0^{r_c}
+\chi(r)^2e^{-ar^2}I_0(br^2\cos\psi)\sin r\,dr.
+$$
+
+Consequently,
+
+$$
+D_\psi^2=\frac{4\pi}{Z_{a,b}^2}
+\int_0^{r_c}\chi(r)^2e^{-ar^2}
+\left[I_0(br^2)-I_0(br^2\cos\psi)\right]\sin r\,dr.
+$$
+
+This is the paper's central formula. It gives more than a numerical recipe.
+The Bessel function is even and increases with the magnitude of its argument.
+The mismatch therefore vanishes exactly at multiples of a half-turn, and
+is largest at a quarter-turn modulo a half-turn.
+
+<figure>
+  <img src="/images/physics/orientation-response.svg" alt="Contours of an elliptical kernel before and after a 105-degree frame rotation, beside a mismatch curve that peaks at 90 degrees and returns to zero at 180 degrees." loading="lazy" />
+  <figcaption>The same kernel before and after a latitude loop. The footprints are shown in logarithmic tangent coordinates. The response curve exposes the half-turn symmetry.</figcaption>
+</figure>
+
+Here is the exception that a purely qualitative description can miss.
+At a colatitude of 60 degrees, the enclosed cap has area pi. The frame returns
+rotated by 180 degrees. Yet the removal footprint is exactly the same.
+Nonzero frame holonomy does not always mean nonzero actuation response.
+
+<Quiz client:load title="Read the holonomy through the footprint" questions={[
+  { prompt: 'A latitude loop produces a half-turn of the transported frame. What happens to an elliptical kernel?', choices: ['It has the largest possible mismatch', 'It is unchanged', 'Its normalization doubles'], answer: 1, explanation: 'The half-turn is a symmetry of the kernel even though it is not the identity rotation of a full frame.' },
+  { prompt: 'Where does the Bessel function enter the calculation?', choices: ['From integrating the Gaussian product over the tangent angle', 'From approximating the Earth as a point mass', 'From solving the non-negative least-squares problem'], answer: 0, explanation: 'Combining the two angular cosine terms turns their integral into the defining integral of I₀.' }
+]} />
+
+## A conjecture becomes an expansion
+
+The earlier draft asked how the mismatch behaves when the ellipse is almost
+circular. The overlap formula answers it directly.
+
+The Bessel series begins with a constant and a quadratic term. After
+subtracting the two Bessel functions, the constant cancels. With a fixed
+mean precision and a fixed rotation angle,
+
+$$
+D_\psi^2=
+\frac{\pi b^2\sin^2\psi}{Z_{a,0}^2}
+\int_0^{r_c}\chi(r)^2e^{-ar^2}r^4\sin r\,dr
++O(b^4).
+$$
+
+Thus the mismatch norm is proportional to the absolute anisotropy, with an
+angular factor given by the absolute sine of the rotation. This is a proved
+asymptotic result for the specified family of kernels. The coefficient comes
+from the radial integral; it is not a fitted constant.
+
+In the numerical experiment, the mean precision is 16 and the cutoff radius
+is 1.2 radians. We use the 45-degree latitude loop and write the contrast as
+epsilon equal to b divided by a. The expansion predicts a mismatch of
+1.040885 times the absolute contrast at leading order.
+
+| Precision contrast | Relative mismatch |
+| --- | --- |
+| 0 | 0 |
+| 0.01 | 0.008618 |
+| 0.02 | 0.017236 |
+| 0.10 | 0.086272 |
+| 0.40 | 0.350946 |
+| 0.60 | 0.539096 |
+
+Doubling the smallest contrast almost exactly doubles the mismatch.
+The measured logarithmic slope is 0.999973. The squared mismatch would have
+slope two; confusing the norm and its square changes the interpretation.
+
+## Can increasing the strength repair a wrong orientation?
+
+Suppose the target is one kernel, but the only available contact points in a
+different direction. Perhaps we could remove more or less to compensate.
+
+The best non-negative strength is the overlap divided by the self-overlap:
+
+$$
+\alpha_\star=\frac{C(\psi)}{C(0)}.
+$$
+
+Even after choosing that strength, the squared error is
+
+$$
+C(0)-\frac{C(\psi)^2}{C(0)}.
+$$
+
+Cauchy–Schwarz makes it positive unless the two kernels are proportional.
+Because both integrate to one, proportionality would mean equality.
+A wrong orientation outside the half-turn symmetry therefore has an
+irreducible one-contact error. Admitting the right orientation reduces that
+error to zero.
+
+This is a deliberately controlled comparison: one target kernel, one available
+kernel, the same widths, and a freely adjustable non-negative strength.
+It gives a precise example of why orientation matters without claiming that
+every anisotropic strategy beats every isotropic strategy.
+
+## Put several contacts together
+
+For a finite set of candidate kernels, choose strengths to minimize the
+squared approximation error, optionally adding a penalty on total removal:
+
+$$
+J(\alpha)=
+\left\|d-\sum_j\alpha_jK_j\right\|_2^2+
+\lambda\sum_j\alpha_j,
+\qquad \alpha_j\geq0.
+$$
+
+There is a minimizer. The useful observation is that the sum of the strengths
+equals the integral of the fitted field. Cauchy–Schwarz bounds this integral
+by its norm. Bounded fitting error therefore bounds every feasible strength
+vector in a sublevel set.
+
+The fitted field is unique, because the squared error is strictly convex in
+the field. The individual strengths need not be unique when different
+combinations of kernels produce the same field.
+
+The numerical benchmark fits the dimensionless target equal to the square of
+the vertical coordinate. We fix twelve centres on the sphere. One dictionary
+offers a single orientation at each centre; the other offers four.
+
+| Candidate atoms | Active strengths | Relative error on fitting grid | Relative error on finer grid |
+| --- | --- | --- | --- |
+| 12 | 12 | 0.471593 | 0.471593 |
+| 48 | 20 | 0.436528 | 0.436528 |
+
+The larger dictionary contains the smaller one, so its optimal error cannot
+increase. The experiment also finds a decrease. The refined-grid agreement
+checks that this decrease is not simply a coarse integration artifact.
+
+These are fairly large residuals. Twelve fixed centres and a prescribed
+footprint do not approximate the global target particularly well.
+The experiment checks a finite fitting problem; it does not solve the
+original lollipop design problem.
+
+<Quiz client:load title="What did the experiment establish?" questions={[
+  { prompt: 'Why can the larger dictionary never have a worse optimal training objective?', choices: ['It includes all old solutions by assigning zero to new coefficients', 'An ellipse is always better than a circle', 'A numerical optimizer always finds the best route'], answer: 0, explanation: 'This follows from feasible-set inclusion. The statement concerns the optimal objective for fixed dictionaries, not every optimizer run or every route.' },
+  { prompt: 'Does the twelve-versus-forty-eight comparison prove an equal-budget orientation advantage?', choices: ['Yes, because both use twelve centres', 'No, because candidate count and active contact count also change', 'Yes, because the target is spectrally sparse'], answer: 1, explanation: 'The larger dictionary offers more candidates and the fitted solution uses more active strengths. That is not an equal-contact-budget comparison.' }
+]} />
+
+## What was checked, and what remains a control problem
+
+The geometric and numerical checks are separate.
+
+First, we integrated parallel transport and halved the step size repeatedly.
+The errors decrease at approximately fourth order. A 20,000-step run gives
+the latitude holonomy to about twelve decimal places.
+
+Second, we computed the mismatch two ways: through the one-dimensional
+Bessel formula and by integrating the squared difference of the actual
+kernels over radial and angular coordinates. The largest discrepancy in
+the table is below 1.3 times ten to the minus fourteen. Refining the direct
+quadrature produces the same displayed values.
+
+Third, we checked the non-negative fitting conditions and evaluated the
+fitted strengths on a finer sphere grid. These checks support the stated
+finite computations.
+
+The remaining control problem is to choose the contacts **and the route that
+carries their orientations**. Adding fixed fields is commutative. A change
+in route matters because it can change the transported frames, and therefore
+change the fields being added. If an actuator resets its orientation at every
+contact, it removes that source of history dependence.
+
+An actual tool might twist, slip, remove material during travel, or alter
+the geometry enough that the reference sphere is no longer adequate.
+Those extensions require additional assumptions and calculations.
+The result here is narrower and complete: for the specified spherical kernel,
+we can calculate exactly how a frame rotation changes its removal field.
+
+## Where this fits in the literature
+
+Directional wavelets already describe orientation-sensitive functions on the
+sphere. [Antoine and collaborators](https://doi.org/10.1016/S1063-5203(02)00507-9)
+provide an early implementation and analysis.
+
+[Cohen and collaborators](https://proceedings.mlr.press/v97/cohen19d.html)
+make the role of local frames explicit in gauge-equivariant convolution,
+including the path dependence of transported filters.
+[Schonsheck, Dong, and Lai](https://doi.org/10.1137/21M1407616) construct
+parallel-transport convolution on manifolds.
+
+In a different setting,
+[Tam and Cheng](https://doi.org/10.1016/j.jmatprotec.2010.01.012) show that
+polishing paths and elliptic contacts affect material removal.
+
+The present note specializes these geometric ideas to a non-negative removal
+model and derives an explicit overlap and mismatch formula for its kernel.
+The lollipop gives the model a concrete starting question; the exact response,
+its symmetry exceptions, and its weak-anisotropy expansion are the mathematical
+results developed here.

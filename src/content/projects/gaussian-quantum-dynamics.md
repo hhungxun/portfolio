@@ -1,4 +1,5 @@
 ---
+note: gaussian-control-gravity-entanglement
 title: Gaussian Quantum Dynamics on Sp(4,R)
 subtitle: Ongoing undergraduate research · supervised by Prof. Tomasz Paterek
 period: Current

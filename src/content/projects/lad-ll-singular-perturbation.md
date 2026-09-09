@@ -1,4 +1,5 @@
 ---
+note: lad-ll-singular-limit
 title: A Gaussian-Pulse Benchmark for Landau–Lifshitz Accuracy
 subtitle: PHY204 term paper · with Xu Ya-Xuan · AI assistance disclosed
 period: "2026"

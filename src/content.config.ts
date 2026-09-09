@@ -53,6 +53,8 @@ const projects = defineCollection({
     subtitle: z.string().optional(),
     period: z.string(),
     summary: z.string(),
+    /** Companion blog entry id, displayed with the project instead of in a second list. */
+    note: z.string().optional(),
     /** path under /public, e.g. /papers/foo.pdf */
     pdf: z.string().optional(),
     repo: z.string().url().optional(),

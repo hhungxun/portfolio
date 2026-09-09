@@ -76,6 +76,24 @@ import { cv } from '../data/cv';
   </section>
 
   <section class="mt-10">
+    <h2 class="cv-h">Co-curricular activities &amp; leadership</h2>
+    <div class="mt-3 space-y-6">
+      {cv.activities.map((activity) => (
+        <div>
+          <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+            <h3 class="font-medium">{activity.title}</h3>
+            <span class="text-[0.82rem] text-muted font-mono">{activity.period}</span>
+          </div>
+          <ul class="mt-1.5 list-disc pl-5 text-ink-2 space-y-1 text-[0.97rem]">
+            {activity.bullets.map((bullet) => <li>{bullet}</li>)}
+          </ul>
+          {'link' in activity && <a href={activity.link} class="mt-2 inline-block text-accent text-[0.9rem]">Visit the Physics Forum ↗</a>}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="mt-10">
     <h2 class="cv-h">Skills</h2>
     <dl class="mt-3 grid sm:grid-cols-[11rem_1fr] gap-x-6 gap-y-3 text-[0.95rem]">
       {

@@ -31,6 +31,7 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@types/opencc-js": "^1.0.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",

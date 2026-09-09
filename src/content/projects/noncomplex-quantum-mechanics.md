@@ -1,4 +1,5 @@
 ---
+note: real-quantum-theory-composition-rule
 title: Quantum Mechanics over Non-Complex Number Systems
 subtitle: Self-study note
 period: Current
