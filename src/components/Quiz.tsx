@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 
 type Question = {
   prompt: string;
@@ -15,6 +15,7 @@ type QuizProps = {
 export default function Quiz({ title = 'Checkpoint', questions }: QuizProps) {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
+  const quizId = useId();
   const question = questions[current];
   const correct = selected === question.answer;
 
@@ -28,12 +29,12 @@ export default function Quiz({ title = 'Checkpoint', questions }: QuizProps) {
   }
 
   return (
-    <section className="quiz" aria-labelledby={`quiz-${current}`}>
+    <section className="quiz" aria-labelledby={`${quizId}-question-${current}`}>
       <div className="quiz__heading">
         <span className="quiz__label">{title}</span>
         <span className="quiz__count">{current + 1} / {questions.length}</span>
       </div>
-      <h3 id={`quiz-${current}`}>{question.prompt}</h3>
+      <h3 id={`${quizId}-question-${current}`}>{question.prompt}</h3>
       <div className="quiz__choices">
         {question.choices.map((choice, index) => (
           <button
@@ -42,6 +43,7 @@ export default function Quiz({ title = 'Checkpoint', questions }: QuizProps) {
             onClick={() => choose(index)}
             type="button"
             aria-pressed={selected === index}
+            disabled={selected !== null}
           >
             <span className="quiz__letter">{String.fromCharCode(65 + index)}</span>
             <span>{choice}</span>
