@@ -35,4 +35,5 @@ See [docs/WRITING.md](docs/WRITING.md) for how to add a post, a poem, or a proje
 1. Copy `.env.deploy.example` to `.env.deploy` and fill in the server details.
 2. `pnpm deploy`. Each deploy lands in `releases/<timestamp>` on the server and the `current` symlink is swapped, so the site is never half-updated.
 
-Set `SITE_URL` once a domain exists so canonical links, the sitemap, and RSS carry the right host.
+The production URL is `https://hhungxun.my`. See [docs/DOMAIN.md](docs/DOMAIN.md)
+for the Hostinger DNS, NGINX, deployment, and HTTPS setup.

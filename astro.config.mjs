@@ -8,8 +8,8 @@ import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
-// Set SITE_URL in the environment (or in .env) once a domain exists.
-const site = process.env.SITE_URL ?? 'https://hhungxun.example';
+// Override SITE_URL for preview deployments; production uses the custom domain.
+const site = process.env.SITE_URL ?? 'https://hhungxun.my';
 
 export default defineConfig({
   site,

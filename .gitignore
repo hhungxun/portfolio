@@ -11,6 +11,7 @@ secrets.tar.gz.gpg
 .env
 .env.*
 !.env.example
+!.env.deploy.example
 deploy.local.json
 
 # os / editor
