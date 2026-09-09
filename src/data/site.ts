@@ -21,5 +21,5 @@ export const site = {
   poetBioEn:
     'Heah Hung Xun (連宏勛) is a Malaysian poet who has written since middle school. A member of the 零刻度 poetry society, his work appears regularly in Sin Chew Daily’s literary supplement 文藝春秋, and he received second prize in the Xiamen University Malaysia “溯洄” Poetry Award.',
   physicsBioEn:
-    'Third-year B.Sc. Physics undergraduate at Xiamen University Malaysia, interested in quantum foundations, mathematical physics, quantum field theory, and physics beyond the Standard Model. Current work centres on the role of complex numbers in quantum theory, the quantum–classical interface, and the connections between quantum mechanics and statistical mechanics.',
+    'B.Sc. Physics undergraduate at Xiamen University Malaysia working across mathematical physics, geometry, spectral methods, and quantum foundations. Current projects use eigenvalue localisation, symplectic dynamics, differential geometry, singular perturbation theory, and validation-first numerics.',
 } as const;

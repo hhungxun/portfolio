@@ -2,11 +2,13 @@
 import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import QuantumWalk from '../components/QuantumWalk.tsx';
+import PostCard from '../components/PostCard.astro';
 import { site } from '../data/site';
 import { cv } from '../data/cv';
-import { getProjects } from '../lib/content';
+import { getPosts, getProjects } from '../lib/content';
 
-const projects = await getProjects();
+const [projects, posts] = await Promise.all([getProjects(), getPosts()]);
+const physicsPosts = posts.filter((post) => post.data.side === 'physics' && !post.data.sample);
 ---
 
 <Base side="physics" title="Physics" description={site.physicsBioEn}>
@@ -30,58 +32,23 @@ const projects = await getProjects();
   </section>
 
   <section class="mt-12">
-    <h2 class="label">Current directions</h2>
-    <ul class="mt-4 space-y-5">
-      {
-        cv.directions.map((d) => (
-          <li>
-            <h3 class="font-medium">{d.title}</h3>
-            <p class="text-ink-2 mt-1">{d.text}</p>
-            {'links' in d && d.links && (
-              <p class="mt-1 text-[0.85rem] flex flex-wrap gap-x-3">
-                {d.links.map((l) => (
-                  <a href={l.href} class="text-accent no-underline hover:underline font-mono">
-                    {l.label}
-                  </a>
-                ))}
-              </p>
-            )}
-          </li>
-        ))
-      }
-    </ul>
+    <h2 class="label">Mathematical toolkit</h2>
+    <p class="mt-4 text-ink-2 leading-relaxed max-w-3xl">
+      Eigenvalue localisation (Gershgorin and Cassini) · symplectic and covariance-matrix methods · Floquet
+      theory · Hamilton–Jacobi and Madelung formulations · principal and frame bundles · holonomy · Lie
+      groups · spherical harmonics · singular perturbation theory · division algebras and p-adic analysis.
+    </p>
   </section>
 
   <section class="mt-12">
-    <h2 class="label">Community &amp; talks</h2>
-    <ul class="mt-4 space-y-5">
-      {
-        cv.activities.map((a) => (
-          <li>
-            <div class="flex flex-wrap items-baseline justify-between gap-x-4">
-              <h3 class="font-medium">{a.role}</h3>
-              <span class="text-[0.82rem] text-muted font-mono">{a.period}</span>
-            </div>
-            <p class="text-ink-2 mt-1">{a.text}</p>
-            {a.bullets.length > 0 && (
-              <ul class="mt-2 list-disc pl-5 text-ink-2 space-y-1">
-                {a.bullets.map((b) => (
-                  <li set:html={b.replace(/\*(.+?)\*/g, '<em>$1</em>')} />
-                ))}
-              </ul>
-            )}
-            {a.links.length > 0 && (
-              <p class="mt-2 text-[0.85rem] flex flex-wrap gap-x-3">
-                {a.links.map((l) => (
-                  <a href={l.href} class="text-accent no-underline hover:underline">
-                    {l.label} ↗
-                  </a>
-                ))}
-              </p>
-            )}
-          </li>
-        ))
-      }
-    </ul>
+    <div class="flex flex-wrap items-baseline justify-between gap-3">
+      <h2 class="label">Research notes</h2>
+      <a href="https://github.com/hhungxun/physics-writeups" class="text-[0.85rem] text-accent no-underline hover:underline">
+        PDF write-ups repository ↗
+      </a>
+    </div>
+    <div class="mt-5 space-y-8">
+      {physicsPosts.map((post) => <PostCard post={post} />)}
+    </div>
   </section>
 </Base>

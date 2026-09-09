@@ -1,7 +1,4 @@
-/**
- * Structured CV. Edit this file and the /cv page updates; keep public/cv.pdf in sync
- * by re-exporting your LaTeX CV.
- */
+/** Structured CV; keep public/cv.pdf in sync with the Mathathon LaTeX CV. */
 export const cv = {
   name: 'Heah Hung Xun',
   affiliation: 'Xiamen University Malaysia',
@@ -11,67 +8,63 @@ export const cv = {
   updated: '2026-09',
 
   summary:
-    'Third-year B.Sc. Physics undergraduate at Xiamen University Malaysia with interests in quantum foundations, mathematical physics, quantum field theory, and physics beyond the Standard Model. Current work focuses on the role of complex numbers in quantum theory, the quantum–classical interface, and connections between quantum mechanics and statistical mechanics. I combine theoretical study with scientific computing in Python and C++, while developing proficiency in ROOT and GEANT4.',
+    'B.Sc. Physics undergraduate at Xiamen University Malaysia working across mathematical physics, geometry, spectral methods, and quantum foundations. My current work uses eigenvalue localisation, symplectic dynamics, differential geometry, singular perturbation theory, and validation-first numerical methods.',
 
   projects: [
     {
-      title: 'Phase-Space Quantum Mechanics & Semiclassical Limits',
-      period: '2026/01',
-      link: '/papers/phase-space-quantum-mechanics.pdf',
+      title: 'Petrov–Weyl Spectral Bounds',
+      period: 'Unpublished draft',
+      link: '/blog/gershgorin-cassini-weyl-matrix',
       bullets: [
-        'Authored a self-contained pedagogical monograph on quantum mechanics formulated in phase space.',
-        'Developed the Weyl–Wigner correspondence mapping operators to phase-space symbols.',
-        'Derived the Moyal ⋆-product and Moyal bracket, showing explicitly how classical Poisson dynamics emerge in the semiclassical limit ħ → 0.',
-        'Analysed the quantum–classical transition via coarse-graining, interpreting classicality as information loss.',
-        'Closely connected to deformation quantization and semiclassical analysis.',
+        'Applied Gershgorin circles and Brauer Cassini ovals to eigenvalue localisation for the structured Weyl matrix in the Newman–Penrose formalism.',
+        'Introduced a candidate radiation-asymmetry invariant σ; its invariance properties and interpretation remain under investigation.',
       ],
     },
     {
-      title: 'Angular Momentum Algebra & Hydrogen Atom in 3D',
-      period: '2025/12',
-      link: '/papers/angular-momentum-hydrogen-atom.pdf',
+      title: 'Anisotropic Kernel Control on the Oriented Frame Bundle of S²',
+      period: 'AI-assisted exploratory draft',
       bullets: [
-        'Developed a rigorous algebraic treatment of angular momentum in quantum mechanics.',
-        'Emphasised 𝔰𝔬(3) and 𝔰𝔲(2) structure, ladder operators, and representation theory.',
-        'Applied spin and orbital angular momentum formalism to the hydrogen atom without relying on heuristic arguments.',
-        'Focused on structural motivation rather than postulated rules.',
+        'Developed five propositions, one theorem, three conjectures, and two algorithms connecting differential geometry, Lie groups, geometric control, and approximation on manifolds.',
+        'Numerically verified the predicted holonomy at θ₀ = π/4; conjectural statements remain unproved and the manuscript is not submitted.',
       ],
     },
     {
-      title: 'Quantum Random Walks: Theory and Developments',
-      period: '2025/04 – 2025/09',
-      link: '/papers/quantum-random-walks.pdf',
+      title: 'Gaussian Quantum Dynamics on Sp(4,R)',
+      period: 'Ongoing undergraduate research',
       bullets: [
-        'Systematic survey of discrete- and continuous-time quantum walks from a mathematical and physical perspective.',
-        'Derived classical diffusion limits and contrasted them with quantum ballistic spreading (σ ∼ t).',
-        'Reviewed algorithmic constructions (SKW, Szegedy) and open problems in mixing and state transfer.',
-        'Implemented and visualised quantum walk dynamics numerically using Python (NumPy, QuTiP, Matplotlib).',
+        'Supervised by Prof. Tomasz Paterek; use covariance-matrix and symplectic methods, Floquet theory, logarithmic negativity, and periodic Riccati integration.',
+        'Independently reproduced the numerical behaviour in Poddubny et al., Fig. 2, as a validation benchmark.',
+      ],
+    },
+    {
+      title: 'Quantum Mechanics over Non-Complex Number Systems',
+      period: 'Self-study note',
+      bullets: [
+        'Compare real and quaternionic division-algebra formulations with completions of Q, including p-adic models, to isolate the algebraic and topological assumptions used by standard quantum theory.',
+      ],
+    },
+    {
+      title: 'Lorentz–Abraham–Dirac to Landau–Lifshitz Deviation',
+      period: 'Course term paper',
+      link: '/blog/lad-ll-singular-limit',
+      bullets: [
+        'Treated the order reduction as a singular perturbation because τ₀ multiplies the highest derivative, and studied the resulting deviation numerically.',
       ],
     },
   ],
 
   directions: [
     {
-      title: 'Real formulations of quantum mechanics',
-      text: 'On the necessity of complex numbers in quantum mechanics, and studying recent real-number reformulations and their physical interpretation.',
+      title: 'Structured spectral problems',
+      text: 'Using inexpensive localisation bounds and matrix structure before moving to exact or numerical spectra.',
     },
     {
-      title: 'Quantum–classical and statistical structure',
-      text: 'Critically reading an ongoing exchange on reconstructing quantum waves from classical action, including the roles of propagated densities, Madelung variables, and the Bohm quantum potential.',
-      links: [
-        { label: 'arXiv:2405.06328', href: 'https://arxiv.org/abs/2405.06328' },
-        { label: 'arXiv:2605.02621', href: 'https://arxiv.org/abs/2605.02621' },
-        { label: 'arXiv:2605.20443', href: 'https://arxiv.org/abs/2605.20443' },
-      ],
+      title: 'Geometry and control on manifolds',
+      text: 'Studying frame bundles, holonomy, Lie-group actions, and anisotropic approximation with explicit numerical checks.',
     },
     {
-      title: 'Quantum field theory and BSM physics',
-      text: 'Systematically studying canonical quantization, free fields, Fock space, propagators, and introductory perturbation theory (attending a seminar series by Prof. Yi-Zen Chu), with longer-term interest in Higgs-portal models and other beyond-the-Standard-Model scenarios.',
-    },
-    {
-      title: 'Foundations of physical theories',
-      text: 'Participant in the 2026 virtual Summer School on the Assumptions of Physics, focused on deriving physical theories from explicit operational and mathematical assumptions.',
-      links: [{ label: 'assumptionsofphysics.org', href: 'https://assumptionsofphysics.org/' }],
+      title: 'Quantum structures',
+      text: 'Comparing symplectic Gaussian dynamics and quantum theory over alternative scalar systems, with attention to what assumptions each formulation needs.',
     },
   ],
 
@@ -82,61 +75,22 @@ export const cv = {
       institution: 'Xiamen University Malaysia',
       details: 'GPA 3.75 / 4.00',
       coursework:
-        'Quantum Mechanics I, Mathematical Methods, Theoretical Mechanics, Linear Algebra, Differential Equations, Electric Circuits, Electrodynamics, Numerical Methods, Optics',
-    },
-  ],
-
-  activities: [
-    {
-      period: '2025/09 – present',
-      role: 'Vice President, Physics Student Council',
-      text: 'Coordinate academic events, peer mentoring, and student engagement.',
-      bullets: [
-        'Delivered departmental talk *A Year in Physics*; preparing an upcoming talk on LaTeX and Git.',
-        'Founded and host the department Physics Forum, running a student journal club.',
-      ],
-      links: [
-        { label: 'talk slides', href: 'https://canva.link/iaz0a9l7qng1jd5' },
-        { label: 'Physics Forum', href: 'https://forum.physicsxmum.my/' },
-      ],
-    },
-    {
-      period: '2025/09 – present',
-      role: 'Vice President, Astronomy Club',
-      text: 'Organise telescope sessions and member-led knowledge sharing.',
-      bullets: [],
-      links: [],
+        'Quantum Mechanics I, Electrodynamics, Mathematical Methods, Theoretical Mechanics, Linear Algebra, Differential Equations, Numerical Methods, Optics',
     },
   ],
 
   skills: [
     {
-      area: 'Mathematical Physics',
-      text: 'Hilbert space formalism, operator algebras, angular momentum theory, 𝔰𝔲(2) representations, semiclassical limits, deformation quantization, phase-space methods',
+      area: 'Mathematical methods',
+      text: 'Gershgorin and Cassini eigenvalue localisation; symplectic and covariance-matrix methods; Floquet theory; Hamilton–Jacobi and Madelung formulations; differential geometry, frame bundles, holonomy, Lie groups, spherical harmonics; singular perturbation theory; division algebras and p-adic analysis',
     },
     {
-      area: 'Quantum Topics',
-      text: 'Quantum foundations, real and complex formulations of quantum mechanics, quantum walks, quantum dynamics, Wigner functions, Moyal ⋆-product, Weyl quantization, Madelung–Bohm formulation',
+      area: 'Scientific computing',
+      text: 'Python (NumPy, SciPy, QuTiP), Octave/MATLAB, stiff integrators (Radau, BDF), periodic Riccati integration, validation-first numerical workflows',
     },
     {
-      area: 'QFT & Particle Physics',
-      text: 'Systematic study of canonical quantization, free scalar fields, Fock space, propagators, and Feynman diagrams; interests in Higgs-portal and other BSM models, together with detector concepts and muon physics',
-    },
-    {
-      area: 'HEP Software',
-      text: 'ROOT (actively learning: histograms, trees, fitting), GEANT4 (familiarising: geometry, physics lists, detector simulation), C++ (learning, primary language for ROOT / GEANT4 workflows)',
-    },
-    {
-      area: 'Machine Learning / AI',
-      text: 'NumPy-based model building, familiarity with scikit-learn; interest in ML applications to HEP (trigger, classification, anomaly detection)',
-    },
-    {
-      area: 'Scientific Computing',
-      text: 'Python (NumPy, SciPy, QuTiP, Matplotlib, Pandas), MATLAB, LaTeX, Git, Jupyter',
-    },
-    {
-      area: 'Tools & Environment',
-      text: 'Linux, VS Code, GitHub, Vim, Emacs',
+      area: 'Programming & tools',
+      text: 'Python, C++, LaTeX/TikZ, Git, Linux, GitHub, Jupyter',
     },
   ],
 } as const;
