@@ -1,93 +1,60 @@
-# Connecting `hhungxun.my`
+# Hosting `hhungxun.my` on GitHub Pages
 
-This project builds a static site into `dist/` and includes an atomic SSH
-deployment script for a VPS. The production canonical URL is
+The source remains in `hhungxun/portfolio`. GitHub Actions builds the Astro
+site on every push to `main`, and GitHub Pages serves the result at
 `https://hhungxun.my`.
 
-## 1. Point the domain at the Hostinger VPS
+## Repository configuration
 
-In hPanel, open **Domains → Domain portfolio → hhungxun.my → DNS / Nameservers**.
-Find the public IPv4 address on the VPS overview page. Remove only conflicting
-web records for `@` and `www`; preserve MX and TXT records used by email.
+The required files are already committed:
 
-Create these records:
+- `.github/workflows/deploy-pages.yml` builds and deploys the site.
+- `public/CNAME` contains `hhungxun.my`.
+- `astro.config.mjs` sets `site` to `https://hhungxun.my` and does not set a
+  repository-name `base` path.
+
+In **GitHub -> hhungxun/portfolio -> Settings -> Pages**, the publishing source
+must be **GitHub Actions** and the custom domain must be `hhungxun.my`.
+
+## Hostinger DNS records
+
+In hPanel, open **Domains -> Domain portfolio -> hhungxun.my -> DNS / Nameservers**.
+Remove only conflicting `A`, `AAAA`, `ALIAS`, or `CNAME` web records for `@`
+and `www`. Preserve MX and TXT records used by email. Do not create a wildcard
+record.
+
+Create the four GitHub Pages IPv4 records:
 
 | Type | Name | Target | TTL |
 |---|---|---|---|
-| A | `@` | the VPS IPv4 address | default |
-| CNAME | `www` | `hhungxun.my` | default |
+| A | `@` | `185.199.108.153` | default |
+| A | `@` | `185.199.109.153` | default |
+| A | `@` | `185.199.110.153` | default |
+| A | `@` | `185.199.111.153` | default |
 
-If the VPS has a configured static IPv6 address, an `AAAA` record for `@` may
-also be added. Do not leave a stale `AAAA` record pointing elsewhere.
+Then create the `www` alias:
 
-Check propagation with:
+| Type | Name | Target | TTL |
+|---|---|---|---|
+| CNAME | `www` | `hhungxun.github.io` | default |
+
+GitHub also supports its four published IPv6 `AAAA` records, but they are
+optional. Do not leave an unrelated or stale `AAAA` record on the apex.
+
+## Verify propagation
 
 ```bash
 dig +short A hhungxun.my
 dig +short CNAME www.hhungxun.my
 ```
 
-## 2. Configure NGINX on the VPS
+The first command should return all four `185.199.*.153` addresses. The second
+should return `hhungxun.github.io.`. DNS propagation may take up to 24 hours.
 
-Create `/etc/nginx/sites-available/hhungxun.my`:
+After GitHub reports that the DNS check is successful, enable **Enforce HTTPS**
+under **Settings -> Pages**. Certificate provisioning can take additional time.
 
-```nginx
-server {
-    listen 80;
-    listen [::]:80;
-    server_name hhungxun.my www.hhungxun.my;
-
-    root /var/www/hhungxun.my/current;
-    index index.html;
-
-    location / {
-        try_files $uri $uri.html $uri/ =404;
-    }
-}
-```
-
-Enable and test it:
-
-```bash
-sudo mkdir -p /var/www/hhungxun.my/releases
-sudo chown -R "$USER":"$USER" /var/www/hhungxun.my
-sudo ln -s /etc/nginx/sites-available/hhungxun.my /etc/nginx/sites-enabled/hhungxun.my
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-The `try_files` rule matters because Astro generates routes such as
-`physics.html` while public URLs use `/physics`.
-
-## 3. Configure and deploy from the development machine
-
-```bash
-cp .env.deploy.example .env.deploy
-```
-
-Edit `.env.deploy` with the real VPS IP, SSH user, deployment path, and optional
-SSH key. This file is ignored by Git. Then run:
-
-```bash
-pnpm deploy
-```
-
-The script uploads a timestamped release and atomically switches the `current`
-symlink, so visitors do not see a half-uploaded build.
-
-## 4. Enable HTTPS after DNS resolves
-
-On a Debian or Ubuntu VPS with NGINX and Certbot installed:
-
-```bash
-sudo certbot --nginx -d hhungxun.my -d www.hhungxun.my
-sudo certbot renew --dry-run
-```
-
-Choose the HTTPS redirect when prompted. Do this only after both names resolve
-to the VPS and ports 80 and 443 are allowed by the VPS firewall.
-
-## 5. Final checks
+Final checks:
 
 ```bash
 curl -I https://hhungxun.my
@@ -95,10 +62,18 @@ curl -I https://www.hhungxun.my
 curl -I https://hhungxun.my/physics
 ```
 
-Confirm that `www` redirects to the preferred root domain, the certificate
-covers both names, and `/sitemap-index.xml` uses `https://hhungxun.my` URLs.
+`www` should redirect to the apex domain, and `/sitemap-index.xml` should
+contain `https://hhungxun.my` URLs.
 
-If this is a Hostinger Web Hosting plan rather than a VPS, do not use the NGINX
-and SSH steps above. Build locally with `pnpm build`, add `hhungxun.my` to the
-hosting plan in hPanel, and upload the contents of `dist/` to that site's
-`public_html` directory instead.
+## Normal publishing workflow
+
+Future pushes to `main` deploy automatically:
+
+```bash
+git add .
+git commit -m "Update site"
+git push origin main
+```
+
+The older `scripts/deploy.sh` remains available only as a VPS fallback; it is
+not used by GitHub Pages.

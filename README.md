@@ -10,7 +10,7 @@ pnpm install      # once
 pnpm dev          # http://localhost:4321, live reload
 pnpm build        # static output in dist/
 pnpm preview      # serve dist/ locally
-pnpm deploy       # build + upload to the VPS (needs .env.deploy)
+pnpm deploy       # optional VPS fallback (needs .env.deploy)
 ```
 
 ## Where things live
@@ -32,8 +32,8 @@ See [docs/WRITING.md](docs/WRITING.md) for how to add a post, a poem, or a proje
 
 ## Deploying
 
-1. Copy `.env.deploy.example` to `.env.deploy` and fill in the server details.
-2. `pnpm deploy`. Each deploy lands in `releases/<timestamp>` on the server and the `current` symlink is swapped, so the site is never half-updated.
+Pushes to `main` are built and published automatically by GitHub Actions to
+GitHub Pages. The SSH deployment script is retained only as a VPS fallback.
 
 The production URL is `https://hhungxun.my`. See [docs/DOMAIN.md](docs/DOMAIN.md)
-for the Hostinger DNS, NGINX, deployment, and HTTPS setup.
+for the GitHub Pages and Hostinger DNS setup.
