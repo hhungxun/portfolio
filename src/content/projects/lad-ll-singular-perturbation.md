@@ -1,6 +1,6 @@
 ---
 note: lad-ll-singular-limit
-title: A Gaussian-Pulse Benchmark for Landau–Lifshitz Accuracy
+title: Not Every Breakdown Is Quantum
 subtitle: PHY204 term paper · with Xu Ya-Xuan · AI assistance disclosed
 period: "2026"
 summary: "A singular-perturbation reading of radiation reaction: τ₀ multiplies the highest derivative, so the τ₀ → 0 limit changes the differential order rather than providing a regular perturbative correction."
@@ -12,9 +12,9 @@ order: 5
 
 For a spatially uniform Gaussian pulse, the physical non-runaway acceleration
 is an exact future-weighted integral and Landau--Lifshitz is its first local
-approximation. The paper derives
-$D_{\rm rms}=(\sqrt3/2)\epsilon^2[1-\epsilon^2+O(\epsilon^4)]$, verifies the
-law by direct quadrature and convergence checks, and separates the classical
-parameter $\epsilon$ from the quantum-recoil parameter $\chi_e$.
+approximation. The revised paper gives an exact finite-$\epsilon$ spectral
+formula for the normalized RMS error, verifies it against independent
+time-domain quadrature, and separates the classical parameter $\epsilon$ from
+the quantum-recoil parameter $\chi_e$.
 
-[Read the short note on the singular limit](/blog/lad-ll-singular-limit).
+[Explore the equations, quizzes, and interactive benchmark](/blog/lad-ll-singular-limit).

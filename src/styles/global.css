@@ -492,6 +492,213 @@ h4,
   }
 }
 
+/* ---- mathematical interactives --------------------------------------- */
+.interactive {
+  margin-block: 2.5rem;
+  padding: 1.35rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-2);
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--line) 45%, transparent);
+}
+.interactive__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block-end: 1rem;
+}
+.interactive__heading h3 {
+  margin: 0.2rem 0 0;
+  font-size: 1.2rem;
+}
+.interactive__eyebrow {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.interactive__readout,
+.interactive__control output {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.interactive__control {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--ink-2);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.interactive__control input[type='range'] {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.interactive__range {
+  display: flex;
+  justify-content: space-between;
+  color: var(--pencil);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+.interactive__plot {
+  margin-block-start: 0.8rem;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+}
+.interactive__plot svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.plot__axis {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.plot__tick,
+.plot__label {
+  fill: var(--pencil);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.plot__line {
+  fill: none;
+  stroke-width: 2.5;
+  vector-effect: non-scaling-stroke;
+}
+.plot__line--force { stroke: var(--pencil); stroke-dasharray: 4 4; }
+.plot__line--exact { stroke: #287271; }
+.plot__line--ll { stroke: var(--accent); }
+.interactive__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-block-start: 0.65rem;
+  color: var(--ink-2);
+  font-size: 0.78rem;
+}
+.interactive__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.interactive__legend i {
+  display: inline-block;
+  width: 1.5rem;
+  border-top: 3px solid;
+}
+.interactive__legend .legend--force { border-color: var(--pencil); border-top-style: dashed; }
+.interactive__legend .legend--exact { border-color: #287271; }
+.interactive__legend .legend--ll { border-color: var(--accent); }
+.interactive__metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-block-start: 1rem;
+}
+.interactive__metrics div {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--paper);
+}
+.interactive__metrics span,
+.interactive__metrics strong {
+  display: block;
+}
+.interactive__metrics span {
+  color: var(--ink-2);
+  font-size: 0.75rem;
+}
+.interactive__metrics strong {
+  margin-block-start: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+.interactive__note {
+  margin: 0.9rem 0 0 !important;
+  color: var(--ink-2);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+.interactive__controls--two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-block-start: 1rem;
+}
+.regime-map {
+  position: relative;
+  display: grid;
+  /* Boundaries match chi_e = 0.1 and approximately one-percent D_rms on
+     the logarithmic slider ranges used by the component. */
+  grid-template: 25% 75% / 90% 10%;
+  min-height: 260px;
+  margin: 1rem 0 2.4rem 2.1rem;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.regime-map__quadrant {
+  display: grid;
+  place-items: center;
+  padding: 0.55rem;
+  color: var(--ink-2);
+  font-size: 0.76rem;
+  line-height: 1.35;
+  text-align: center;
+}
+.regime-map__quadrant:nth-child(1),
+.regime-map__quadrant:nth-child(3) { border-right: 1px dashed var(--line); }
+.regime-map__quadrant:nth-child(-n+2) { border-bottom: 1px dashed var(--line); }
+.regime-map__quadrant--tl { background: color-mix(in srgb, #d39b3a 9%, var(--paper)); }
+.regime-map__quadrant--tr { background: color-mix(in srgb, #a24c43 11%, var(--paper)); }
+.regime-map__quadrant--bl { background: color-mix(in srgb, #3f8051 9%, var(--paper)); }
+.regime-map__quadrant--br { background: color-mix(in srgb, #b86b35 9%, var(--paper)); }
+.regime-map__point {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border: 3px solid var(--paper);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+  transform: translate(-50%, 50%);
+  transition: left 0.1s linear, bottom 0.1s linear;
+}
+.regime-map__x,
+.regime-map__y {
+  position: absolute;
+  color: var(--pencil);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+.regime-map__x { right: 0; bottom: -1.8rem; }
+.regime-map__y { left: -1.9rem; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); white-space: nowrap; }
+.interactive__verdict {
+  margin-block-start: 1rem;
+  padding: 0.8rem 0.9rem;
+  border-inline-start: 3px solid var(--accent);
+  background: var(--paper);
+  color: var(--ink-2);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+@media (max-width: 600px) {
+  .interactive { padding: 1rem; }
+  .interactive__heading { flex-direction: column; }
+  .interactive__metrics,
+  .interactive__controls--two { grid-template-columns: 1fr; }
+  .regime-map { min-height: 220px; margin-left: 1.7rem; }
+}
+
 /* Shiki dual theme */
 .astro-code,
 .astro-code span {

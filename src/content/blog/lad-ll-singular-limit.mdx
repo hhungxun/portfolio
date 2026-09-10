@@ -1,7 +1,8 @@
 ---
-title: A Gaussian-Pulse Benchmark for Landau–Lifshitz Accuracy
-description: An exact non-runaway Abraham–Lorentz solution turns order reduction into a calibrated error problem.
+title: Not Every Breakdown Is Quantum
+description: An exact Gaussian benchmark separates a singular classical approximation from the onset of quantum radiation reaction.
 date: 2026-09-09
+updated: 2026-09-10
 tags: [singular perturbations, electrodynamics, numerical validation]
 lang: en
 side: physics
@@ -9,269 +10,289 @@ draft: false
 ---
 
 import Quiz from '../../components/Quiz.tsx';
+import GaussianBenchmark from '../../components/GaussianBenchmark.tsx';
+import BreakdownMap from '../../components/BreakdownMap.tsx';
 
-*This is a guided reading of the PHY204 term paper written with Xu Ya-Xuan. The
-manuscript discloses AI assistance; the authors checked the calculations,
-citations, and final claims.*
+*This is a guided reading of a PHY204 term paper written with Xu Ya-Xuan and
+substantially revised for public release. Both authors approved the revision.
+The manuscript states where computational and generative-AI tools assisted;
+the authors checked the derivations, citations, code, and claims.*
 
-## The question before the equations
+Suppose a complicated theory and its simpler approximation disagree. What has
+failed? The approximation might have been truncated too early. The underlying
+classical theory might have left its domain of validity. Or the numerical
+method might simply be wrong. Calling all three possibilities “breakdown” hides
+the question we actually need to answer.
 
-Radiation reaction is often discussed as if “Landau–Lifshitz breakdown” named
-one phenomenon. It does not. There are two different questions:
+Radiation reaction gives a sharp example. The Abraham–Lorentz (AL) equation
+contains an unphysical runaway solution. The Landau–Lifshitz (LL) equation
+removes that direction by reduction of order. Meanwhile, sufficiently strong
+fields make photon recoil and stochastic emission important, so *any*
+deterministic classical equation becomes questionable. Those are different
+limits, governed by different dimensionless parameters.
 
-1. Does the Landau–Lifshitz (LL) reduction accurately follow the physical,
-   non-runaway branch of the Lorentz–Abraham–Dirac (LAD) equation?
-2. Even if the classical reduction is accurate, is a deterministic classical
-   emission model still appropriate once photon recoil and stochastic emission
-   matter?
+This article builds the smallest model in which we can measure the first limit
+exactly and keep it separate from the second.
 
-The paper answers the first question in a deliberately small model, then places
-its answer next to the quantum nonlinearity parameter $\chi_e$. The result is
-not a new equation of motion. It is a reproducible benchmark for keeping two
-meanings of “breakdown” apart.
+## Start with the singular limit
 
-## Why LAD is difficult to integrate
-
-In covariant form, LAD contains a second proper-time derivative of the
-four-velocity. Since velocity is already the derivative of position, the
-position equation is third order. Position and velocity at one instant do not
-specify a solution; an initial acceleration is also needed.
-
-That extra degree of freedom contains the runaway. With no external force, a
-generic solution can contain a term proportional to
+In one nonrelativistic spatial dimension, write the external force per unit
+mass as $f(t)$. The AL equation is
 
 $$
-\exp(t/\tau_e), \qquad \tau_e \simeq 6.26\times 10^{-24}\,\mathrm{s}
+a(t)=f(t)+\tau_e\dot a(t),
 $$
 
-for an electron. A numerical integrator that starts off the physical manifold
-will therefore amplify tiny errors instead of relaxing them.
-
-The standard physical prescription is a *future* boundary condition: after the
-force has disappeared, the acceleration must vanish rather than grow. This
-selects the non-runaway branch, but it also makes the selected acceleration
-nonlocal in time. The acceleration now depends very slightly on force values
-that have not yet arrived. That is pre-acceleration, a consequence of the
-boundary condition rather than an instability in the quadrature used below.
-
-## The one-dimensional benchmark
-
-Take the nonrelativistic, one-dimensional Abraham–Lorentz limit, with a force
-per unit mass $f(t)=F(t)/m$:
+where $\tau_e\simeq6.26\times10^{-24}\,\mathrm{s}$ for an electron. It looks
+like a small correction because $\tau_e$ is tiny. But rearranging gives
 
 $$
-a(t)=f(t)+\tau_e\dot a(t).
+\tau_e\dot a-a=-f.
 $$
 
-The homogeneous solution is the runaway $a_h=C\exp(t/\tau_e)$. To remove it,
-impose $a(t)\to0$ after the force has switched off. Solving with that future
-condition gives
+The small number multiplies the highest derivative. Setting $\tau_e=0$ lowers
+the order of the differential equation and removes the initial acceleration as
+independent data. That is a **singular perturbation**, not an ordinary small
+change to a stable initial-value problem.
+
+With $f=0$, the homogeneous equation has
 
 $$
-a_{\mathrm{LAD}}(t)=\int_0^\infty e^{-u}f(t+\tau_e u)\,du.
+a_h(t)=C e^{t/\tau_e}.
 $$
 
-This formula is the exact physical branch *within this toy limit*. It is also
-numerically friendly: there is no unstable initial-value integration to perform.
+Unless $C$ is exactly zero, a microscopic error grows exponentially. The
+physical prescription is therefore not to choose an arbitrary initial
+acceleration. We demand that the acceleration vanish after the force has
+disappeared. This selects the non-runaway branch.
 
-Now expand the shifted force:
+<Quiz client:load title="The missing initial datum" questions={[
+  { prompt: 'Why is the limit τₑ → 0 singular?', choices: ['The Gaussian becomes discontinuous', 'The small parameter multiplies the highest derivative', 'The solution becomes complex', 'The force amplitude diverges'], answer: 1, explanation: 'The limit lowers the differential order. One dynamical direction—the runaway direction—disappears instead of changing smoothly.' },
+  { prompt: 'What removes the runaway in this benchmark?', choices: ['Choosing a sufficiently small time step', 'A future non-runaway boundary condition', 'Increasing the force amplitude', 'Replacing the electron with a heavier particle'], answer: 1, explanation: 'The physical branch is selected by requiring the acceleration to vanish after the force is gone. Numerical precision alone cannot remove a genuine homogeneous solution.' },
+]} />
+
+## Deriving the exact physical branch
+
+Multiply the equation by the integrating factor $e^{-t/\tau_e}$:
 
 $$
-f(t+\tau_e u)=f(t)+\tau_e u\dot f(t)+
-\frac{\tau_e^2u^2}{2}\ddot f(t)+\cdots.
+\frac{d}{dt}\left(e^{-t/\tau_e}a(t)\right)
+=-\frac{1}{\tau_e}e^{-t/\tau_e}f(t).
 $$
 
-Because $\int_0^\infty e^{-u}u^n\,du=n!$, the exact branch has the formal
+Integrate from the present time $t$ to a late time $R$, then take
+$R\rightarrow\infty$ on the non-runaway branch. The boundary term at $R$
+vanishes and we obtain
+
+$$
+a_{\mathrm{AL}}(t)=\frac{1}{\tau_e}\int_t^\infty
+e^{-(s-t)/\tau_e}f(s)\,ds
+=\int_0^\infty e^{-u}f(t+\tau_e u)\,du.
+$$
+
+The exponential kernel is positive, has unit mass, and has width $\tau_e$.
+It averages the force over a very short interval—but that interval points into
+the future. The selected branch is therefore pre-accelerating and formally
+acausal. Its tiny timescale does not turn it into a causal law; it only makes
+the acausal interval extraordinarily difficult to resolve experimentally.
+
+Expand the shifted force:
+
+$$
+f(t+\tau_e u)=\sum_{n=0}^{\infty}
+\frac{(\tau_e u)^n}{n!}f^{(n)}(t).
+$$
+
+Since $\int_0^\infty e^{-u}u^n\,du=n!$, the branch has the formal derivative
 series
 
 $$
-a_{\mathrm{LAD}}=f+\tau_e\dot f+\tau_e^2\ddot f+\cdots.
+a_{\mathrm{AL}}=f+\tau_e\dot f+\tau_e^2\ddot f+\cdots.
 $$
 
-Keeping only the first two terms is precisely the local LL approximation in
-this setting:
+Truncating after the first derivative gives the LL approximation in this
+model:
 
 $$
-a_{\mathrm{LL}}(t)=f(t)+\tau_e\dot f(t).
+a_{\mathrm{LL}}=f+\tau_e\dot f.
 $$
 
-The important mathematical point is that the LL approximation is a *singular
-perturbation reduction*. The small parameter multiplies the highest derivative
-in the original equation, so setting $\tau_e=0$ changes the order of the
-problem and discards the runaway direction. This is not an ordinary Taylor
-perturbation of a stable initial-value problem.
+This calculation explains both the usefulness and the danger of reduction of
+order. It replaces an unstable higher-order evolution with a local expression,
+but its accuracy depends on how quickly the force varies.
 
-<Quiz client:load title="Before reading the numerics" questions={[
-  { prompt: 'What selects the physical LAD branch in this benchmark?', choices: ['A special initial position', 'A future non-runaway condition', 'A periodic boundary condition', 'Setting the force amplitude to zero'], answer: 1, explanation: 'The acceleration is required to vanish after the force is gone. That removes the exponentially growing homogeneous solution and produces the future-weighted integral.' },
-  { prompt: 'Why is reduction of order singular here?', choices: ['The force is discontinuous', 'The equation contains a complex frequency', 'The small parameter multiplies the highest derivative', 'The Gaussian has infinite support'], answer: 2, explanation: 'Putting τₑ to zero lowers the differential order and removes a dynamical direction. That is the defining singular feature.' },
-]} />
+## A Gaussian makes the comparison countable
 
-## Choosing a pulse and a dimensionless parameter
-
-The paper uses a smooth Gaussian force, with characteristic duration $T$. The
-dimensionless pulse-variation parameter is
+Choose
 
 $$
+f(t)=f_0e^{-t^2/(2T^2)},\qquad x=\frac{t}{T},\qquad
 \epsilon=\frac{\tau_e}{T}.
 $$
 
-Small $\epsilon$ means that the force changes slowly on the radiation-reaction
-timescale. Large $\epsilon$ is useful for stressing the approximation,
-although $\epsilon\sim1$ is not a realistic electron laboratory regime when
-$\tau_e$ is $10^{-24}$ seconds.
-
-For a Gaussian, the error is smooth and its first omitted term is proportional
-to $\epsilon^2$. Normalising by the force scale gives the root-mean-square
-result
+After dividing acceleration by $f_0$, every profile depends only on $x$ and
+$\epsilon$:
 
 $$
-D_{\mathrm{rms}}=\frac{\sqrt{3}}{2}\epsilon^2
-\left[1-\epsilon^2+O(\epsilon^4)\right],
-\qquad D_{\max}\sim\epsilon^2.
-$$
-
-The coefficient $\sqrt{3}/2\approx0.866$ is not fitted as an arbitrary
-constant. It comes from Gaussian moment integrals and is then checked against
-the numerical quadrature. That analytic–numeric agreement is what makes this a
-benchmark rather than merely a plot of two curves.
-
-### Where the future integral comes from
-
-It is worth doing the boundary-condition step once, because it is the part most
-likely to be hidden by a black-box solver. Rewrite the one-dimensional equation
-as
-
-$$
-\dot a-\frac{1}{\tau_e}a=-\frac{1}{\tau_e}f(t).
-$$
-
-Multiplying by $\exp(-t/\tau_e)$ gives an exact derivative. Integrate from the
-present time $t$ to a late time $R$, then send $R\to\infty$ on the branch for
-which $a(R)\to0$:
-
-$$
-\begin{aligned}
-\left[e^{-s/\tau_e}a(s)\right]_{s=t}^{s=R}
-  &=-\frac{1}{\tau_e}\int_t^R e^{-s/\tau_e}f(s)\,ds,\\
-a(t)&=\frac{1}{\tau_e}\int_t^\infty
- e^{-(s-t)/\tau_e}f(s)\,ds.
-\end{aligned}
-$$
-
-The substitution $u=(s-t)/\tau_e$ produces the compact formula used above.
-This derivation makes two facts visible: the kernel is positive and has unit
-mass, and its width is exactly $\tau_e$. The LAD branch is therefore a causal
-looking average shifted into the future by the boundary condition; it is not a
-second numerical initial condition that we are free to tune.
-
-### A reproducible Gaussian test
-
-For the benchmark, write the pulse as
-
-$$
-f(t)=f_0\exp\!\left[-\frac{t^2}{2T^2}\right],
-\qquad x=\frac{t}{T},\qquad \epsilon=\frac{\tau_e}{T}.
-$$
-
-After dividing accelerations by $f_0$, the exact calculation depends only on
-$x$ and $\epsilon$:
-
-$$
-\frac{a_{\mathrm{LAD}}}{f_0}=\int_0^\infty e^{-u}
-\exp\!\left[-\frac{(x+\epsilon u)^2}{2}\right]du,
+\frac{a_{\mathrm{AL}}}{f_0}=\int_0^\infty e^{-u}
+e^{-(x+\epsilon u)^2/2}\,du,
 \qquad
-\frac{a_{\mathrm{LL}}}{f_0}=e^{-x^2/2}
-\left(1-\epsilon x\right).
+\frac{a_{\mathrm{LL}}}{f_0}=e^{-x^2/2}(1-\epsilon x).
 $$
 
-This nondimensionalisation is more than cosmetic. It prevents the tiny physical
-value of $\tau_e$ from being confused with numerical underflow and lets one
-run the same test in seconds, code units, or symbolic algebra. The first omitted
-term is $\tau_e^2f''(t)$. For the Gaussian,
+$\epsilon$ is a timescale ratio. A slow pulse has $\epsilon\ll1$ and a rapidly
+varying stress test approaches $\epsilon=1$. Move the slider below. The graph
+recomputes the future integral rather than interpolating stored curves.
 
-$$
-f''(t)=\left(\frac{t^2}{T^4}-\frac{1}{T^2}\right)f(t),
-$$
+<GaussianBenchmark client:load />
 
-so the difference is an $O(\epsilon^2)$ function with the same rapidly decaying
-envelope as the pulse. Squaring that expression and integrating Gaussian
-moments gives the reported $\sqrt{3}/2$ RMS coefficient; the computer is then
-checking a coefficient obtained before the numerical fit.
+The displacement of the exact peak toward negative $x$ is the pre-acceleration
+made visible. LL reproduces the first-order displacement. What remains is a
+second-order shape error.
 
-## What the computation actually checks
-
-The numerical section evaluates the future-weighted LAD integral using composite
-Simpson quadrature for $\epsilon\in[0.01,1]$. It compares that value with the
-local LL expression and records both an RMS error and a maximum error. Two
-reruns change the reported RMS value by less than $4\times10^{-18}$ when the
-integration cutoff is varied and less than $2\times10^{-11}$ when the time
-grid is refined.
-
-Those checks matter because a numerical slope can be manufactured by an
-under-resolved quadrature. Here the leading slope is predicted independently,
-the quadrature recovers it, and the first correction is visible over the scan.
-
-<Quiz client:load title="Read the scaling" questions={[
-  { prompt: 'If the pulse duration T is doubled while τₑ is fixed, what happens to ε?', choices: ['It doubles', 'It is unchanged', 'It is halved', 'It changes sign'], answer: 2, explanation: 'ε = τₑ/T, so a slower pulse halves the small parameter and reduces the leading error by roughly a factor of four.' },
-  { prompt: 'Why is the coefficient √3/2 a useful validation target?', choices: ['It is the value of χₑ', 'It is derived from Gaussian moments before fitting', 'It is chosen to make the plot linear', 'It removes the runaway numerically'], answer: 1, explanation: 'An independently derived coefficient gives the quadrature a falsifiable target.' },
+<Quiz client:load title="Predict before calculating" questions={[
+  { prompt: 'If T doubles while τₑ is fixed, what happens to the leading LL error?', choices: ['It doubles', 'It is unchanged', 'It is roughly quartered', 'It changes sign'], answer: 2, explanation: 'Doubling T halves ε. Because the first omitted contribution is quadratic in ε, the leading error falls by about four.' },
+  { prompt: 'Why does changing f₀ not change this normalized benchmark?', choices: ['The electron timescale depends on f₀', 'Both accelerations scale linearly with f₀', 'The Gaussian integral ignores amplitude', 'LL is exact only at unit amplitude'], answer: 1, explanation: 'In this prescribed-force linear model, dividing by f₀ removes the common amplitude. Amplitude can still change the separate quantum parameter χₑ.' },
 ]} />
 
-<Quiz client:load title="Audit the benchmark" questions={[
-  { prompt: 'What does changing the pulse amplitude f₀ change in this normalised test?', choices: ['The value of ε', 'The LL–LAD shape error after normalisation', 'The electron timescale τₑ', 'The order of the differential equation'], answer: 1, explanation: 'Both accelerations scale linearly with f₀, so the normalised difference is controlled by ε. Amplitude can still matter for χₑ and quantum emission.' },
-  { prompt: 'Why integrate the exact branch instead of shooting an initial-value LAD solution?', choices: ['It avoids the unstable runaway direction', 'It makes the Gaussian discontinuous', 'It forces χₑ to zero', 'It changes the equation to first order'], answer: 0, explanation: 'The future-weighted integral imposes the non-runaway condition analytically, so quadrature does not amplify an arbitrary acceleration error.' },
+## An exact error law, not just a fitted slope
+
+Define the normalized RMS discrepancy
+
+$$
+D_{\mathrm{rms}}^2=
+\frac{\int_{-\infty}^{\infty}|a_{\mathrm{LL}}-a_{\mathrm{AL}}|^2\,dx}
+{\int_{-\infty}^{\infty}|a_{\mathrm{AL}}|^2\,dx}.
+$$
+
+A log–log plot can suggest a power law, but it does not prove one. Fourier
+space exposes the structure exactly. With
+$\widehat h(\omega)=\int h(x)e^{-i\omega x}\,dx$, the differential equation
+and LL truncation give
+
+$$
+\widehat a_{\mathrm{AL}}=
+\frac{\widehat g}{1-i\epsilon\omega},\qquad
+\widehat a_{\mathrm{LL}}=(1+i\epsilon\omega)\widehat g,
+$$
+
+where $g(x)=e^{-x^2/2}$. Their difference is
+
+$$
+\widehat a_{\mathrm{LL}}-\widehat a_{\mathrm{AL}}
+=-\frac{\epsilon^2\omega^2}{1-i\epsilon\omega}\widehat g.
+$$
+
+Parseval's identity therefore yields, for every $\epsilon>0$,
+
+$$
+D_{\mathrm{rms}}^2=
+\frac{\displaystyle\int_{-\infty}^{\infty}
+\frac{\epsilon^4\omega^4}{1+\epsilon^2\omega^2}e^{-\omega^2}\,d\omega}
+{\displaystyle\int_{-\infty}^{\infty}
+\frac{1}{1+\epsilon^2\omega^2}e^{-\omega^2}\,d\omega}.
+$$
+
+Introduce
+
+$$
+J(\epsilon)=\int_{-\infty}^{\infty}
+\frac{e^{-\omega^2}}{1+\epsilon^2\omega^2}\,d\omega
+=\frac{\pi}{\epsilon}e^{1/\epsilon^2}
+\operatorname{erfc}(1/\epsilon).
+$$
+
+Polynomial division of the numerator then gives the closed expression
+
+$$
+\boxed{D_{\mathrm{rms}}^2
+=1-\frac{\sqrt\pi(1-\epsilon^2/2)}{J(\epsilon)}}.
+$$
+
+The boxed formula suffers cancellation if evaluated naively at very small
+$\epsilon$. Expanding it instead gives
+
+$$
+D_{\mathrm{rms}}=
+\frac{\sqrt3}{2}\epsilon^2
+\left[1-\epsilon^2+3\epsilon^4+O(\epsilon^6)\right].
+$$
+
+Thus $\sqrt3/2$ is not a fitted decoration. It follows from the exact spectral
+identity. In the downloadable calculation, a time-domain Simpson quadrature is
+checked against the independent frequency-domain integral at 15 values of
+$\epsilon$; the largest RMS discrepancy is $6.48\times10^{-9}$. Doubling the
+representative grids changes $D_{\mathrm{rms}}$ by at most
+$1.3\times10^{-13}$.
+
+<Quiz client:load title="Audit the evidence" questions={[
+  { prompt: 'Why is the frequency-domain calculation a stronger check than merely refining one quadrature?', choices: ['It uses a different representation of the same quantity', 'It always returns a smaller error', 'It assumes LL is exact', 'It removes ε from the problem'], answer: 0, explanation: 'Independent representations are less likely to share the same implementation mistake. Agreement checks the time-domain convolution against Parseval’s spectral identity.' },
+  { prompt: 'Can the boxed closed form be evaluated naively when ε is extremely small?', choices: ['Yes, because erfc is always exactly one', 'No, large intermediate factors and cancellation require a stable form or asymptotic series', 'No, because ε becomes complex', 'Yes, but only in degrees rather than radians'], answer: 1, explanation: 'The final answer is tiny while terms in the closed form nearly cancel. The spectral integral or asymptotic series is numerically safer.' },
 ]} />
 
-## Keeping classical accuracy separate from quantum validity
+## A second parameter answers a different question
 
-The second axis is the strong-field quantum parameter $\chi_e$, which roughly
-compares the electron’s rest-frame field with the Schwinger field:
-
-$$
-\chi_e\simeq \frac{\gamma E_{\mathrm{eff}}}{E_S}.
-$$
-
-In this linear benchmark, changing the pulse amplitude or beam energy can move
-$\chi_e$ without changing the *normalised* LL–LAD error. The paper therefore
-uses an $(\epsilon,\chi_e)$ map as a diagnostic: horizontal motion changes
-classical reduction-of-order accuracy, while vertical motion changes whether a
-classical deterministic emission model is physically adequate.
-
-For femtosecond pulses, $\epsilon\sim10^{-9}$, so the benchmarked classical
-truncation error is around $10^{-18}$. That does not say that a strong-field
-experiment is classical. It says that if the experiment disagrees with a
-classical prediction, this particular LL truncation error is an implausible
-first suspect; quantum emission, beam dynamics, field modelling, or detector
-backgrounds deserve attention instead.
-
-## Scope and limits
-
-The result is intentionally narrow. The force is prescribed, the motion is
-nonrelativistic and one-dimensional, and the exact physical branch exists in a
-closed integral form. The paper does not prove a relativistic error theorem, nor
-does it calculate a quantum-emission spectrum. The $\epsilon\sim1$ scan is a
-controlled stress test, not a claim that an electron’s $\tau_e$ becomes
-macroscopic.
-
-That modest scope is the point: before debating a complicated “breakdown,”
-identify which approximation is being tested and build the smallest exact
-problem that can measure it.
-
-## Reproduction checklist
-
-To reproduce the central figure, choose a grid in $x=t/T$, evaluate the
-future integral on a sufficiently long positive $u$ interval, and compare it
-with the closed-form LL expression above. Increase the cutoff until the tail
-is negligible; then refine the $x$ grid and verify that the reported RMS slope
-does not move. A useful independent check is to plot
+The strong-field quantum parameter is
 
 $$
-\log D_{\mathrm{rms}} \quad\text{against}\quad \log\epsilon.
+\chi_e=\frac{e\hbar}{m^3c^4}
+\sqrt{-\left(F_{\mu\nu}p^\nu\right)^2}.
 $$
 
-The small-$\epsilon$ points should approach slope $2$. If the slope is closer
-to $1$, the derivative term has probably been omitted; if it is erratic, the
-quadrature or time window is under-resolved. These are deliberately boring
-checks, but they are what turns a plausible visual comparison into a numerical
-claim that another reader can audit.
+Roughly, it measures the field seen in the electron rest frame relative to the
+QED critical field. Quantum corrections can become measurable around
+$\chi_e\sim0.1$; $\chi_e\sim1$ is a useful guide for strong recoil. Neither
+threshold is an abrupt phase transition.
 
-[Read the full term paper (PDF)](/papers/landau-lifshitz-gaussian-benchmark.pdf).
+In the normalized prescribed-force model, $\epsilon$ measures the accuracy of
+classical reduction of order, while $\chi_e$ flags the adequacy of a
+deterministic classical emission model. Adjust them independently below.
+
+<BreakdownMap client:load />
+
+For a femtosecond pulse, $\epsilon$ is around $10^{-9}$, so this benchmark's
+LL truncation error is around $10^{-18}$. A strong-field experiment can still
+have appreciable quantum corrections because its $\chi_e$ need not be small.
+[Recent all-optical radiation-reaction measurements](https://www.nature.com/articles/s41467-025-67918-8),
+for example, report mean quantum parameters around $0.05$–$0.1$: already
+interesting for quantum corrections, but not accurately described as
+$\chi_e\gtrsim1$.
+
+<Quiz client:load title="Diagnose the disagreement" questions={[
+  { prompt: 'An experiment has ε ≪ 1 but χₑ ≈ 0.2. What is the first conclusion?', choices: ['LL reduction of order must have failed', 'The runaway has returned', 'Classical LL–AL truncation is small here, while quantum emission may matter', 'The pulse cannot be Gaussian'], answer: 2, explanation: 'The two axes test different approximations. Small ε controls this classical truncation; appreciable χₑ raises a separate quantum-validity question.' },
+  { prompt: 'Does a small error in this one-dimensional benchmark prove every relativistic LL simulation is accurate?', choices: ['Yes, by dimensional analysis', 'No, the result is scoped to a prescribed-force toy model', 'Yes, provided χₑ is small', 'No, because Gaussian functions are discontinuous'], answer: 1, explanation: 'Field gradients, relativistic motion, beam dynamics, and model-specific approximations require their own error analysis.' },
+]} />
+
+## What is—and is not—new here
+
+Gaussian-pulse comparisons between AL and LL
+[already exist](https://arxiv.org/abs/2205.14809), and the broader fact that
+reduction-of-order series may be asymptotic
+[is established](https://arxiv.org/abs/2105.01640). The claim here is narrower:
+for this normalized Gaussian benchmark we give an exact
+finite-$\epsilon$ RMS error identity, connect it explicitly to the singular
+loss of differential order, verify it through independent time- and
+frequency-domain computations, and place it on a two-parameter diagnostic map
+without conflating $\epsilon$ with $\chi_e$.
+
+The model is one-dimensional, nonrelativistic, and externally prescribed. It
+does not prove a relativistic error theorem, compute a photon spectrum, include
+beam back-reaction, or resolve the conceptual acausality of the AL physical
+branch. Values near $\epsilon=1$ are mathematical stress tests, not attainable
+electron pulse durations.
+
+That limited claim is useful precisely because it is auditable. Every equation
+needed to reproduce the central result fits on this page; the repository adds
+the numerical cross-check and complete manuscript source.
+
+## Reproduce or challenge it
+
+The public package contains the LaTeX source, figures, generated data,
+dependency-light Python script, a review note recording the claim boundaries,
+and a self-contained arXiv upload archive. Run the script and try to break the
+agreement: enlarge the integration window, refine both grids, or replace the
+Gaussian and see which parts of the exact derivation survive.
+
+- [Read the revised paper (PDF)](/papers/landau-lifshitz-gaussian-benchmark.pdf)
+- [Inspect the source and numerical benchmark](https://github.com/hhungxun/physics-writeups/tree/main/sources/landau-lifshitz-gaussian-benchmark)
+- [Download the arXiv-ready source archive](https://github.com/hhungxun/physics-writeups/raw/main/sources/landau-lifshitz-gaussian-benchmark/arxiv/landau-lifshitz-gaussian-benchmark.tar.gz)

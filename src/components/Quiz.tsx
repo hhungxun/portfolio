@@ -17,6 +17,7 @@ export default function Quiz({ title = 'Checkpoint', questions }: QuizProps) {
   const [selected, setSelected] = useState<number | null>(null);
   const quizId = useId();
   const question = questions[current];
+  if (!question) return null;
   const correct = selected === question.answer;
 
   function choose(index: number) {
@@ -29,7 +30,7 @@ export default function Quiz({ title = 'Checkpoint', questions }: QuizProps) {
   }
 
   return (
-    <section className="quiz" aria-labelledby={`${quizId}-question-${current}`}>
+    <section className="quiz" aria-labelledby={`${quizId}-question-${current}`} data-quiz-ready="true">
       <div className="quiz__heading">
         <span className="quiz__label">{title}</span>
         <span className="quiz__count">{current + 1} / {questions.length}</span>
