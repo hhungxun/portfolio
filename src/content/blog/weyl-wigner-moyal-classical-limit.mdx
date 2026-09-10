@@ -27,9 +27,9 @@ theory is classical? The answer is almost all of it. Operators become symbols,
 density matrices become quasi-distributions, traces become integrals, and
 commutators become deformed Poisson brackets.
 
-The catch is where the quantum structure moves. It does not disappear. It is
-stored in two unusual features: the state can be negative as a phase-space
-function, and the product of observables is no longer ordinary multiplication.
+The catch is where the quantum structure moves. It ends up stored in two
+unusual features: the state can be negative as a phase-space function, and the
+product of observables stops being ordinary multiplication.
 
 ## The map must remember operator ordering
 
@@ -43,9 +43,9 @@ e^{-ipy/\hbar}
 \left|q-\frac y2\right\rangle.
 $$
 
-This is not a decorative Fourier transform. The midpoint $q$ and separation
-$y$ split the two position arguments of the kernel, while the Fourier variable
-$p$ supplies the conjugate momentum coordinate.
+Every piece of that integral is carrying weight. The midpoint $q$ and
+separation $y$ split the two position arguments of the kernel, while the
+Fourier variable $p$ supplies the conjugate momentum coordinate.
 
 Simple operators behave as hoped:
 
@@ -60,9 +60,12 @@ $$
 \left(\frac{\hat q\hat p+\hat p\hat q}{2}\right)_W=qp.
 $$
 
-The symbol therefore encodes a particular ordering prescription. A classical
-expression alone does not specify a unique quantum operator; quantization is
-not merely replacing $q$ and $p$ by hats.
+The symbol therefore encodes a particular ordering prescription. If you were
+taught quantization as putting hats on a classical expression, this is where
+that recipe runs out of instructions. Putting hats
+on $q$ and $p$ underdetermines the operator: $\hat q\hat p$, $\hat p\hat q$ and
+their symmetrization are three different operators sharing one classical
+expression, and the Weyl map has picked the third.
 
 <Quiz client:load title="The Weyl dictionary" questions={[
   { prompt: 'Why can operator multiplication not map to ordinary multiplication of symbols?', choices: ['Phase space has too many dimensions', 'Ordinary functions commute but quantum operators need not', 'Fourier transforms are irreversible', 'Momentum is not observable'], answer: 1, explanation: 'If both products became the same pointwise function AB = BA, the symbol map would erase the commutator. The deformed product preserves that information.' },
@@ -100,21 +103,21 @@ $$
 =\iint W_\rho(q,p)A_W(q,p)\,dq\,dp.
 $$
 
-So why call $W$ a *quasi*-probability? Because it can be negative. Those
-negative regions are not negative frequencies of experimental events. They
-are the price of placing noncommuting quantum information inside one real
-function on $(q,p)$ while still recovering the correct position and momentum
-marginals.
+So why call $W$ a *quasi*-probability? Because it can be negative, and no
+apparatus has ever recorded an event a negative number of times. The negative
+regions are the price of placing noncommuting quantum information inside one
+real function on $(q,p)$ while still recovering the correct position and
+momentum marginals.
 
 For a coherent Gaussian state, the Wigner function is positive. For excited
 number states and superpositions, it typically develops oscillatory negative
 lobes. Interference in Hilbert space has become signed fine structure in phase
 space.
 
-Negativity is therefore informative, but it must be interpreted carefully. A
-positive Wigner function does not make every aspect of a state classical, and
-a negative value is not itself an observable frequency. What experiments
-reconstruct is the state from many ordinary measurement statistics.
+Negativity is therefore informative, and easy to over-read in both directions.
+A positive Wigner function still leaves a state with plenty of nonclassical
+structure. What an experiment reconstructs is the state itself, assembled from
+many ordinary measurement statistics.
 
 ## The star product is where noncommutativity lives
 
@@ -161,13 +164,17 @@ $$
 q\star p-p\star q=i\hbar.
 $$
 
-The canonical commutation relation has not been approximated. It has been
-translated exactly. Phase space remains ordinary as a set of points, but its
-algebra of observables has become noncommutative.
+That is the canonical commutation relation, translated exactly. Phase space
+remains ordinary as a set of points, while its algebra of observables has
+become noncommutative.
 
 This is the central idea of deformation quantization. Instead of replacing
 classical functions by operators, one deforms the product of the functions.
-The parameter $\hbar$ measures the deformation.
+The parameter $\hbar$ measures the deformation. If that sounds like a change of
+bookkeeping rather than of physics, watch what happens at $\hbar\to0$: the star
+product collapses to ordinary multiplication and the bracket above collapses to
+the Poisson bracket, which is the classical limit arriving as a limit of the
+product itself.
 
 <Quiz client:load title="Where the quantum structure went" questions={[
   { prompt: 'In the Weyl–Wigner formulation, what replaces operator composition?', choices: ['Convolution in time', 'The star product', 'Bayesian conditioning', 'Matrix transposition'], answer: 1, explanation: 'The defining compatibility is (ÂB̂)W = AW ⋆ BW. The noncommutativity of operators is carried by the star product.' },
@@ -278,10 +285,9 @@ into uncontrolled degrees of freedom; coarse-graining is a description of
 limited resolution or discarded detail. They can produce related mathematics,
 but they answer different questions.
 
-The lasting value of the Weyl–Wigner formulation is not that it turns quantum
-mechanics back into classical statistics. It makes the boundary visible. The
-same phase space supports both theories, while negativity and the star product
-mark exactly where the classical analogy fails.
+The lasting value of the Weyl–Wigner formulation is that it makes the boundary
+visible. The same phase space supports both theories, and negativity and the
+star product mark exactly where the classical analogy fails.
 
 For the historical foundations, see [Wigner's original phase-space
 construction](https://doi.org/10.1103/PhysRev.40.749),

@@ -16,24 +16,27 @@ import AngularMomentumExplorer from '../../components/AngularMomentumExplorer.ts
 paper organizes standard results; it does not claim a new spectrum or a new
 representation-theoretic theorem.*
 
-The formula
+For $j=\tfrac12$, the formula
 
 $$
 J^2|j,m\rangle=\hbar^2j(j+1)|j,m\rangle
 $$
 
-often arrives in a first quantum-mechanics course as something to memorize.
-That presentation reverses the logic. The strange-looking $j(j+1)$ and the
-finite list $m=-j,-j+1,\ldots,j$ are not guesses fitted to atomic data. They
-follow from three structural facts: spatial rotations do not commute,
-observable generators are Hermitian, and Hilbert-space norms cannot be
-negative.
+returns $\tfrac34\hbar^2$. The largest projection you can measure along any
+axis is $\hbar/2$, so the naive guess for $J^2$ would be $\tfrac14\hbar^2$.
+The formula is three times larger. Most first courses hand the result over to
+be memorized, and if that is where you met it, the $j(j+1)$ probably looked
+like something read off a spectroscopic table.
 
-Hydrogen then adds a second layer. Rotation symmetry determines the angular
-functions and their allowed quantum numbers, while the Coulomb potential and
-radial boundary conditions quantize the energy. Keeping those layers separate
-shows exactly which part of the spectrum comes from symmetry and which part
-comes from dynamics.
+It follows instead from three structural facts: spatial rotations do not
+commute, observable generators are Hermitian, and Hilbert-space norms cannot
+be negative. The derivation is short and uses only the commutators.
+
+Hydrogen adds a second layer on top of that one. Rotation symmetry determines
+the angular functions and their allowed quantum numbers, while the Coulomb
+potential and radial boundary conditions quantize the energy. The two layers
+are worth keeping apart, because the $n^2$ degeneracy of hydrogen turns out to
+be two separate facts and only one of them is a statement about symmetry.
 
 ## Rotations carry an algebra
 
@@ -46,19 +49,21 @@ U(\boldsymbol\theta)
 +O(|\boldsymbol\theta|^2).
 $$
 
-The operators $J_x,J_y,J_z$ are the generators of rotations. Rotating a little
-about $x$ and then $y$ does not give precisely the same result as reversing the
-order. The mismatch is itself a small rotation about $z$. Algebraically,
+The operators $J_x,J_y,J_z$ are the generators of rotations. Turn a book 90°
+about $x$ and then 90° about $y$, then start over and reverse the order: it
+lands in a different orientation. The same failure survives all the way down to
+infinitesimal rotations, where the mismatch is second order in the angle and is
+itself a small rotation about $z$. Algebraically,
 
 $$
 [J_i,J_j]=i\hbar\epsilon_{ijk}J_k.
 $$
 
 This is the Lie algebra $\mathfrak{so}(3)$, equivalently
-$\mathfrak{su}(2)$ at the infinitesimal level. It says more than “components
-cannot be measured together.” It says that each component generates a motion
-on state space, and the commutator records the curvature of composing those
-motions.
+$\mathfrak{su}(2)$ at the infinitesimal level. First courses usually gloss it
+as “the components cannot be measured together,” which is true and stops short
+of the interesting part: each component generates a motion on state space, and
+the commutator records the curvature of composing those motions.
 
 The natural rotational scalar is
 
@@ -98,9 +103,9 @@ J_\pm=J_x\pm iJ_y,
 \qquad [J_z,J_\pm]=\pm\hbar J_\pm.
 $$
 
-So $J_\pm$ are not magic combinations introduced after the answer is known.
-They are eigenvectors of the adjoint action $A\mapsto[J_z,A]$. Applied to a
-state, they shift $m$ by one without changing the value of $J^2$.
+The only input was $[J_z,A]=\lambda A$. Solving it hands back $J_\pm$, the
+eigenvectors of the adjoint action $A\mapsto[J_z,A]$. Applied to a state, they
+shift $m$ by one and leave $J^2$ alone.
 
 Two identities make the spectrum visible:
 
@@ -116,6 +121,9 @@ $$
 \|J_+|\lambda,m\rangle\|^2
 =\lambda-\hbar^2m(m+1)\ge0.
 $$
+
+Worth pausing on that inequality before reading on. As we climb, $\lambda$ is
+fixed and $m$ grows by one at every step. What stops it?
 
 If the ladder continued upward forever while $\lambda$ stayed fixed, the
 right-hand side would eventually become negative. Therefore the ladder must
@@ -141,16 +149,15 @@ J_\pm|j,m\rangle
 =\hbar\sqrt{j(j+1)-m(m\pm1)}\,|j,m\pm1\rangle.
 $$
 
-This proof is a compact example of representation theory doing physics. A
-commutator determines the step size, positivity forces endpoints, and the
-distance between endpoints quantizes the representation.
+Take $j=\tfrac32$ as a worked case. The ladder has four rungs, and at the top
+rung $m=\tfrac32$ both $j(j+1)$ and $m(m+1)$ equal $\tfrac{15}{4}$, so the
+coefficient under the square root is exactly zero.
 
 <AngularMomentumExplorer client:load />
 
-Use the upper panel to move through a multiplet. Notice that the raising
-coefficient is largest away from the top and vanishes exactly at $m=j$. The
-state is not blocked there by an arbitrary rule; the norm of the proposed next
-state is zero.
+Use the upper panel to move through a multiplet. The raising coefficient is
+largest away from the top and vanishes exactly at $m=j$, where the state that
+$J_+$ would produce has zero norm.
 
 <Quiz client:load title="Build the ladder" questions={[
   { prompt: 'For j = 3/2, how many m states exist?', choices: ['2', '3', '4', '5'], answer: 2, explanation: 'A spin-j irreducible representation has dimension 2j+1, hence four states for j=3/2.' },
@@ -159,8 +166,9 @@ state is zero.
 
 ## Why orbital angular momentum excludes half-integers
 
-The abstract algebra permits both integer and half-integer $j$. A concrete
-realization decides which ones occur.
+The algebra permits both integer and half-integer $j$, and so far we have seen
+nothing that prefers either. Which ones occur is decided by the concrete
+realization.
 
 For a scalar wavefunction on ordinary space, rotations act by moving the
 argument:
@@ -183,7 +191,8 @@ $$
 
 so an $L_z$ eigenfunction has azimuthal dependence $e^{im\phi}$. A scalar
 wavefunction must return to the same value under $\phi\mapsto\phi+2\pi$;
-therefore $e^{2\pi im}=1$ and $m\in\mathbb Z$. The orbital multiplet then has
+therefore $e^{2\pi im}=1$ and $m\in\mathbb Z$. Half-integers fail at the first
+turn: $m=\tfrac12$ gives $e^{i\pi}=-1$. The orbital multiplet is left with
 $\ell=0,1,2,\ldots$.
 
 The remaining angular equation is
@@ -193,15 +202,17 @@ L^2Y_{\ell m}=\hbar^2\ell(\ell+1)Y_{\ell m},
 $$
 
 whose regular, single-valued solutions on the sphere are the spherical
-harmonics $Y_{\ell m}(\theta,\phi)$. They are not merely decorative orbital
-shapes. They are matrix elements of rotation representations realized as
-functions on $S^2$, and they form the natural Fourier basis for angular data.
+harmonics $Y_{\ell m}(\theta,\phi)$. These are the functions behind the $s$,
+$p$ and $d$ orbital pictures in a chemistry textbook, which makes them easy to
+file away as shapes. They are matrix elements of rotation representations
+realized as functions on $S^2$, and they form the natural Fourier basis for
+angular data.
 
 ## Spin lives in an internal representation
 
-A spinor is not a scalar function that happens to carry half an orbital unit.
-It takes values in an internal vector space. Rotations can therefore act both
-on position and on components:
+A spinor takes values in an internal vector space, which is what lets it carry
+the half-integer $j$ that scalar functions on space just ruled out. Rotations
+can therefore act both on position and on components:
 
 $$
 \Psi(\mathbf r)\longmapsto
@@ -224,10 +235,10 @@ S_i=\frac{\hbar}{2}\sigma_i
 $$
 
 satisfies the angular-momentum algebra. A $2\pi$ rotation sends a spinor to
-minus itself, while a $4\pi$ rotation returns it. Probabilities are unchanged
-by the first sign, but interference can detect it. This is the global
-difference between $SO(3)$ and its double cover $SU(2)$ that the shared Lie
-algebra alone does not reveal.
+minus itself; you need $4\pi$ to get back. If that sounds like bookkeeping,
+look at where the sign survives: probabilities are blind to it, interference is
+not. $SO(3)$ and $SU(2)$ share a Lie algebra and differ globally, and this is
+the place that difference becomes measurable.
 
 <Quiz client:load title="Orbital or internal?" questions={[
   { prompt: 'What forces orbital m to be an integer for scalar wavefunctions?', choices: ['The Coulomb energy formula', 'Single-valuedness under φ → φ + 2π', 'The Pauli exclusion principle', 'The radial boundary at infinity'], answer: 1, explanation: 'The factor e^{imφ} must be unchanged after one full turn, requiring integer m.' },
@@ -258,10 +269,12 @@ $$
 +\frac{\hbar^2\ell(\ell+1)}{2\mu r^2}\right]u=Eu.
 $$
 
-The second term in brackets is the centrifugal barrier. It is not another
-force inserted by hand; it is the angular kinetic energy appearing as an
-effective radial potential. Increasing $\ell$ suppresses probability near the
-origin, which the lower interactive plot makes visible.
+The second term in brackets is the centrifugal barrier, and at this point it
+reasonably looks like a force inserted to make the radial problem come out. It
+is the angular kinetic energy showing up as an effective radial potential, and
+the $\ell(\ell+1)$ sitting in it is the same $\ell(\ell+1)$ the ladder argument
+produced. Increasing $\ell$ suppresses probability near the origin, which the
+lower interactive plot makes visible.
 
 For a bound state, $u(r)$ must be regular at the origin and decay at infinity.
 After extracting those endpoint behaviours, the remaining power series becomes
@@ -285,25 +298,29 @@ $$
 Rotation symmetry explains the $(2\ell+1)$ degeneracy within each $\ell$
 multiplet. The larger fact that the nonrelativistic Coulomb energy depends on
 $n$ but not $\ell$ is an additional, “accidental” degeneracy associated with
-the special Coulomb problem. Spin, relativistic corrections, and the Lamb
-shift further split levels that this model leaves degenerate.
+the special Coulomb problem; at $n=2$ it is what puts $2s$ and $2p$ at the same
+energy. Spin, relativistic corrections, and the Lamb shift further split levels
+that this model leaves degenerate.
 
 ## What this route buys us
 
-One could solve the angular differential equation first and discover the same
-integer labels. The algebra-first route reveals more:
+One could solve the angular differential equation first and arrive at the same
+integer labels. Going through the algebra first buys three things that route
+leaves buried.
 
-1. Quantization begins before coordinates are chosen.
-2. Integer versus half-integer values depend on the global representation, not
-   merely on the local commutators.
-3. Spherical harmonics and spinors are two realizations of the same generator
-   algebra on different spaces.
-4. Hydrogen energy quantization requires radial dynamics in addition to
-   rotational symmetry.
+Quantization begins before coordinates are chosen — the ladder argument never
+mentions a sphere. The split between integer and half-integer $j$ turns out to
+be global rather than local, decided by which group is being represented, since
+the commutators are identical either way. And spherical harmonics and spinors
+are one generator algebra realized on two different spaces, which is why the
+$\ell(\ell+1)$ of the angular equation and the $j(j+1)$ of the ladder are the
+same expression.
 
-That division of labour is the central lesson of the writeup. Symmetry tells us
-how states organize. Boundary conditions and the Hamiltonian tell us which
-organized states nature permits at a given energy.
+Hydrogen is where the method reaches its limit, and that is worth saying as
+plainly as the successes. Its energies need the radial dynamics; symmetry alone
+gets you the angular labels and stops there. Symmetry organizes the states, and
+the Hamiltonian and the boundary conditions decide which of them nature permits
+at a given energy.
 
 - [Read the complete pedagogical writeup (PDF)](/papers/angular-momentum-hydrogen-atom.pdf)
 - [See the project and source repository](https://github.com/hhungxun/physics-writeups)

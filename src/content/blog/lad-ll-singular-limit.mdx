@@ -61,10 +61,11 @@ $$
 a_h(t)=C e^{t/\tau_e}.
 $$
 
-Unless $C$ is exactly zero, a microscopic error grows exponentially. The
-physical prescription is therefore not to choose an arbitrary initial
-acceleration. We demand that the acceleration vanish after the force has
-disappeared. This selects the non-runaway branch.
+Unless $C$ is exactly zero, a microscopic error grows exponentially. You might
+expect to pin $C$ down by choosing an initial acceleration, the way an
+initial-value problem usually works. Here the condition comes from the other
+end of the problem instead: we demand that the acceleration vanish after the
+force has disappeared, which selects the non-runaway branch.
 
 <Quiz client:load title="The missing initial datum" questions={[
   { prompt: 'Why is the limit τₑ → 0 singular?', choices: ['The Gaussian becomes discontinuous', 'The small parameter multiplies the highest derivative', 'The solution becomes complex', 'The force amplitude diverges'], answer: 1, explanation: 'The limit lowers the differential order. One dynamical direction—the runaway direction—disappears instead of changing smoothly.' },
@@ -93,8 +94,9 @@ $$
 The exponential kernel is positive, has unit mass, and has width $\tau_e$.
 It averages the force over a very short interval—but that interval points into
 the future. The selected branch is therefore pre-accelerating and formally
-acausal. Its tiny timescale does not turn it into a causal law; it only makes
-the acausal interval extraordinarily difficult to resolve experimentally.
+acausal: the particle starts moving before the force reaches it. Its tiny
+timescale does not turn it into a causal law; it only makes the acausal
+interval extraordinarily difficult to resolve experimentally.
 
 Expand the shifted force:
 
@@ -218,8 +220,9 @@ D_{\mathrm{rms}}=
 \left[1-\epsilon^2+3\epsilon^4+O(\epsilon^6)\right].
 $$
 
-Thus $\sqrt3/2$ is not a fitted decoration. It follows from the exact spectral
-identity. In the downloadable calculation, a time-domain Simpson quadrature is
+The $\sqrt3/2$ is what the polynomial division returns, carried down from the
+exact spectral identity above. In the downloadable calculation, a time-domain
+Simpson quadrature is
 checked against the independent frequency-domain integral at 15 values of
 $\epsilon$; the largest RMS discrepancy is $6.48\times10^{-9}$. Doubling the
 representative grids changes $D_{\mathrm{rms}}$ by at most

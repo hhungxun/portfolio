@@ -23,11 +23,15 @@ keeps complex amplitudes for every path, and postpones measurement. Paths that
 arrive at the same position can then reinforce or cancel one another.
 
 That one change replaces diffusive spreading,
-$\sigma\propto\sqrt t$, with ballistic spreading, $\sigma\propto t$. But “a
-quantum walk is faster” is an incomplete lesson. The speed comes from a
-specific spectral and interference structure. It does not mean that every
-quantum-walk algorithm beats every classical algorithm, nor that measuring a
-far-away position solves a computational problem by itself.
+$\sigma\propto\sqrt t$, with ballistic spreading, $\sigma\propto t$. After a
+hundred steps the coherent width is about fifty-four sites against the
+classical ten, and the gap keeps opening.
+
+“A quantum walk is faster” is where most short accounts stop, and it is the
+part worth being careful about. The speed comes from a specific spectral and
+interference structure. It buys no guarantee that a given quantum-walk
+algorithm beats its classical counterpart, and measuring a far-away position is
+by itself no solution to a computational problem.
 
 ## Begin with the classical recurrence
 
@@ -69,8 +73,9 @@ P(x,t)=\frac{1}{\sqrt{4\pi Dt}}
 $$
 
 Diffusion smooths and irreversibly loses information. Running the heat equation
-backward magnifies short-wavelength noise. That is precisely what a closed
-quantum system is forbidden to do: its time evolution must be reversible.
+backward magnifies short-wavelength noise. A closed quantum system cannot
+behave this way, because its time evolution has to be reversible, and that
+constraint is what the next section has to build around.
 
 <Quiz client:load title="Classical baseline" questions={[
   { prompt: 'Why does the classical standard deviation grow as √t?', choices: ['Independent step variances add', 'Every path has the same phase', 'The walker moves √t sites per step', 'The coin is unitary'], answer: 0, explanation: 'Each unbiased ±1 step has variance one. After t independent steps the variance is t, hence the standard deviation is √t.' },
@@ -79,9 +84,10 @@ quantum system is forbidden to do: its time evolution must be reversible.
 
 ## Quantizing the walk requires an extra space
 
-The obvious rule “send half the amplitude left and half right” is not unitary:
-it cannot remember where the amplitude came from. A discrete-time quantum walk
-adds a two-dimensional coin space
+The obvious rule is to send half the amplitude left and half right. Try writing
+it as a matrix and it fails to be unitary: it cannot remember where the
+amplitude came from. A discrete-time quantum walk adds a two-dimensional coin
+space
 
 $$
 \mathcal H=\mathcal H_{\mathrm{position}}\otimes
@@ -132,6 +138,10 @@ states. Yet the later position distribution can be strongly asymmetric because
 the relative phase changes interference. For the Hadamard walk, $\phi=\pi/2$
 produces a symmetric distribution.
 
+If you have met the rule that an overall phase is unobservable, this is the
+place to keep the two cases apart. The phase here is relative, between coin
+components, and relative phase is exactly what a later Hadamard reads.
+
 Use the lower slider while the animation is paused. It changes only the
 initial relative phase; the coin, shift, and number of steps stay fixed.
 
@@ -163,8 +173,7 @@ $$
 $$
 
 the group velocities of the two bands. Because these velocities are finite and
-nonzero, the dominant fronts move a distance proportional to $t$. This is the
-spectral reason for ballistic spreading.
+nonzero, the dominant fronts move a distance proportional to $t$.
 
 For the symmetric Hadamard walk, the rescaled position $X_t/t$ approaches a
 non-Gaussian limit supported inside
@@ -175,14 +184,18 @@ $$
 \sqrt{1-\frac1{\sqrt2}}\approx0.541,
 $$
 
-whereas $\sigma_c(t)/\sqrt t\to1$ for the classical unbiased walk. The two
-limits scale different random variables: $X_t/t$ in the coherent case and
-$X_t/\sqrt t$ in the diffusive case. This distinction is made precise by
+whereas $\sigma_c(t)/\sqrt t\to1$ for the classical unbiased walk. If you want
+one number to carry away, take the $0.541$: the coherent width settles at a
+fixed fraction of the elapsed time, while the classical width settles at a
+fixed fraction of its square root. The two limits scale different random
+variables: $X_t/t$ in the coherent case and $X_t/\sqrt t$ in the diffusive
+case. This distinction is made precise by
 [Konno's one-dimensional limit theorem](https://arxiv.org/abs/quant-ph/0206103).
 
-The quantum speed is therefore not a larger diffusion constant. A diffusion
-constant still gives width proportional to $\sqrt t$. The quantum walk belongs
-to a different scaling regime.
+It is tempting to read the quantum speed as a larger diffusion constant, and
+the reading fails on the exponent alone: any $D$ whatsoever still gives width
+proportional to $\sqrt t$. Raising $D$ changes the prefactor and leaves the
+exponent sitting at one half.
 
 ### What happens if we measure every step?
 
@@ -192,9 +205,9 @@ removed. Alternative paths no longer meet as amplitudes; they meet as ordinary
 probabilities. For the Hadamard coin this repeated dephasing recovers a
 classical-like diffusive walk.
 
-This gives an operational meaning to coherence. It is not an extra force
-pushing the walker outward. It is the ability to preserve and later compare
-the phases of paths that would otherwise be distinguishable.
+That is what coherence buys, operationally: the ability to preserve and later
+compare the phases of paths that would otherwise be distinguishable. The
+outward fronts sit where those surviving amplitudes agree in phase.
 
 <Quiz client:load title="Read the scaling law" questions={[
   { prompt: 'If σq is proportional to t, what happens to σq/σc as t grows?', choices: ['It approaches zero', 'It stays constant', 'It grows like √t', 'It grows like t²'], answer: 2, explanation: 'Dividing t by √t leaves √t. The widening ratio in the interactive is a direct signature of different scaling exponents.' },
@@ -223,9 +236,10 @@ i\frac{d}{dt}|\psi(t)\rangle=H|\psi(t)\rangle,
 $$
 
 $H$ may be an adjacency matrix or a Laplacian, depending on convention and the
-physical model. The imaginary unit does not simply “make a classical matrix
-unitary.” Rather, Hermiticity of $H$ makes its exponential unitary. Each graph
-eigenmode acquires a phase instead of being exponentially damped.
+physical model. It is easy to say that the $i$ “makes the classical matrix
+unitary,” but the work is done by Hermiticity: $H=H^\dagger$ is what makes
+$e^{-iHt}$ unitary. Each graph eigenmode acquires a phase instead of being
+exponentially damped.
 
 On the infinite line, choosing a nearest-neighbour Hamiltonian yields amplitudes
 proportional to Bessel functions:
@@ -281,9 +295,10 @@ $$
 \text{quantum: }e^{-itH}.
 $$
 
-One semigroup damps; the other rotates. From that difference follow diffusion
-versus interference, stationary behaviour versus persistent oscillation, and
-many of the conceptual difficulties in defining quantum hitting and mixing.
+One semigroup damps; the other rotates. Diffusion versus interference follows
+from that, and so does stationary behaviour versus persistent oscillation, and
+so does the awkwardness of defining quantum hitting and mixing times at all
+when there is nothing for the walk to settle into.
 
 The report is a course survey, not a new theorem. Some application sections
 summarize proposals whose practical advantage depends on their computational
