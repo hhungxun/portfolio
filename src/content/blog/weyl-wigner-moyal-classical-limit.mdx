@@ -1,0 +1,291 @@
+---
+title: Quantum Mechanics Without Leaving Phase Space
+description: The Weyl–Wigner dictionary, why multiplication becomes a star product, and what coarse-graining really does to the classical limit.
+date: 2026-01-04
+updated: 2026-09-10
+tags: [phase space, deformation quantization, semiclassical analysis]
+lang: en
+side: physics
+draft: false
+---
+
+import Quiz from '../../components/Quiz.tsx';
+import WignerSmoothing from '../../components/WignerSmoothing.tsx';
+
+*Status: an interactive companion to an independent pedagogical write-up. It
+reconstructs established Weyl–Wigner and Moyal theory; it does not claim a new
+quantization theorem or a solution to the measurement problem.*
+
+Classical mechanics gives us a seductive picture. A state is a point
+$(q,p)$ in phase space, an observable is a function $A(q,p)$, and Hamilton's
+equations move the point along a trajectory. Quantum mechanics seems to throw
+that geometry away in favour of vectors and operators.
+
+The Weyl–Wigner formulation asks a sharper question: how much of quantum
+mechanics can be written *on the same phase space* without pretending that the
+theory is classical? The answer is almost all of it. Operators become symbols,
+density matrices become quasi-distributions, traces become integrals, and
+commutators become deformed Poisson brackets.
+
+The catch is where the quantum structure moves. It does not disappear. It is
+stored in two unusual features: the state can be negative as a phase-space
+function, and the product of observables is no longer ordinary multiplication.
+
+## The map must remember operator ordering
+
+Take an operator $\hat A$ on one canonical degree of freedom. Its Weyl symbol
+is
+
+$$
+A_W(q,p)=\int_{-\infty}^{\infty}dy\,
+e^{-ipy/\hbar}
+\left\langle q+\frac y2\right|\hat A
+\left|q-\frac y2\right\rangle.
+$$
+
+This is not a decorative Fourier transform. The midpoint $q$ and separation
+$y$ split the two position arguments of the kernel, while the Fourier variable
+$p$ supplies the conjugate momentum coordinate.
+
+Simple operators behave as hoped:
+
+$$
+(\hat q)_W=q,\qquad (\hat p)_W=p.
+$$
+
+Trouble begins with products. Since $\hat q\hat p\ne\hat p\hat q$, both cannot
+map to the ordinary function $qp$. Weyl ordering treats the two symmetrically:
+
+$$
+\left(\frac{\hat q\hat p+\hat p\hat q}{2}\right)_W=qp.
+$$
+
+The symbol therefore encodes a particular ordering prescription. A classical
+expression alone does not specify a unique quantum operator; quantization is
+not merely replacing $q$ and $p$ by hats.
+
+<Quiz client:load title="The Weyl dictionary" questions={[
+  { prompt: 'Why can operator multiplication not map to ordinary multiplication of symbols?', choices: ['Phase space has too many dimensions', 'Ordinary functions commute but quantum operators need not', 'Fourier transforms are irreversible', 'Momentum is not observable'], answer: 1, explanation: 'If both products became the same pointwise function AB = BA, the symbol map would erase the commutator. The deformed product preserves that information.' },
+  { prompt: 'What extra choice is hidden in turning the classical monomial qp into an operator?', choices: ['A boundary condition', 'An ordering prescription', 'A measurement outcome', 'A temperature'], answer: 1, explanation: 'Because q-hat and p-hat do not commute, q̂p̂, p̂q̂, and their symmetrized combination are distinct operators.' },
+]} />
+
+## A quantum state can look like a distribution, but not a probability
+
+For a density operator $\hat\rho$, define the Wigner function
+
+$$
+W_\rho(q,p)=\frac{1}{2\pi\hbar}
+\int_{-\infty}^{\infty}dy\,e^{-ipy/\hbar}
+\left\langle q+\frac y2\right|\hat\rho
+\left|q-\frac y2\right\rangle.
+$$
+
+Its normalization and marginals look exactly probabilistic:
+
+$$
+\iint W_\rho(q,p)\,dq\,dp=1,
+$$
+
+$$
+\int W_\rho(q,p)\,dp=\langle q|\hat\rho|q\rangle,
+\qquad
+\int W_\rho(q,p)\,dq=\langle p|\hat\rho|p\rangle.
+$$
+
+Expectation values also become phase-space averages:
+
+$$
+\langle\hat A\rangle
+=\operatorname{Tr}(\hat\rho\hat A)
+=\iint W_\rho(q,p)A_W(q,p)\,dq\,dp.
+$$
+
+So why call $W$ a *quasi*-probability? Because it can be negative. Those
+negative regions are not negative frequencies of experimental events. They
+are the price of placing noncommuting quantum information inside one real
+function on $(q,p)$ while still recovering the correct position and momentum
+marginals.
+
+For a coherent Gaussian state, the Wigner function is positive. For excited
+number states and superpositions, it typically develops oscillatory negative
+lobes. Interference in Hilbert space has become signed fine structure in phase
+space.
+
+Negativity is therefore informative, but it must be interpreted carefully. A
+positive Wigner function does not make every aspect of a state classical, and
+a negative value is not itself an observable frequency. What experiments
+reconstruct is the state from many ordinary measurement statistics.
+
+## The star product is where noncommutativity lives
+
+To preserve operator composition, symbols use the Moyal star product:
+
+$$
+A\star B
+=A\exp\!\left[
+\frac{i\hbar}{2}
+\left(
+\overleftarrow\partial_q\overrightarrow\partial_p
+-\overleftarrow\partial_p\overrightarrow\partial_q
+\right)
+\right]B.
+$$
+
+The arrows say which factor each derivative acts on. Expanding the exponential
+reveals the deformation:
+
+$$
+A\star B
+=AB+\frac{i\hbar}{2}\{A,B\}_{\mathrm P}
+-\frac{\hbar^2}{8}A\Lambda^2B+\cdots,
+$$
+
+where
+
+$$
+\{A,B\}_{\mathrm P}
+=\partial_qA\,\partial_pB-\partial_pA\,\partial_qB
+$$
+
+is the Poisson bracket, and $\Lambda$ abbreviates the same bidifferential
+operator. For the coordinate functions,
+
+$$
+q\star p=qp+\frac{i\hbar}{2},\qquad
+p\star q=pq-\frac{i\hbar}{2},
+$$
+
+so
+
+$$
+q\star p-p\star q=i\hbar.
+$$
+
+The canonical commutation relation has not been approximated. It has been
+translated exactly. Phase space remains ordinary as a set of points, but its
+algebra of observables has become noncommutative.
+
+This is the central idea of deformation quantization. Instead of replacing
+classical functions by operators, one deforms the product of the functions.
+The parameter $\hbar$ measures the deformation.
+
+<Quiz client:load title="Where the quantum structure went" questions={[
+  { prompt: 'In the Weyl–Wigner formulation, what replaces operator composition?', choices: ['Convolution in time', 'The star product', 'Bayesian conditioning', 'Matrix transposition'], answer: 1, explanation: 'The defining compatibility is (ÂB̂)W = AW ⋆ BW. The noncommutativity of operators is carried by the star product.' },
+  { prompt: 'What is q ⋆ p − p ⋆ q?', choices: ['0', 'qp', 'iℏ', 'ℏ²'], answer: 2, explanation: 'The first-order derivative terms have opposite signs and the ordinary qp terms cancel, reproducing the canonical commutator exactly.' },
+]} />
+
+## Dynamics becomes a deformed Hamiltonian flow
+
+The von Neumann equation
+
+$$
+i\hbar\,\partial_t\hat\rho=[\hat H,\hat\rho]
+$$
+
+maps to
+
+$$
+\partial_tW_\rho
+=\{H_W,W_\rho\}_{\mathrm M},
+$$
+
+where the Moyal bracket is
+
+$$
+\{A,B\}_{\mathrm M}
+=\frac{A\star B-B\star A}{i\hbar}.
+$$
+
+Only the odd powers of the bidifferential operator survive the antisymmetric
+difference. After division by $i\hbar$, the expansion therefore contains only
+even powers of $\hbar$:
+
+$$
+\{A,B\}_{\mathrm M}
+=\{A,B\}_{\mathrm P}+O(\hbar^2).
+$$
+
+This formula is often summarized as “quantum mechanics becomes classical when
+$\hbar\to0$.” That slogan hides the real condition. The corrections involve
+higher derivatives, so what matters is whether $A$ and $B$ vary slowly on the
+phase-space scale set by $\hbar$. Fine oscillations can make higher derivatives
+large enough to compete with the nominal powers of $\hbar$.
+
+There is one exceptionally clean case. If the Hamiltonian is at most quadratic
+in $q$ and $p$, every third and higher derivative of $H$ vanishes. All quantum
+corrections in the Moyal bracket disappear, and
+
+$$
+\{H,W\}_{\mathrm M}=\{H,W\}_{\mathrm P}
+$$
+
+exactly. A harmonic-oscillator Wigner function is transported by the same
+linear symplectic flow as a classical phase-space density.
+
+This does **not** make the oscillator fully classical. Its allowed states still
+obey uncertainty constraints and may have negative Wigner functions. The
+dynamical law can be classically shaped while the state space remains quantum.
+
+## Coarse-graining attacks the shortest scales first
+
+A real apparatus has finite phase-space resolution. Model that limitation by
+convolving $W$ with a normalized Gaussian kernel. In Fourier language,
+convolution multiplies each wavevector component by a decaying Gaussian.
+High-frequency fringes are suppressed before broad positive lobes.
+
+The model below isolates that mechanism. It is not fitted experimental data;
+it is a two-lobe quasi-distribution with an interference term. Increase the
+smoothing and watch the negative, rapidly oscillating part vanish first.
+
+<WignerSmoothing client:load />
+
+This explains why a coarse observer can see an apparently classical density
+even when the fine description is quantum. It also explains why simply taking
+$\hbar$ to be numerically small is insufficient: a state can generate
+structure on correspondingly small scales.
+
+The Husimi function provides a physically distinguished smoothing. For a
+coherent state $|\alpha\rangle$,
+
+$$
+Q(\alpha)=\frac1\pi\langle\alpha|\hat\rho|\alpha\rangle\ge0.
+$$
+
+It can be obtained by Gaussian smoothing of the Wigner function at the minimum
+uncertainty scale. Its positivity is guaranteed because it is an expectation
+value of the positive operator $\hat\rho$. The gain is a genuine probability
+density for coherent-state outcomes; the cost is resolution. The sharp
+features that distinguished some states have been averaged away.
+
+<Quiz client:load title="Classical limits without slogans" questions={[
+  { prompt: 'Why does the Moyal bracket equal the Poisson bracket exactly for a quadratic Hamiltonian?', choices: ['Quadratic systems have no uncertainty', 'All third and higher derivatives of the Hamiltonian vanish', 'Their Wigner functions are always positive', 'ℏ is set to zero'], answer: 1, explanation: 'The first correction to Poisson evolution contains third derivatives. A quadratic Hamiltonian kills it and every still-higher term, without taking ℏ to zero.' },
+  { prompt: 'What does Gaussian coarse-graining remove first?', choices: ['Normalization', 'High-frequency phase-space fringes', 'The broadest positive lobe', 'Hamiltonian energy levels'], answer: 1, explanation: 'Convolution is a low-pass filter. Short-scale oscillations, including many negative interference fringes, are attenuated most strongly.' },
+  { prompt: 'Does a positive Husimi Q-function prove that the underlying state is classical?', choices: ['Yes, positivity is sufficient', 'No, positivity follows from smoothing and the state can still be quantum', 'Yes, but only for oscillators', 'No, because Q is never normalized'], answer: 1, explanation: 'Q describes finite-resolution coherent-state statistics. Positivity is useful, but smoothing can hide nonclassical fine structure rather than abolish the quantum state.' },
+]} />
+
+## What the phase-space picture does and does not establish
+
+The formal classical limit is precise: pointwise multiplication and the
+Poisson bracket are the leading terms of a noncommutative deformation. The
+operational classical limit is subtler: finite resolution suppresses the
+small-scale structure on which quantum corrections and Wigner negativity can
+depend.
+
+Neither statement, by itself, explains why one definite measurement outcome
+occurs. Coarse-graining is also not identical to environmental decoherence.
+Decoherence is a physical open-system process that transfers phase information
+into uncontrolled degrees of freedom; coarse-graining is a description of
+limited resolution or discarded detail. They can produce related mathematics,
+but they answer different questions.
+
+The lasting value of the Weyl–Wigner formulation is not that it turns quantum
+mechanics back into classical statistics. It makes the boundary visible. The
+same phase space supports both theories, while negativity and the star product
+mark exactly where the classical analogy fails.
+
+For the historical foundations, see [Wigner's original phase-space
+construction](https://doi.org/10.1103/PhysRev.40.749),
+[Groenewold's analysis of quantization](https://doi.org/10.1016/S0031-8914(46)80059-4),
+and [Moyal's statistical formulation](https://doi.org/10.1017/S0305004100000487).
+
+[Read the full pedagogical write-up (PDF)](/papers/phase-space-quantum-mechanics.pdf).

@@ -1,6 +1,6 @@
 ---
 note: quantum-walk-spreading
-title: "Quantum Random Walks: Theory and Developments"
+title: "A Quantum Walk Remembers Which Paths Interfered"
 subtitle: Discrete- and continuous-time quantum walks, with numerics
 period: 2025/04 – 2025/09
 summary: A systematic survey of discrete- and continuous-time quantum walks from a mathematical and physical perspective, contrasting classical diffusion (σ ∝ √t) with quantum ballistic spreading (σ ∝ t), with numerical simulations in Python.
@@ -10,4 +10,8 @@ tags: [quantum walks, quantum algorithms, numerics]
 order: 8
 ---
 
-The report derives the classical diffusion limit and contrasts it with the ballistic spreading of the Hadamard walk, reviews algorithmic constructions (SKW, Szegedy) and open problems in mixing and state transfer, and implements the dynamics numerically with NumPy, QuTiP, and Matplotlib. The animation on the home page is a direct descendant of that code. [Read the accompanying note and interactive comparison.](/blog/quantum-walk-spreading)
+The PHY104 report derives the classical diffusion limit and contrasts it with
+the ballistic spreading of discrete- and continuous-time quantum walks. The
+companion article now exposes the role of the initial coin phase, gives the
+Fourier-space explanation of ballistic fronts, and distinguishes fast transport
+from an algorithmic speed-up. [Explore the interactive walk and retrieval quizzes.](/blog/quantum-walk-spreading)

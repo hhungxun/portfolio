@@ -16,18 +16,21 @@ type Props = {
   /** ms between steps while animating */
   speed?: number;
   caption?: string;
+  /** let the reader vary the relative phase of the initial coin state */
+  phaseControl?: boolean;
 };
 
 const SQ = Math.SQRT1_2;
 
-function computeWalks(steps: number) {
+function computeWalks(steps: number, phase: number) {
   const N = 2 * steps + 1;
   const off = steps;
   // quantum amplitudes for coin 0 / coin 1 as (re, im)
   let r0 = new Float64Array(N), i0 = new Float64Array(N);
   let r1 = new Float64Array(N), i1 = new Float64Array(N);
-  r0[off] = SQ; // |0⟩ component
-  i1[off] = SQ; // i|1⟩ component
+  r0[off] = SQ;
+  r1[off] = SQ * Math.cos(phase);
+  i1[off] = SQ * Math.sin(phase);
   let c = new Float64Array(N);
   c[off] = 1;
 
@@ -65,10 +68,14 @@ function computeWalks(steps: number) {
   return { quantum, classical, N, off };
 }
 
-function sigma(p: Float64Array, off: number) {
-  let m2 = 0;
-  for (let x = 0; x < p.length; x++) m2 += p[x] * (x - off) * (x - off);
-  return Math.sqrt(m2);
+function moments(p: Float64Array, off: number) {
+  let mean = 0;
+  let second = 0;
+  for (let x = 0; x < p.length; x++) {
+    mean += p[x] * (x - off);
+    second += p[x] * (x - off) * (x - off);
+  }
+  return { mean, sigma: Math.sqrt(Math.max(0, second - mean * mean)) };
 }
 
 function cssVar(name: string, fallback: string) {
@@ -83,14 +90,16 @@ export default function QuantumWalk({
   height = 220,
   speed = 90,
   caption,
+  phaseControl = false,
 }: Props) {
   const [steps, setSteps] = useState(initialSteps);
   const [t, setT] = useState(0);
   const [playing, setPlaying] = useState(true);
+  const [phase, setPhase] = useState(Math.PI / 2);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
 
-  const data = useMemo(() => computeWalks(steps), [steps]);
+  const data = useMemo(() => computeWalks(steps, phase), [steps, phase]);
 
   // reduced motion: jump to the end and stay
   const reduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -188,8 +197,8 @@ export default function QuantumWalk({
       ctx.fillStyle = muted;
       ctx.fillText('■ classical random walk', padX + 176, 4);
       ctx.fillStyle = ink;
-      const sq = sigma(q, off).toFixed(1), sc = sigma(c, off).toFixed(1);
-      const stats = `t = ${String(t).padStart(String(steps).length, ' ')}   σq = ${sq}   σc = ${sc}`;
+      const qm = moments(q, off), cm = moments(c, off);
+      const stats = `t = ${String(t).padStart(String(steps).length, ' ')}   μq = ${qm.mean.toFixed(1)}   σq = ${qm.sigma.toFixed(1)}   σc = ${cm.sigma.toFixed(1)}`;
       if (narrow) {
         ctx.textAlign = 'left';
         ctx.fillText(stats, padX, 20);
@@ -239,6 +248,18 @@ export default function QuantumWalk({
           <button type="button" className="toggle-btn" onClick={() => { setT(0); setPlaying(true); }}>
             restart
           </button>
+          {phaseControl && (
+            <label className="flex items-center gap-2 basis-full">
+              <span>initial phase φ/π</span>
+              <input
+                type="range" min={-1} max={1} step={0.05} value={phase / Math.PI}
+                onChange={(e) => { setPhase(Number(e.target.value) * Math.PI); setT(steps); setPlaying(false); }}
+                className="accent-[var(--accent)] grow"
+                aria-label="Initial coin relative phase in units of pi"
+              />
+              <span className="tabular-nums w-12">{(phase / Math.PI).toFixed(2)}</span>
+            </label>
+          )}
         </div>
       )}
       {caption && <figcaption className="mt-2 text-sm text-muted">{caption}</figcaption>}

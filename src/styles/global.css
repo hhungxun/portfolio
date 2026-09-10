@@ -366,6 +366,14 @@ h4,
   overflow-y: hidden;
   padding-block: 0.25em;
 }
+.prose .katex {
+  /* KaTeX defaults to 1.21em, which made exponents dominate the notebook
+     typography. Keep inline mathematics close to the surrounding text. */
+  font-size: 1.02em;
+}
+.prose .katex-display > .katex {
+  font-size: 1.06em;
+}
 .prose:lang(zh-Hant),
 .prose:lang(zh-Hans) {
   line-height: 1.95;
@@ -691,6 +699,83 @@ h4,
   font-size: 0.92rem;
   line-height: 1.5;
 }
+.angular-explorer__panel + .angular-explorer__panel {
+  margin-block-start: 1.5rem;
+  padding-block-start: 1.5rem;
+  border-top: 1px dashed var(--line);
+}
+.angular-ladder {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 115px;
+  margin-block-start: 1rem;
+  padding: 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+}
+.angular-ladder span {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 0.35rem;
+  place-items: center;
+  color: var(--pencil);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+}
+.angular-ladder i {
+  display: block;
+  width: 2.5rem;
+  border-top: 2px solid var(--line);
+}
+.angular-ladder span.is-selected {
+  color: var(--accent);
+  font-weight: 700;
+}
+.angular-ladder span.is-selected i {
+  border-color: var(--accent);
+  border-width: 4px;
+}
+.hydrogen-plot {
+  margin-block-start: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+}
+.hydrogen-plot svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.plot__area {
+  fill: color-mix(in srgb, #287271 14%, transparent);
+  stroke: none;
+}
+.wigner-map {
+  position: relative;
+  margin: 1rem 0 2.1rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--paper);
+}
+.wigner-map svg {
+  display: block;
+  width: 100%;
+  height: 300px;
+  image-rendering: auto;
+}
+.wigner-map__q,
+.wigner-map__p {
+  position: absolute;
+  color: var(--pencil);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+.wigner-map__q { right: 0; bottom: -1.6rem; }
+.wigner-map__p { left: -1.5rem; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); white-space: nowrap; }
 @media (max-width: 600px) {
   .interactive { padding: 1rem; }
   .interactive__heading { flex-direction: column; }
