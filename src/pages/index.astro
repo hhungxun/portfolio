@@ -81,7 +81,7 @@ const [posts, poems, projects] = await Promise.all([getPosts(), getPoems(), getP
         <h2 class="label">Latest writing</h2>
         <div class="mt-5 space-y-7">
           {posts.slice(0, 3).map((post) => (
-            <PostCard post={post} />
+            <PostCard post={post} as="h3" />
           ))}
         </div>
         <a href="/blog" class="inline-block mt-6 text-accent no-underline hover:underline">All posts →</a>

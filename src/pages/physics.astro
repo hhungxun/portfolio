@@ -54,7 +54,7 @@ const otherNotes = physicsPosts.filter((post) => !linkedNotes.has(post.id));
       </a>
     </div>
     <div class="mt-5 space-y-8">
-      {otherNotes.map((post) => <PostCard post={post} />)}
+      {otherNotes.map((post) => <PostCard post={post} as="h3" />)}
     </div>
   </section>}
 </Base>
