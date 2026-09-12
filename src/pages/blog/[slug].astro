@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import LanguageToggle from '../../components/LanguageToggle.astro';
 import { getPosts, formatDate, readingTime, tagSlug } from '../../lib/content';
 
 export async function getStaticPaths() {
@@ -12,10 +13,12 @@ export async function getStaticPaths() {
 }
 
 const { post, newer, older } = Astro.props;
-const { title, description, date, updated, tags, lang, side, sample } = post.data;
+const { title, description, date, updated, tags, lang, side, sample, translation } = post.data;
 const { Content } = await render(post);
 const minutes = readingTime(post.body ?? '');
 const headerSide = side === 'physics' ? 'physics' : side === 'poetry' ? 'poetry' : 'both';
+const adjacentOlder = older?.id === translation?.slug ? null : older;
+const adjacentNewer = newer?.id === translation?.slug ? null : newer;
 ---
 
 <Base side={headerSide} lang={lang} title={title} description={description}>
@@ -32,6 +35,7 @@ const headerSide = side === 'physics' ? 'physics' : side === 'poetry' ? 'poetry'
         {title}
       </h1>
       {description && <p class:list={['mt-3 text-[1.1rem] text-ink-2', lang === 'zh' && 'font-tc']}>{description}</p>}
+      {translation && <LanguageToggle current={lang} alternate={translation} />}
       <p class="mt-4 text-[0.85rem] text-muted flex flex-wrap gap-x-3 gap-y-1">
         <time datetime={date.toISOString()}>{formatDate(date, lang)}</time>
         {updated && <span>updated {formatDate(updated, lang)}</span>}
@@ -50,25 +54,25 @@ const headerSide = side === 'physics' ? 'physics' : side === 'poetry' ? 'poetry'
       <Content />
     </div>
 
-    <nav class="mt-16 pt-6 border-t border-line flex justify-between gap-6 text-[0.9rem]" aria-label="Post navigation">
+    {(adjacentOlder || adjacentNewer) && <nav class="mt-16 pt-6 border-t border-line flex justify-between gap-6 text-[0.9rem]" aria-label="Post navigation">
       <span>
         {
-          older && (
-            <a href={`/blog/${older.id}`} class="no-underline text-ink-2 hover:text-accent">
-              ← {older.data.title}
+          adjacentOlder && (
+            <a href={`/blog/${adjacentOlder.id}`} class="no-underline text-ink-2 hover:text-accent">
+              ← {adjacentOlder.data.title}
             </a>
           )
         }
       </span>
       <span class="text-right">
         {
-          newer && (
-            <a href={`/blog/${newer.id}`} class="no-underline text-ink-2 hover:text-accent">
-              {newer.data.title} →
+          adjacentNewer && (
+            <a href={`/blog/${adjacentNewer.id}`} class="no-underline text-ink-2 hover:text-accent">
+              {adjacentNewer.data.title} →
             </a>
           )
         }
       </span>
-    </nav>
+    </nav>}
   </article>
 </Base>

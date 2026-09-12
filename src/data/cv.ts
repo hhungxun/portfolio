@@ -14,7 +14,6 @@ export const cv = {
     {
       title: 'Petrov–Weyl Spectral Bounds',
       period: 'Unpublished draft',
-      link: '/blog/gershgorin-cassini-weyl-matrix',
       bullets: [
         'Apply Gershgorin discs and Brauer Cassini ovals to eigenvalue localisation for a structured Newman–Penrose Weyl matrix.',
         'The matrix convention, frame dependence, and proposed radius functional still require a complete invariant audit.',
@@ -49,7 +48,7 @@ export const cv = {
     {
       title: 'A Gaussian-Pulse Benchmark for Landau–Lifshitz Accuracy',
       period: 'PHY204 term paper · coauthored',
-      link: '/blog/lad-ll-singular-limit',
+      link: '/papers/landau-lifshitz-gaussian-benchmark.pdf',
       bullets: [
         'With Xu Ya-Xuan, compared the exact future-weighted non-runaway Abraham–Lorentz acceleration with the first local Landau–Lifshitz reduction for a smooth Gaussian pulse.',
         'Derived Dᵣₘₛ = (√3/2)ε²[1 − ε² + O(ε⁴)] and verified the O(ε²) law by quadrature and convergence tests over ε ∈ [0.01, 1]. AI assistance is disclosed in the manuscript.',

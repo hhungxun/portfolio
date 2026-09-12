@@ -10,9 +10,7 @@ import { getPosts, getProjects } from '../lib/content';
 const [projects, posts] = await Promise.all([getProjects(), getPosts()]);
 const physicsPosts = posts.filter((post) => post.data.side === 'physics' && !post.data.sample);
 const linkedNotes = new Set(projects.map((project) => project.data.note).filter(Boolean));
-for (const id of linkedNotes) {
-  if (!physicsPosts.some((post) => post.id === id)) throw new Error(`Missing published physics note: ${id}`);
-}
+const publishedNoteIds = new Set(physicsPosts.map((post) => post.id));
 const otherNotes = physicsPosts.filter((post) => !linkedNotes.has(post.id));
 ---
 
@@ -31,9 +29,9 @@ const otherNotes = physicsPosts.filter((post) => !linkedNotes.has(post.id));
 
   <section class="mt-12">
     <h2 class="label">Projects &amp; research notes</h2>
-    <p class="mt-3 text-ink-2">Each project brings together an explanation, the technical paper, and its source repository.</p>
+    <p class="mt-3 text-ink-2">Technical papers and source repositories for current and past projects.</p>
     <div class="mt-2">
-      {projects.map((p) => <ProjectCard project={p} />)}
+      {projects.map((p) => <ProjectCard project={p} noteAvailable={!p.data.note || publishedNoteIds.has(p.data.note)} />)}
     </div>
   </section>
 

@@ -1,0 +1,34 @@
+---
+interface Props {
+  current: 'en' | 'zh';
+  alternate: {
+    lang: 'en' | 'zh';
+    slug: string;
+    label?: string;
+  };
+}
+
+const { current, alternate } = Astro.props;
+const labels = { en: 'English', zh: '中文' };
+---
+
+<nav
+  class="mt-5 inline-flex items-center rounded-full border border-line bg-paper p-1 text-[0.82rem]"
+  aria-label={current === 'zh' ? '選擇文章語言' : 'Choose article language'}
+>
+  <span
+    class="rounded-full bg-ink px-3 py-1.5 text-paper"
+    lang={current === 'zh' ? 'zh-Hant' : 'en'}
+    aria-current="page"
+  >
+    {labels[current]}
+  </span>
+  <a
+    class="rounded-full px-3 py-1.5 no-underline text-ink-2 transition-colors hover:bg-paper-2 hover:text-ink"
+    href={`/blog/${alternate.slug}`}
+    hreflang={alternate.lang === 'zh' ? 'zh-Hant' : 'en'}
+    lang={alternate.lang === 'zh' ? 'zh-Hant' : 'en'}
+  >
+    {alternate.label ?? labels[alternate.lang]}
+  </a>
+</nav>

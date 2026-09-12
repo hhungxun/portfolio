@@ -523,6 +523,34 @@ h4,
   font-size: 0.92rem;
   line-height: 1.55;
 }
+.strategy__modes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin-block-end: 1rem;
+}
+.strategy__modes button {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--paper);
+  color: var(--ink-2);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+.strategy__modes button[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--paper));
+  color: var(--accent);
+}
+.strategy__map svg {
+  min-width: 520px;
+}
+
+.strategy__map {
+  overflow-x: auto;
+}
 .entanglement-bars {
   display: flex;
   align-items: flex-end;

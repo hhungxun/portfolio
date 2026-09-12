@@ -6,10 +6,13 @@ interface Props {
   project: Project;
   /** render the markdown body below the summary */
   full?: boolean;
+  /** whether the companion note is currently public */
+  noteAvailable?: boolean;
 }
-const { project, full = false } = Astro.props;
+const { project, full = false, noteAvailable = true } = Astro.props;
 const { title, subtitle, period, summary, pdf, repo, tags, note } = project.data;
-const primaryLink = note ? `/blog/${note}` : pdf;
+const publicNote = noteAvailable ? note : undefined;
+const primaryLink = publicNote ? `/blog/${publicNote}` : pdf;
 const { Content } = full ? await render(project) : { Content: null };
 ---
 
@@ -30,7 +33,7 @@ const { Content } = full ? await render(project) : { Content: null };
     )
   }
   <p class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.85rem]">
-    {note && <a href={`/blog/${note}`} class="text-accent no-underline hover:underline">Read the explanation →</a>}
+    {publicNote && <a href={`/blog/${publicNote}`} class="text-accent no-underline hover:underline">Read the explanation →</a>}
     {pdf && <a href={pdf} class="text-accent no-underline hover:underline">Read the PDF ↗</a>}
     {repo && <a href={repo} class="text-accent no-underline hover:underline">Repository ↗</a>}
     {tags.map((t) => <span class="text-muted">#{t}</span>)}

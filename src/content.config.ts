@@ -13,6 +13,14 @@ const blog = defineCollection({
     tags: z.array(z.string()).default([]),
     /** language of the post body; controls <html lang> and fonts */
     lang: z.enum(['en', 'zh']).default('en'),
+    /** Optional companion edition in another language. Rendered as a language switcher. */
+    translation: z
+      .object({
+        lang: z.enum(['en', 'zh']),
+        slug: z.string(),
+        label: z.string().optional(),
+      })
+      .optional(),
     /** which side of the site this belongs to */
     side: z.enum(['physics', 'poetry', 'misc']).default('misc'),
     draft: z.boolean().default(false),
