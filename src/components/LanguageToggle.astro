@@ -13,7 +13,7 @@ const labels = { en: 'English', zh: '中文' };
 ---
 
 <a
-  class="mt-5 inline-flex items-center gap-1 rounded-full border border-line bg-paper p-1 text-[0.82rem] no-underline transition-colors hover:border-accent hover:text-accent"
+  class="mt-5 inline-flex items-center gap-1 rounded-full border border-line bg-paper p-1 text-[0.82rem] no-underline transition-colors hover:bg-paper-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
   href={`/blog/${alternate.slug}`}
   hreflang={alternate.lang === 'zh' ? 'zh-Hant' : 'en'}
   aria-label={current === 'zh' ? '切換到 English' : 'Switch to 中文'}
