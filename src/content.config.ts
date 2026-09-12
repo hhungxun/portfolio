@@ -60,6 +60,8 @@ const projects = defineCollection({
     repo: z.string().url().optional(),
     tags: z.array(z.string()).default([]),
     order: z.number().default(0),
+    /** Temporarily withheld projects remain available in development but are omitted from production. */
+    draft: z.boolean().default(false),
   }),
 });
 

@@ -8,6 +8,7 @@ pdf: /papers/gaussian-gravity-entanglement-control.pdf
 repo: https://github.com/hhungxun/physics-writeups
 tags: [symplectic dynamics, Floquet theory, quantum information]
 order: 3
+draft: true
 ---
 
 Within the audited quadratic model, a finite-time quench provides an existence
