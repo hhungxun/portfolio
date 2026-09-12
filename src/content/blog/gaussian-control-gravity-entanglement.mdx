@@ -1,0 +1,313 @@
+---
+title: Can Gravity Entangle Two Masses? First Decide Which Question You Mean
+description: A Gaussian calculation separates mathematical existence, physical attribution, and experimental feasibility.
+date: 2026-09-07
+updated: 2026-09-12
+tags: [Gaussian states, symplectic dynamics, quantum information]
+lang: en
+side: physics
+draft: false
+---
+
+import GravityEntanglementExplorer from '../../components/GravityEntanglementExplorer.tsx';
+
+Can gravity entangle two masses?
+
+I used to hear this as one question. It is at least three.
+
+First, can a Newtonian quadratic interaction turn a separable Gaussian state
+into an entangled one? Second, if a calculation says yes, was gravity really
+the only non-local quantum resource in the model? Third, can an experiment
+prepare, preserve, and verify the required state before noise overwhelms it?
+
+The answers need not agree. My current calculation finds “yes” to the first
+question, imposes a strict gravity-off test for the second, and finds an
+extraordinarily difficult set of requirements for the third. Mixing these
+answers together creates both false no-go theorems and false experimental
+optimism.
+
+*Status: this is an interactive account of ongoing undergraduate research
+supervised by Prof. Tomasz Paterek. The linked manuscript is a working draft,
+not a submitted or peer-reviewed paper. Exact statements below are scoped to
+the stated linearised two-mode Gaussian model.*
+
+## Why Gaussian mechanics is the right first test
+
+Consider two trapped masses, each moving along one coordinate. Put their
+positions and momenta into a phase-space vector
+
+$$
+u=(x_A,p_A,x_B,p_B)^T.
+$$
+
+A Gaussian state is fixed by its mean $\langle u\rangle$ and covariance matrix
+
+$$
+\sigma_{ij}=\frac12\langle
+\Delta u_i\Delta u_j+\Delta u_j\Delta u_i
+\rangle.
+$$
+
+That economy is the attraction. After expanding the interaction to second
+order, the Hamiltonian is quadratic and the covariance evolves by a matrix
+equation. There is no need to discretise a two-particle wavefunction over a
+large grid. Symplectic linear algebra carries the dynamics.
+
+The economy also sets the boundary. Gaussian mechanics omits the cubic and
+higher terms that can create non-Gaussian states. It cannot answer every
+question about gravity and quantumness. It can answer a clean preliminary one:
+does the simplest controlled quantum model already permit entanglement?
+
+For two modes, the entanglement test is especially sharp. Partial transpose
+amounts to reversing one momentum, $p_B\mapsto-p_B$. Let $\tilde\nu_-$ be the
+smaller symplectic eigenvalue of the partially transposed covariance. Then
+
+$$
+\tilde\nu_-<\frac{\hbar}{2}
+$$
+
+certifies entanglement, and the base-two logarithmic negativity is
+
+$$
+E_N=\max\!\left[0,-\log_2\!\left(
+\frac{2\tilde\nu_-}{\hbar}\right)\right].
+$$
+
+A nonzero cross-covariance is not enough. Classical correlations also fill the
+off-diagonal blocks of $\sigma$. The partial-transpose eigenvalue is what
+distinguishes correlation from entanglement in this setting, following the
+continuous-variable PPT criterion of
+[Simon](https://doi.org/10.1103/PhysRevLett.84.2726) and the logarithmic
+negativity of [Vidal and Werner](https://doi.org/10.1103/PhysRevA.65.032314).
+
+## Geometry decides whether gravity stiffens or softens
+
+The same attractive force produces opposite quadratic signs in two common
+geometries. This surprised me at first.
+
+Let the equilibrium centre separation be $L$. If both masses move along the
+line joining them, their relative displacement changes the distance at first
+order. Expanding $-Gm^2/(L+r)$ gives a negative quadratic curvature: the
+relative mechanical mode softens. If the motion is transverse to the joining
+line, the distance is $\sqrt{L^2+r^2}$ and the quadratic curvature is positive:
+the mode stiffens.
+
+The coordinate-independent check is the Hessian of a central potential. For
+$V=C/s^n$,
+
+$$
+\partial_i\partial_j V
+=nCs^{-n-2}\big[(n+2)\hat s_i\hat s_j-\delta_{ij}\big].
+$$
+
+For Newtonian gravity, $C=-Gm^2$ and $n=1$. The Hessian has one longitudinal
+eigenvalue and two transverse eigenvalues with opposite sign and a factor of
+two between their magnitudes. “Gravity is attractive” does not tell us the
+sign of a fluctuation stiffness. The geometry does.
+
+This check mattered when I reconstructed the fixed-coupling calculation in
+[Poddubny et al.](https://arxiv.org/abs/2408.06251). I first reproduced the
+published dimensionless dynamics, then derived the microscopic coupling from
+the potential rather than trusting a sign convention. The distinction between
+reproducing a plotted model and validating its physical parameter map became a
+rule for the rest of the project.
+
+## A quench gives a constructive existence result
+
+For equal masses and traps, centre-of-mass and relative coordinates diagonalise
+the quadratic Hamiltonian. In the collinear geometry the centre-of-mass mode
+keeps the bare trap frequency $\omega_m$, while the relative frequency is
+
+$$
+\Omega=\omega_m\sqrt{1-\kappa},
+\qquad
+\kappa=\frac{4Gm}{L^3\omega_m^2}.
+$$
+
+Stability requires $0<\kappa<1$. Define the frequency mismatch
+
+$$
+\gamma=\frac{\omega_m}{\Omega}=(1-\kappa)^{-1/2}.
+$$
+
+Now begin with two independent local thermal states, each with mean occupation
+$\bar n$, and switch on the gravitational curvature suddenly. The
+centre-of-mass covariance remains stationary. The relative covariance
+breathes because its initial width belongs to the old frequency. After one
+relative-mode quarter-period, the mismatch has rotated position squeezing into
+the correlations that partial transpose detects.
+
+The peak logarithmic negativity is
+
+$$
+E_N^{\mathrm{quench}}
+=\max\!\left[0,\log_2\!\left(
+\frac{\gamma}{2\bar n+1}\right)\right].
+$$
+
+This is a constructive answer to the existence question. It specifies the
+initial covariance, the stable Hamiltonian, and the readout time. It is not the
+claim that an apparatus can execute the construction.
+
+At $\kappa=0.5$,
+
+$$
+E_N^{\mathrm{quench}}
+=\max\left[0,\frac12-\log_2(2\bar n+1)\right].
+$$
+
+The state is entangled only if
+
+$$
+\bar n<\frac{\sqrt2-1}{2}\simeq0.2071.
+$$
+
+That number is easy to quote and easy to misunderstand. It is an occupation,
+not a laboratory temperature, and it belongs to this particular quench with
+$\kappa=0.5$.
+
+<GravityEntanglementExplorer client:load />
+
+The two bars compare different preparations. The coupled Gibbs state is the
+thermal equilibrium state of the already interacting Hamiltonian. The quench
+starts from a product thermal state and uses the subsequent breathing motion.
+At zero occupation the quench peak has twice the Gibbs logarithmic negativity.
+This is nonequilibrium gain, not free cooling.
+
+Try holding $\kappa=0.5$ and moving $\bar n$ through $0.207$. The displayed
+negativity reaches zero at the analytic PPT boundary. Then weaken $\kappa$.
+The allowed occupation collapses, which is why a tiny gravitational curvature
+cannot be rescued by merely waiting longer.
+
+## The mass cancels where one might hope it helps
+
+For two non-overlapping spheres of radius $a$, density $\rho$, and separation
+$L=2\lambda a$, the largest available gravitational curvature has a simple
+form:
+
+$$
+\omega_G^2=\frac{4Gm}{L^3}
+=\frac{2\pi G\rho}{3\lambda^3}.
+$$
+
+The radius has disappeared. At fixed material density and fractional
+clearance, making both spheres larger increases the gravitational force and
+the inertia together. The characteristic curvature does not improve.
+
+For fused silica near contact, the manuscript obtains
+$\omega_G/(2\pi)=88.26\,\mu\mathrm{Hz}$. Reaching $\kappa=0.5$ therefore means
+lowering the final trap frequency to about $108.19\,\mu\mathrm{Hz}$. The
+quarter-period readout then arrives after $3268$ seconds, or $54.5$ minutes.
+With $\bar n=0.05$, the ideal model gives $E_N=0.3625$ bits, but the same
+occupation corresponds to an effective motional temperature of only
+$1.71\,\mathrm{fK}$ at that final frequency.
+
+The femtokelvin number is not a refrigerator specification. A possible route
+would cool a much stiffer trap, decompress while preserving occupation, set the
+finite-clearance geometry, compensate the mean Newtonian force, and then
+quench. The current draft does not demonstrate a bounded, low-noise
+decompression schedule. That missing step separates the existence proof from
+an experimental protocol.
+
+There is a second warning near $\kappa=1$. The algebraic entanglement grows as
+the relative mode softens, but its spatial variance also grows. Eventually the
+wavepacket samples enough of the potential that the quadratic expansion fails.
+The stability wall is not a source of unlimited trustworthy entanglement.
+
+## Local feedback must pass a gravity-off test
+
+Continuous measurement and feedback introduce another distinction: the state
+conditioned on a measurement record is not the unconditional state delivered
+when that record is ignored.
+
+For a linear measurement, the conditional covariance obeys a Riccati equation.
+The Kalman filter estimates the conditional mean, and a linear-quadratic
+regulator chooses local forces. Across measurement records, however, those
+means fluctuate. The unconditional covariance has the form
+
+$$
+\sigma^{u}=\sigma^{c}+\Xi,
+\qquad \Xi\ge0.
+$$
+
+The additional positive covariance can only make the PPT test less favourable.
+Conditional entanglement is therefore an upper bound on the unconditional
+resource, not a finished experimental result.
+
+This is also where a dangerous modelling shortcut appears. A dense feedback
+gain can look like a spring coupling mass $A$ to mass $B$. If it is inserted
+directly into the operator drift without the measurement noise that carries
+the classical record, it becomes an unlabelled coherent non-local interaction.
+The simulation may then produce entanglement even with gravity removed.
+
+That is a counterfeit success.
+
+In a physically complete gravity-off calculation, local measurements,
+classical communication, and local conditional forces form an LOCC channel and
+cannot create entanglement. The numerical audit in the draft deliberately
+generates large classical cross-correlations under dense record feed-forward
+while retaining $E_N=0$. Inserting the same gain as a noiseless Hamiltonian
+spring instead gives a false positive. This reproduces, in a concrete covariance
+model, the resource accounting emphasized by
+[Kafri, Taylor and Milburn](https://arxiv.org/abs/1401.0946).
+
+## Periodic control revealed an error in my own reasoning
+
+I also studied a periodically modulated separation. In Fourier language, a
+drive near the sum of two mode frequencies selects a two-mode-squeezing term,
+while a drive near their difference selects a passive beam-splitter term. The
+full covariance problem is periodic:
+
+$$
+\dot\sigma=A(t)\sigma+\sigma A^T(t)+D.
+$$
+
+Stability comes from the Floquet multipliers of the time-ordered monodromy.
+Once stable, the periodic covariance follows from a discrete Lyapunov equation.
+This gives an independent route alongside direct long-time integration.
+
+An early version of my analysis suggested that the thermal tolerance diverged
+as the parametric drive approached its stability boundary. It was wrong. The
+formula I had used held the squeezed mode's purity fixed while the open system
+continued to diffuse. In the corrected secular rotating-wave model, the
+threshold saturates at $\bar n=0.2071$. A full calculation with a bare-local
+completely positive bath gives nearby but reservoir-dependent thresholds.
+
+That correction changed how I use analytic reductions. Agreement with the
+closed-system limit is not enough. The reduced model must preserve the bath,
+noise, and purity assumptions of the full dynamics. The manuscript now checks
+Floquet exponents against direct covariance growth and checks periodic
+Lyapunov solutions against long-time integration.
+
+The optimal-feedback work of
+[Winkler et al.](https://arxiv.org/abs/2408.07492) supplies the broader control
+setting. My contribution here is not a new general optimum. It is an audited
+comparison within declared control families, with gravity-off attribution and
+physicality tests applied before accepting a numerical point.
+
+## So, can gravity entangle the masses?
+
+Inside the linearised Newtonian Gaussian model, yes. The stable finite-time
+quench is a direct construction, and its covariance passes the partial-transpose
+test. No measurement or non-local feedback is needed to create the ideal
+correlations.
+
+Does the calculation hide another non-local resource? The gravity-off audit is
+designed to catch exactly that failure. Local record-based control stays
+separable; a noiseless cross-spring does not.
+
+Can the construction be built now? The draft does not establish that. It asks
+for sub-phonon occupation after enormous decompression, tens of minutes of
+coherence at a microhertz trap frequency, high-efficiency measurement if
+feedback preparation is used, finite-range force compensation, and a force
+gradient budget below the Newtonian signal. Increasing the mass at fixed
+density does not evade the curvature ceiling.
+
+The next useful calculation is consequently not another unconstrained search
+for a larger $E_N$. It is a bounded decompression and readout protocol with
+explicit excursion, actuator, recoil, delay, and surface-force budgets. Only
+then do the three questions begin to share one answer.
+
+- [Read the working research draft (PDF)](/papers/gaussian-gravity-entanglement-control.pdf)
+- [Read the central-force treatment that motivates the quadratic expansion](https://arxiv.org/abs/2206.12897)
+- [Inspect the public physics write-ups repository](https://github.com/hhungxun/physics-writeups)

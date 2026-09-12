@@ -10,7 +10,6 @@ sample: false
 ---
 
 import QuantumWalk from '../../components/QuantumWalk.tsx';
-import Quiz from '../../components/Quiz.tsx';
 
 *Status: an interactive reconstruction of a PHY104 course project. The report
 surveys established quantum-walk results and includes numerical illustrations;
@@ -76,11 +75,6 @@ Diffusion smooths and irreversibly loses information. Running the heat equation
 backward magnifies short-wavelength noise. A closed quantum system cannot
 behave this way, because its time evolution has to be reversible, and that
 constraint is what the next section has to build around.
-
-<Quiz client:load title="Classical baseline" questions={[
-  { prompt: 'Why does the classical standard deviation grow as √t?', choices: ['Independent step variances add', 'Every path has the same phase', 'The walker moves √t sites per step', 'The coin is unitary'], answer: 0, explanation: 'Each unbiased ±1 step has variance one. After t independent steps the variance is t, hence the standard deviation is √t.' },
-  { prompt: 'Why is Pₜ(x) zero when t+x is odd?', choices: ['Destructive interference', 'The Gaussian approximation fails', 'Each step flips position parity', 'The coin has only one side'], answer: 2, explanation: 'Starting at zero, every ±1 move changes parity. Position and time therefore have matching parity.' },
-]} />
 
 ## Quantizing the walk requires an extra space
 
@@ -152,11 +146,6 @@ the origin. The quantum profile develops two outward-moving fronts and an
 oscillatory interior. Varying $\phi$ moves probability between the fronts but
 does not restore a Gaussian.
 
-<Quiz client:load title="Phase before probability" questions={[
-  { prompt: 'Two initial coin states have the same |amplitude|² values but different relative phases. Must their later position distributions agree?', choices: ['Yes, probabilities determine everything', 'No, the coin later recombines amplitudes and exposes their phase', 'Yes, because H is real', 'No, but only after an intermediate measurement'], answer: 1, explanation: 'Relative phase is invisible in the initial coin probabilities but becomes observable when later unitary operations mix the components.' },
-  { prompt: 'What would repeated position or coin measurement tend to destroy?', choices: ['Normalization', 'The lattice parity rule', 'Coherence between alternative paths', 'The existence of integers'], answer: 2, explanation: 'Intermediate measurement records which alternatives occurred and suppresses the cross terms responsible for interference.' },
-]} />
-
 ## Ballistic spreading comes from phases that remain coherent
 
 For a translation-invariant walk, Fourier transform position into quasi-momentum
@@ -208,11 +197,6 @@ classical-like diffusive walk.
 That is what coherence buys, operationally: the ability to preserve and later
 compare the phases of paths that would otherwise be distinguishable. The
 outward fronts sit where those surviving amplitudes agree in phase.
-
-<Quiz client:load title="Read the scaling law" questions={[
-  { prompt: 'If σq is proportional to t, what happens to σq/σc as t grows?', choices: ['It approaches zero', 'It stays constant', 'It grows like √t', 'It grows like t²'], answer: 2, explanation: 'Dividing t by √t leaves √t. The widening ratio in the interactive is a direct signature of different scaling exponents.' },
-  { prompt: 'Why is ballistic spreading not merely faster diffusion?', choices: ['The quantum walker has a different mass', 'Diffusion always has width proportional to √t, while coherent band velocities produce width proportional to t', 'Quantum probabilities can be negative', 'The lattice spacing increases'], answer: 1, explanation: 'The governing scaling variable changes from x/√t to x/t; increasing a diffusion coefficient cannot change that exponent.' },
-]} />
 
 ## Continuous time removes the coin, not interference
 

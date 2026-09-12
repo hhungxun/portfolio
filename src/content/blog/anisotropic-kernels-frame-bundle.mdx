@@ -9,8 +9,6 @@ side: physics
 draft: false
 ---
 
-import Quiz from '../../components/Quiz.tsx';
-
 This started with a lollipop. Suppose it is perfectly spherical, and suppose we
 want to lick it into the shape of the Earth. More precisely, we want the
 flattening of the WGS84 reference ellipsoid, scaled down to the candy.
@@ -73,11 +71,6 @@ now tells us where the mass calculation was silent.
 This distinction matters later: the cosine-squared field is the **first-order
 target**, rather than the exact radial difference for the ellipsoid. At second
 order, a term proportional to cosine to the fourth power appears.
-
-<Quiz client:load title="Start with the shape" questions={[
-  { prompt: 'You remove the correct total volume, uniformly over the sphere. What shape results?', choices: ['The desired oblate spheroid', 'A smaller sphere', 'A prolate spheroid'], answer: 1, explanation: 'Uniform radial removal preserves rotational symmetry. Total volume alone cannot encode the desired flattening.' },
-  { prompt: 'Where should the first-order WGS84 target remove the most material?', choices: ['At the equator', 'Uniformly everywhere', 'Near the poles'], answer: 2, explanation: 'Colatitude is zero at the north pole, so cos²θ is maximal there and vanishes at the equator.' }
-]} />
 
 ## A complicated-looking shape with only two harmonic degrees
 
@@ -142,11 +135,6 @@ There is one subtlety. An ellipse does not distinguish an axis from its
 reverse. Turning it through 180 degrees gives the same patch. A full frame
 therefore contains a little more information than the footprint needs. Keeping
 that redundant frame is convenient because transport acts on frames directly.
-
-<Quiz client:load title="What counts as a different contact?" questions={[
-  { prompt: 'Why is a centre on the sphere insufficient for an elliptical footprint?', choices: ['Its tangent orientation affects the removal field', 'The sphere needs a fourth spatial coordinate', 'Its total integral must be negative'], answer: 0, explanation: 'The centre fixes the tangent plane but does not fix the direction of the ellipse within that plane.' },
-  { prompt: 'Which rotation always leaves a fixed elliptical footprint unchanged?', choices: ['45 degrees', '90 degrees', '180 degrees'], answer: 2, explanation: 'A half-turn reverses both principal axes. An ellipse has no arrow attached to either axis, so the footprint is identical.' }
-]} />
 
 ## Put a Gaussian in the tangent plane
 
@@ -291,11 +279,6 @@ At a colatitude of 60 degrees, the enclosed cap has area pi. The frame returns
 rotated by 180 degrees. Yet the removal footprint is exactly the same.
 Nonzero frame holonomy does not always mean nonzero actuation response.
 
-<Quiz client:load title="Read the holonomy through the footprint" questions={[
-  { prompt: 'A latitude loop produces a half-turn of the transported frame. What happens to an elliptical kernel?', choices: ['It has the largest possible mismatch', 'It is unchanged', 'Its normalization doubles'], answer: 1, explanation: 'The half-turn is a symmetry of the kernel even though it is not the identity rotation of a full frame.' },
-  { prompt: 'Where does the Bessel function enter the calculation?', choices: ['From integrating the Gaussian product over the tangent angle', 'From approximating the Earth as a point mass', 'From solving the non-negative least-squares problem'], answer: 0, explanation: 'Combining the two angular cosine terms turns their integral into the defining integral of I₀.' }
-]} />
-
 ## A conjecture becomes an expansion
 
 The earlier draft asked how the mismatch behaves when the ellipse is almost
@@ -401,11 +384,6 @@ These are fairly large residuals. Twelve fixed centres and a prescribed
 footprint do not approximate the global target particularly well.
 The experiment checks a finite fitting problem; it does not solve the
 original lollipop design problem.
-
-<Quiz client:load title="What did the experiment establish?" questions={[
-  { prompt: 'Why can the larger dictionary never have a worse optimal training objective?', choices: ['It includes all old solutions by assigning zero to new coefficients', 'An ellipse is always better than a circle', 'A numerical optimizer always finds the best route'], answer: 0, explanation: 'This follows from feasible-set inclusion. The statement concerns the optimal objective for fixed dictionaries, not every optimizer run or every route.' },
-  { prompt: 'Does the twelve-versus-forty-eight comparison prove an equal-budget orientation advantage?', choices: ['Yes, because both use twelve centres', 'No, because candidate count and active contact count also change', 'Yes, because the target is spectrally sparse'], answer: 1, explanation: 'The larger dictionary offers more candidates and the fitted solution uses more active strengths. That is not an equal-contact-budget comparison.' }
-]} />
 
 ## What was checked, and what remains a control problem
 

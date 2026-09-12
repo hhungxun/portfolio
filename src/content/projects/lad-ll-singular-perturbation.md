@@ -17,4 +17,4 @@ formula for the normalized RMS error, verifies it against independent
 time-domain quadrature, and separates the classical parameter $\epsilon$ from
 the quantum-recoil parameter $\chi_e$.
 
-[Explore the equations, quizzes, and interactive benchmark](/blog/lad-ll-singular-limit).
+[Explore the equations and interactive benchmark](/blog/lad-ll-singular-limit).

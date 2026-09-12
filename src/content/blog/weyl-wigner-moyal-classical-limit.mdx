@@ -9,7 +9,6 @@ side: physics
 draft: false
 ---
 
-import Quiz from '../../components/Quiz.tsx';
 import WignerSmoothing from '../../components/WignerSmoothing.tsx';
 
 *Status: an interactive companion to an independent pedagogical write-up. It
@@ -66,11 +65,6 @@ that recipe runs out of instructions. Putting hats
 on $q$ and $p$ underdetermines the operator: $\hat q\hat p$, $\hat p\hat q$ and
 their symmetrization are three different operators sharing one classical
 expression, and the Weyl map has picked the third.
-
-<Quiz client:load title="The Weyl dictionary" questions={[
-  { prompt: 'Why can operator multiplication not map to ordinary multiplication of symbols?', choices: ['Phase space has too many dimensions', 'Ordinary functions commute but quantum operators need not', 'Fourier transforms are irreversible', 'Momentum is not observable'], answer: 1, explanation: 'If both products became the same pointwise function AB = BA, the symbol map would erase the commutator. The deformed product preserves that information.' },
-  { prompt: 'What extra choice is hidden in turning the classical monomial qp into an operator?', choices: ['A boundary condition', 'An ordering prescription', 'A measurement outcome', 'A temperature'], answer: 1, explanation: 'Because q-hat and p-hat do not commute, q̂p̂, p̂q̂, and their symmetrized combination are distinct operators.' },
-]} />
 
 ## A quantum state can look like a distribution, but not a probability
 
@@ -176,11 +170,6 @@ product collapses to ordinary multiplication and the bracket above collapses to
 the Poisson bracket, which is the classical limit arriving as a limit of the
 product itself.
 
-<Quiz client:load title="Where the quantum structure went" questions={[
-  { prompt: 'In the Weyl–Wigner formulation, what replaces operator composition?', choices: ['Convolution in time', 'The star product', 'Bayesian conditioning', 'Matrix transposition'], answer: 1, explanation: 'The defining compatibility is (ÂB̂)W = AW ⋆ BW. The noncommutativity of operators is carried by the star product.' },
-  { prompt: 'What is q ⋆ p − p ⋆ q?', choices: ['0', 'qp', 'iℏ', 'ℏ²'], answer: 2, explanation: 'The first-order derivative terms have opposite signs and the ordinary qp terms cancel, reproducing the canonical commutator exactly.' },
-]} />
-
 ## Dynamics becomes a deformed Hamiltonian flow
 
 The von Neumann equation
@@ -263,12 +252,6 @@ uncertainty scale. Its positivity is guaranteed because it is an expectation
 value of the positive operator $\hat\rho$. The gain is a genuine probability
 density for coherent-state outcomes; the cost is resolution. The sharp
 features that distinguished some states have been averaged away.
-
-<Quiz client:load title="Classical limits without slogans" questions={[
-  { prompt: 'Why does the Moyal bracket equal the Poisson bracket exactly for a quadratic Hamiltonian?', choices: ['Quadratic systems have no uncertainty', 'All third and higher derivatives of the Hamiltonian vanish', 'Their Wigner functions are always positive', 'ℏ is set to zero'], answer: 1, explanation: 'The first correction to Poisson evolution contains third derivatives. A quadratic Hamiltonian kills it and every still-higher term, without taking ℏ to zero.' },
-  { prompt: 'What does Gaussian coarse-graining remove first?', choices: ['Normalization', 'High-frequency phase-space fringes', 'The broadest positive lobe', 'Hamiltonian energy levels'], answer: 1, explanation: 'Convolution is a low-pass filter. Short-scale oscillations, including many negative interference fringes, are attenuated most strongly.' },
-  { prompt: 'Does a positive Husimi Q-function prove that the underlying state is classical?', choices: ['Yes, positivity is sufficient', 'No, positivity follows from smoothing and the state can still be quantum', 'Yes, but only for oscillators', 'No, because Q is never normalized'], answer: 1, explanation: 'Q describes finite-resolution coherent-state statistics. Positivity is useful, but smoothing can hide nonclassical fine structure rather than abolish the quantum state.' },
-]} />
 
 ## What the phase-space picture does and does not establish
 

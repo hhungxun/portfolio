@@ -9,7 +9,6 @@ side: physics
 draft: false
 ---
 
-import Quiz from '../../components/Quiz.tsx';
 import GaussianBenchmark from '../../components/GaussianBenchmark.tsx';
 import BreakdownMap from '../../components/BreakdownMap.tsx';
 
@@ -66,11 +65,6 @@ expect to pin $C$ down by choosing an initial acceleration, the way an
 initial-value problem usually works. Here the condition comes from the other
 end of the problem instead: we demand that the acceleration vanish after the
 force has disappeared, which selects the non-runaway branch.
-
-<Quiz client:load title="The missing initial datum" questions={[
-  { prompt: 'Why is the limit τₑ → 0 singular?', choices: ['The Gaussian becomes discontinuous', 'The small parameter multiplies the highest derivative', 'The solution becomes complex', 'The force amplitude diverges'], answer: 1, explanation: 'The limit lowers the differential order. One dynamical direction—the runaway direction—disappears instead of changing smoothly.' },
-  { prompt: 'What removes the runaway in this benchmark?', choices: ['Choosing a sufficiently small time step', 'A future non-runaway boundary condition', 'Increasing the force amplitude', 'Replacing the electron with a heavier particle'], answer: 1, explanation: 'The physical branch is selected by requiring the acceleration to vanish after the force is gone. Numerical precision alone cannot remove a genuine homogeneous solution.' },
-]} />
 
 ## Deriving the exact physical branch
 
@@ -152,11 +146,6 @@ The displacement of the exact peak toward negative $x$ is the pre-acceleration
 made visible. LL reproduces the first-order displacement. What remains is a
 second-order shape error.
 
-<Quiz client:load title="Predict before calculating" questions={[
-  { prompt: 'If T doubles while τₑ is fixed, what happens to the leading LL error?', choices: ['It doubles', 'It is unchanged', 'It is roughly quartered', 'It changes sign'], answer: 2, explanation: 'Doubling T halves ε. Because the first omitted contribution is quadratic in ε, the leading error falls by about four.' },
-  { prompt: 'Why does changing f₀ not change this normalized benchmark?', choices: ['The electron timescale depends on f₀', 'Both accelerations scale linearly with f₀', 'The Gaussian integral ignores amplitude', 'LL is exact only at unit amplitude'], answer: 1, explanation: 'In this prescribed-force linear model, dividing by f₀ removes the common amplitude. Amplitude can still change the separate quantum parameter χₑ.' },
-]} />
-
 ## An exact error law, not just a fitted slope
 
 Define the normalized RMS discrepancy
@@ -228,11 +217,6 @@ $\epsilon$; the largest RMS discrepancy is $6.48\times10^{-9}$. Doubling the
 representative grids changes $D_{\mathrm{rms}}$ by at most
 $1.3\times10^{-13}$.
 
-<Quiz client:load title="Audit the evidence" questions={[
-  { prompt: 'Why is the frequency-domain calculation a stronger check than merely refining one quadrature?', choices: ['It uses a different representation of the same quantity', 'It always returns a smaller error', 'It assumes LL is exact', 'It removes ε from the problem'], answer: 0, explanation: 'Independent representations are less likely to share the same implementation mistake. Agreement checks the time-domain convolution against Parseval’s spectral identity.' },
-  { prompt: 'Can the boxed closed form be evaluated naively when ε is extremely small?', choices: ['Yes, because erfc is always exactly one', 'No, large intermediate factors and cancellation require a stable form or asymptotic series', 'No, because ε becomes complex', 'Yes, but only in degrees rather than radians'], answer: 1, explanation: 'The final answer is tiny while terms in the closed form nearly cancel. The spectral integral or asymptotic series is numerically safer.' },
-]} />
-
 ## A second parameter answers a different question
 
 The strong-field quantum parameter is
@@ -260,11 +244,6 @@ have appreciable quantum corrections because its $\chi_e$ need not be small.
 for example, report mean quantum parameters around $0.05$–$0.1$: already
 interesting for quantum corrections, but not accurately described as
 $\chi_e\gtrsim1$.
-
-<Quiz client:load title="Diagnose the disagreement" questions={[
-  { prompt: 'An experiment has ε ≪ 1 but χₑ ≈ 0.2. What is the first conclusion?', choices: ['LL reduction of order must have failed', 'The runaway has returned', 'Classical LL–AL truncation is small here, while quantum emission may matter', 'The pulse cannot be Gaussian'], answer: 2, explanation: 'The two axes test different approximations. Small ε controls this classical truncation; appreciable χₑ raises a separate quantum-validity question.' },
-  { prompt: 'Does a small error in this one-dimensional benchmark prove every relativistic LL simulation is accurate?', choices: ['Yes, by dimensional analysis', 'No, the result is scoped to a prescribed-force toy model', 'Yes, provided χₑ is small', 'No, because Gaussian functions are discontinuous'], answer: 1, explanation: 'Field gradients, relativistic motion, beam dynamics, and model-specific approximations require their own error analysis.' },
-]} />
 
 ## What is—and is not—new here
 

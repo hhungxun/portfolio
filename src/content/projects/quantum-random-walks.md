@@ -14,4 +14,4 @@ The PHY104 report derives the classical diffusion limit and contrasts it with
 the ballistic spreading of discrete- and continuous-time quantum walks. The
 companion article now exposes the role of the initial coin phase, gives the
 Fourier-space explanation of ballistic fronts, and distinguishes fast transport
-from an algorithmic speed-up. [Explore the interactive walk and retrieval quizzes.](/blog/quantum-walk-spreading)
+from an algorithmic speed-up. [Explore the interactive walk and full essay.](/blog/quantum-walk-spreading)

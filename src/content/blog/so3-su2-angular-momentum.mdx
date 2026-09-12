@@ -9,7 +9,6 @@ side: physics
 draft: false
 ---
 
-import Quiz from '../../components/Quiz.tsx';
 import AngularMomentumExplorer from '../../components/AngularMomentumExplorer.tsx';
 
 *Status: an interactive companion to an independent pedagogical writeup. The
@@ -80,11 +79,6 @@ $$
 J^2|\lambda,m\rangle=\lambda|\lambda,m\rangle,
 \qquad J_z|\lambda,m\rangle=\hbar m|\lambda,m\rangle.
 $$
-
-<Quiz client:load title="Read the symmetry" questions={[
-  { prompt: 'Why can J² and Jz label the same state?', choices: ['They are numerically equal', 'They commute', 'Jz has no eigenvalues', 'Every Hermitian operator commutes'], answer: 1, explanation: 'Commuting Hermitian operators admit a common eigenbasis. J² is rotationally invariant, while Jz resolves states within a multiplet.' },
-  { prompt: 'What does [Jx,Jy] = iℏJz encode?', choices: ['Successive small rotations depend on order', 'Angular momentum is classically zero', 'Only the z direction exists', 'All rotations share one eigenvector'], answer: 0, explanation: 'The commutator is the infinitesimal residue left by composing rotations in opposite orders.' },
-]} />
 
 ## Ladder operators are eigen-operators
 
@@ -158,11 +152,6 @@ coefficient under the square root is exactly zero.
 Use the upper panel to move through a multiplet. The raising coefficient is
 largest away from the top and vanishes exactly at $m=j$, where the state that
 $J_+$ would produce has zero norm.
-
-<Quiz client:load title="Build the ladder" questions={[
-  { prompt: 'For j = 3/2, how many m states exist?', choices: ['2', '3', '4', '5'], answer: 2, explanation: 'A spin-j irreducible representation has dimension 2j+1, hence four states for j=3/2.' },
-  { prompt: 'Why must the raising ladder terminate?', choices: ['Time evolution stops', 'Otherwise a squared norm eventually becomes negative', 'The Hamiltonian is always zero', 'm is defined to be positive'], answer: 1, explanation: 'J² stays fixed while m grows. Positivity of ||J+|j,m⟩||² forbids arbitrarily large m.' },
-]} />
 
 ## Why orbital angular momentum excludes half-integers
 
@@ -239,11 +228,6 @@ minus itself; you need $4\pi$ to get back. If that sounds like bookkeeping,
 look at where the sign survives: probabilities are blind to it, interference is
 not. $SO(3)$ and $SU(2)$ share a Lie algebra and differ globally, and this is
 the place that difference becomes measurable.
-
-<Quiz client:load title="Orbital or internal?" questions={[
-  { prompt: 'What forces orbital m to be an integer for scalar wavefunctions?', choices: ['The Coulomb energy formula', 'Single-valuedness under φ → φ + 2π', 'The Pauli exclusion principle', 'The radial boundary at infinity'], answer: 1, explanation: 'The factor e^{imφ} must be unchanged after one full turn, requiring integer m.' },
-  { prompt: 'Why can spin one-half exist even though scalar orbital states have integer ℓ?', choices: ['Spin uses an internal SU(2) representation', 'Spin changes Planck’s constant', 'The electron is not quantum mechanical', 'Half-integers solve the radial equation'], answer: 0, explanation: 'Spin acts on an internal vector space rather than arising from scalar functions on physical space.' },
-]} />
 
 ## Hydrogen: symmetry separates the problem
 

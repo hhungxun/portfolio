@@ -1,6 +1,6 @@
 ---
 note: gaussian-control-gravity-entanglement
-title: Gaussian Quantum Dynamics on Sp(4,R)
+title: Can Gravity Entangle Two Masses?
 subtitle: Ongoing undergraduate research · supervised by Prof. Tomasz Paterek
 period: Current
 summary: A Gaussian-state study of whether local control can enable unconditional gravity-mediated entanglement, using symplectic covariance dynamics, logarithmic negativity, and Riccati methods.
@@ -16,4 +16,4 @@ and finite-range stable actuation as the real obstacles. The numerical workflow
 uses independent reproduction as a gate: I reproduced Poddubny et al., Fig. 2,
 before extending the calculation.
 
-[Read the research note](/blog/gaussian-control-gravity-entanglement).
+[Read the full research essay and explore the quench threshold](/blog/gaussian-control-gravity-entanglement).
