@@ -123,11 +123,16 @@ h4,
   letter-spacing: -0.01em;
 }
 
-/* Chinese text keeps WenKai even in headings, where Bricolage has no glyphs */
-:lang(zh-Hant),
-:lang(zh-Hans),
-:lang(zh),
-.font-tc {
+/* Chinese text keeps WenKai even in headings, where Bricolage has no glyphs.
+   The :not() is load-bearing. `lang` is inherited through the DOM, so a bare
+   :lang() selector matches every span KaTeX emits, and a rule that matches an
+   element directly beats one it would otherwise inherit -- no matter the
+   specificity. Without the exclusion, WenKai replaced KaTeX_Main inside every
+   formula, which is why U+E020 (the overlay stroke in \neq) came out as tofu. */
+:lang(zh-Hant):not(.katex *),
+:lang(zh-Hans):not(.katex *),
+:lang(zh):not(.katex *),
+.font-tc:not(.katex *) {
   font-family: var(--font-tc);
 }
 :lang(zh-Hant) h1,
@@ -367,12 +372,22 @@ h4,
   padding-block: 0.25em;
 }
 .prose .katex {
-  /* KaTeX defaults to 1.21em, which made exponents dominate the notebook
-     typography. Keep inline mathematics close to the surrounding text. */
-  font-size: 1.02em;
+  /* KaTeX defaults to 1.21em, which is large next to the notebook body face.
+     Scale the whole formula down rather than reaching for any single part of
+     it: the superscript and subscript sizes are relative (0.7em, then 0.5em),
+     so they follow. */
+  font-size: 1.05em;
 }
 .prose .katex-display > .katex {
-  font-size: 1.06em;
+  font-size: 1.1em;
+}
+/* Digits and operators carry no font class of their own and inherit from
+   .katex, so any rule that reaches them directly wins. Keep the whole subtree
+   on the KaTeX faces and let KaTeX's own (.katex .mathnormal and friends,
+   which are more specific) pick the italic and upright variants. */
+.katex,
+.katex * {
+  font-family: KaTeX_Main, "Times New Roman", serif;
 }
 .prose:lang(zh-Hant),
 .prose:lang(zh-Hans) {
@@ -545,11 +560,21 @@ h4,
   color: var(--accent);
 }
 .strategy__map svg {
-  min-width: 520px;
+  min-width: 560px;
 }
 
 .strategy__map {
   overflow-x: auto;
+}
+/* Four options do not fit two-up at any comfortable label length. */
+.footprint__modes {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.holonomy__stage {
+  overflow-x: auto;
+}
+.holonomy__stage svg {
+  min-width: 560px;
 }
 .entanglement-bars {
   display: flex;

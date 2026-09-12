@@ -1,8 +1,8 @@
 ---
 title: What a Lollipop Taught Me About Geometry
-description: From shaping a sphere to an exact formula for how a transported elliptical footprint changes, with derivations, numerical experiments, and checkpoints.
+description: A friend asked whether you could lick a round lollipop into the shape of the Earth. The optimal strategy turns out to be one line long, and getting there cost me a week of minimising the wrong thing.
 date: 2026-09-08
-updated: 2026-09-12
+updated: 2026-09-13
 tags: [differential geometry, holonomy, geometric control]
 lang: en
 translation:
@@ -15,92 +15,76 @@ draft: false
 
 import LollipopHolonomyExplorer from '../../components/LollipopHolonomyExplorer.tsx';
 import LollipopStrategyExplorer from '../../components/LollipopStrategyExplorer.tsx';
+import LollipopFootprintExplorer from '../../components/LollipopFootprintExplorer.tsx';
 
 **Can you lick a perfectly spherical lollipop into the shape of the Earth?**
 
-Ignore mountains and oceans. At planetary scale, Earth is approximately an
-*oblate spheroid*: slightly wider around the equator than from pole to pole.
-Imagine shrinking that same proportion onto a round sweet. The task sounds like
-a joke, but it immediately asks three serious questions:
+A friend asked me this, and my first answer was wrong in a way I did not notice
+for a while. Total the volume you need gone, divide by the volume one lick takes,
+done.
 
-1. How much candy must be removed?
-2. Where on the surface should it be removed?
-3. If a lick leaves an elongated mark, which way should that mark point?
+Ignore mountains and oceans. At planetary scale the Earth is an *oblate
+spheroid*: a little wider around the equator than from pole to pole. Shrink that
+same proportion onto a round sweet and three questions fall out.
 
-The first is a volume calculation. The second is a problem of assembling a
-global shape from many local patches. The third is the trapdoor. Once the
-contact patch has a direction, its state is not just a dot on the sphere. We
-must also remember an arrow lying flat against the surface.
+1. How much candy has to go?
+2. Where does it come off?
+3. If a lick leaves a long thin mark rather than a dot, which way should the mark
+   point?
 
-Carry that arrow around a closed route without deliberately twisting it. When
-it returns to its starting point, it may point in a different direction. This
-is not slippage; it is curvature. The effect is called *holonomy*, but the name
-matters less than the picture: on a curved surface, “keep pointing straight”
-depends on the path you take.
+The first is arithmetic and I will do it in a paragraph. The second is harder.
+The third one is the reason this page exists, and I did not see it coming.
 
-This note follows that chain all the way to a formula for the change in the
-removal footprint. It explains the [technical paper](/papers/anisotropic-kernel-control-s2.pdf);
-the [source and experiments](https://github.com/hhungxun/physics-writeups/tree/main/sources/anisotropic-kernel-control-s2)
-let you reproduce the numbers. The model describes small, additive radial
-removal on a fixed sphere. Actual candy dissolution would need its own
-experimental contact law.
+The model here is a fixed sphere, additive removal, and no saliva. Real candy
+dissolves, the tongue is warm and wet, and the shape changes while you work on
+it. Everything after this sentence is about a sphere that does not care.[^model]
 
-## Knowing how much is not knowing where
+## How much, and then where
 
-The flattening of an ellipsoid is the fractional difference between its
-equatorial and polar radii:
+The flattening of a spheroid is the fractional gap between its equatorial and
+polar radii,
 
 $$
 f=\frac{a_E-b_E}{a_E}.
 $$
 
-WGS84, the reference model used by GPS, specifies an inverse flattening of
-298.257223563. In other words, the difference is small—about one part in 298—but
-not zero. Keep the lollipop's equatorial radius equal to its original radius
-and shorten the polar radius by this fraction. The sphere and target then
-differ in volume by
+WGS84, the model your phone's GPS uses, puts the inverse flattening at
+298.257223563. So $f = 0.0033528$. On a lollipop of radius $R_0 = 20$ mm that
+makes the polar dimple 67 µm deep — about the thickness of a sheet of paper.
+Keep the equator where it is, pull the poles in by that much, and the volume you
+owe is
 
 $$
-\Delta V=\frac{4\pi}{3}R_0^3f.
+\Delta V=\frac{4\pi}{3}R_0^3f \approx 112\ \text{mm}^3,
 $$
 
-That tells us the total amount of candy. It cannot tell us a licking strategy,
-for the same reason that knowing how much paint is in a tin does not tell us
-what picture to paint.
-Removing that amount uniformly simply gives a smaller sphere. Removing more
-near the equator makes the shape change in the wrong direction.
+which is 0.34% of a 33.5 cm³ sweet. That was my first answer, and it is a
+correct answer to a question nobody asked. A tin of paint knows its own volume
+and has no opinion about the painting.
 
-We need a *field*: simply a rule assigning an amount of removal to every point.
+Remove that much evenly and you get a smaller sphere. Remove more near the
+equator and you have made an American football. What the problem actually wants
+is a *field*: a rule saying how deep to go at every point.
 
-Let the colatitude be the angle measured down from the north pole. The target
-spheroid has radial coordinate
-
-$$
-r_f(\theta)=R_0
-\left(\sin^2\theta+\frac{\cos^2\theta}{(1-f)^2}\right)^{-1/2}.
-$$
-
-Expand in the small flattening. To first order, the desired removal is
+Let $\theta$ be colatitude, measured down from the north pole. Expanding the
+target spheroid to first order in $f$,
 
 $$
 \delta_\star(\theta)=R_0f\cos^2\theta.
 $$
 
-At a pole the cosine squared is one. At the equator it is zero. The geometry
-now tells us where the mass calculation was silent.
+Check the ends. At a pole $\cos^2\theta = 1$ and you take the full 67 µm. At the
+equator it is zero and you take nothing. Geometry has answered the question the
+volume calculation could not even hear.[^second]
 
-This distinction matters later: the cosine-squared field is the **first-order
-target**, rather than the exact radial difference for the ellipsoid. At second
-order, a term proportional to cosine to the fourth power appears.
+## Two notes
 
-## The target is simpler than it looks
+Spherical harmonics are the notes of a sphere. A pattern painted on a ball
+decomposes into a fundamental and its overtones the way a struck string does,
+and the low harmonics are the broad patterns while the high ones are the fine
+detail.
 
-Spherical harmonics are the natural “notes” of a sphere. Just as a musical tone
-can be decomposed into a fundamental and overtones, a pattern painted on a
-sphere can be decomposed into broad and fine angular patterns.
-
-Our target has an especially short expansion. The second Legendre polynomial
-satisfies
+Our target is a two-note chord. $P_2$ is the polynomial you want:
 
 $$
 P_2(t)=\frac{3t^2-1}{2},
@@ -108,73 +92,166 @@ P_2(t)=\frac{3t^2-1}{2},
 \cos^2\theta=\frac13+\frac23P_2(\cos\theta).
 $$
 
-The constant belongs to harmonic degree zero. The second term belongs to
-degree two. There are no other degrees in the linearized target.
+A constant, which is degree zero, plus one broad pole-versus-equator pattern,
+which is degree two. Nothing else survives the linearisation.
 
-The target therefore asks for only two notes: a uniform part and one broad
-pole-versus-equator pattern. Hitting those two notes is still hard. A localized lick
-is a narrow patch and generally contains many harmonic degrees. Several patches
-must add up to approximate a very simple global shape. Good approximation means
-both building the desired low-degree pattern and controlling the unwanted
-high-degree content.
+Two notes. That should be the easy case, and for a while I thought it was going
+to be, because the instrument is the problem: a single lick is a small patch,
+and a small patch is a chord of dozens of harmonics at once. You cannot play
+degree two on its own. You can only play thick clusters and hope the unwanted
+partials cancel.
 
-The coefficients also have a physical restriction: a lick removes candy and
-cannot put it back to cancel an earlier mistake, which is why they have to be
-non-negative.
+Except they can't cancel, because a lick removes candy and cannot put it back.
+Every amplitude is non-negative. That is where the music analogy dies, and it
+dies at the point that makes this problem interesting: I get to choose where to
+strike, every strike is positive, and there is no such thing as playing a note at
+negative volume to silence the one before it.
 
-## A dot cannot remember which way the lick points
+## The week I spent minimising the wrong thing
 
-Begin with a circular contact patch. To place it on the sphere, we need its
-centre and its size. Rotating it around its centre changes nothing.
-
-Now stretch it into an ellipse. Two patches can have the same centre and the
-same widths, while one points north–south and the other east–west. They remove
-different fields. The contact point has stopped being a complete state.
-
-At a point on the sphere, imagine laying down two tiny perpendicular arrows:
-one along the long axis of the lick and one along its short axis. Both arrows
-touch the surface rather than pointing through it; mathematicians call them
-*tangent vectors*. Together with the outward-pointing normal, they form a
-complete three-dimensional orientation, written as a rotation matrix:
+So I set up the obvious objective. Pick a menu of possible licks, give each one
+a non-negative strength $\alpha_j$, and minimise the squared distance from the
+target field:
 
 $$
-R=[e_1\ e_2\ x]\in \operatorname{SO}(3).
+J(\alpha)=\Big\|\delta_\star-\sum_j\alpha_jK_j\Big\|_2^2,
+\qquad \alpha_j\ge0.
 $$
 
-The first two columns specify the contact axes; the last specifies its centre.
-The phrase *oriented orthonormal frame bundle* means nothing more mysterious
-than “every surface point, together with every possible pair of perpendicular
-unit arrows attached there.”
+Twelve contact points spread over the sphere, four orientations each, 48
+candidates, non-negative least squares. Relative error 0.4365. I tried more
+orientations. I tried moving the centres. Nothing got below about 0.4, and I
+spent a week convinced the obstruction was deep.
 
-The identification with the rotation group is concrete. Every rotation matrix
-has three orthonormal columns, and its first two columns lie in the tangent
-plane at its third column. Conversely, a positively oriented tangent basis and
-its normal produce exactly such a matrix.
+The obstruction was that I was minimising the wrong thing.
 
-If we erase the two tangent arrows, many different orientations collapse to the
-same point. This compact statement records that forgetting operation:
+Go back and look at what a constant does. A uniform layer of removal takes the
+same depth off everywhere. It shaves the lollipop down to a smaller lollipop,
+and a smaller lollipop is *the same shape*. The degree-zero harmonic is not part
+of the design problem at all. It is a free parameter that costs candy and buys
+nothing, and I had been faithfully fitting it, at full weight, for a week.
+
+Only degree two matters. Of my 0.4365, a large chunk was the essay-grade error of
+insisting that $\delta$ equal $R_0f\cos^2\theta$ on the nose, when what was
+wanted was $\delta$ equal to $R_0f\cos^2\theta$ *plus anything constant*.
+
+## The whole answer, in one line
+
+Drop the constant from the objective and the problem stops being an
+optimisation. It becomes a division.
+
+Here is the move. The target depends only on $\theta$, so look for a removal
+recipe that also depends only on $\theta$: a *density* $w$ over the sphere,
+uniform in longitude, licking in rings. Smearing a footprint evenly around a
+circle of latitude and then adding up the rings is a spherical convolution, and
+convolution on a sphere is multiplication note by note. If the footprint $K$ has
+degree-$\ell$ transfer
+
+$$
+k_\ell=2\pi\int_0^{r_c}K(r)\,P_\ell(\cos r)\sin r\,dr,
+$$
+
+then a density with note $w_\ell$ produces a field with note $w_\ell k_\ell$.
+Every note is independent. To get degree two right, divide by $k_2$.
+
+Write $w = w_0 + w_2 P_2(\cos\theta)$. Matching degree two needs
+$w_2 k_2 = \tfrac23 R_0 f$. Degree zero is free, so make it as small as
+non-negativity allows: $P_2$ bottoms out at $-\tfrac12$, so $w_0 = w_2/2$, and
+
+$$
+\boxed{\;w(\theta)=\frac{R_0f}{k_2}\cos^2\theta\;}
+$$
+
+The optimal lick density has the same shape as the thing you are carving. Lick
+hardest at the poles, taper as $\cos^2$, stop entirely at the equator, and
+spread each ring evenly around its circle. The resulting removal field is
+
+$$
+\delta(\theta)=R_0f\cos^2\theta+\frac{R_0f}{3}\left(\frac1{k_2}-1\right),
+$$
+
+which is the target plus a constant. Shape error zero. I checked it numerically
+and got $4\times10^{-13}$, which is what "zero" looks like when you compute it
+in double precision.
+
+For the footprint I have been using, $k_2 = 0.847721$.[^width] So the recipe
+removes $1/k_2 = 1.1796$ times the bare volume difference: 133 mm³ instead of
+112. The extra 18% is not waste in any interesting sense. It goes entirely into
+that uniform term, and on a 20 mm lollipop the uniform term is 4.0 µm.
+
+Four microns. You are carving a 67 µm feature and the price of doing it exactly
+right is a lollipop four microns smaller than the theoretical minimum. Nobody is
+going to notice four microns. That is the whole answer to my friend's question,
+and it took a week of not looking at it.
+
+## Three hundred licks
+
+A density is not a strategy. You cannot lick continuously; you lick a finite
+number of times. So put $M$ rings at the Gauss–Legendre colatitudes, give ring
+$k$ the mass its share of $\cos^2\theta$ demands, and split that mass evenly
+among $n_k$ licks spaced around the circle, with $n_k$ scaled to the ring's
+circumference so the licks overlap by about the same amount everywhere.
+
+| Rings | Licks | Shape error |
+| --- | --- | --- |
+| 5 | 126 | $1.8\times10^{-1}$ |
+| 7 | 192 | $1.5\times10^{-2}$ |
+| 9 | 258 | $4.5\times10^{-4}$ |
+| 11 | 316 | $5.0\times10^{-6}$ |
+| 13 | 384 | $3.3\times10^{-7}$ |
+
+Eleven rings and 316 licks gets the shape to five parts in a million. Solve
+the ring masses again by non-negative least squares, throwing away the formula,
+and you recover the same numbers to eight digits. That is the check I actually
+trust.
+
+Three hundred licks is also, and I did not plan this, roughly how many licks it
+takes to finish a lollipop.
+
+<LollipopStrategyExplorer client:visible />
+
+Drag it up to eleven rings and watch the solid curve settle onto the dashed one,
+displaced upward by a constant. The constant is the whole lesson.
+
+## The state of a lick
+
+Everything so far assumed the footprint is round. Time to spend the rest of the
+essay on the assumption I quietly made and my friend's question did not grant
+me.
+
+Begin with a circular contact patch. To place it you need a centre and a size;
+rotating it about its own centre does nothing at all. Now stretch it into an
+ellipse. Two patches with the same centre and the same two widths, one lying
+north–south and the other east–west, remove different candy. A point on the
+sphere has stopped being enough to say where you licked.
+
+At the contact point, lay down two little perpendicular arrows, one along the
+long axis and one along the short. Both lie flat on the candy; nothing pokes
+through. They are *tangent vectors*. Together with the outward normal they
+make a full three-dimensional orientation, which is to say a rotation matrix:
+
+$$
+R=[e_1\ e_2\ x]\in\operatorname{SO}(3).
+$$
+
+The last column is where you are and the first two are which way the lick
+points. The *oriented orthonormal frame bundle* means nothing more alarming than
+"every point of the sphere, together with every pair of perpendicular unit
+arrows you could attach there," and if you erase the arrows and keep only the
+position, many frames collapse onto one point:
 
 $$
 S^2\cong\operatorname{SO}(3)/\operatorname{SO}(2).
 $$
 
-There is one subtlety. An ellipse does not distinguish an axis from its
-reverse. Turning it through 180 degrees gives the same patch. A full frame
-therefore contains a little more information than the footprint needs. Keeping
-that redundant frame is convenient because transport acts on frames directly.
+I am carrying more information than the ellipse has. An ellipse turned through
+180° is the same ellipse, so the frame distinguishes states the footprint
+cannot. That is sloppy, and it is also the only reason transport is easy to
+write down, so I keep it.
 
-## Give the lick a bell-shaped footprint
-
-Real contact marks do not end at a perfectly sharp boundary: they are strongest
-near the centre and fade outward. We model that fading with a Gaussian, the
-familiar bell curve, stretched into an ellipse.
-
-To write a flat bell curve on a round surface, first unroll a small
-neighbourhood onto the tangent plane. The *logarithm map* is the precise version
-of this local unrolling. It sends a nearby point to a two-component arrow whose
-length is the distance travelled along the sphere.
-
-In polar tangent coordinates, the kernel is
+For the footprint itself: strongest at the centre, fading outward, stretched into
+an ellipse. Unroll a small neighbourhood onto the tangent plane with the
+logarithm map, work in polar tangent coordinates $(r,\phi)$, and write
 
 $$
 K(r,\phi)=\frac{\chi(r)}{Z_{a,b}}
@@ -182,117 +259,84 @@ K(r,\phi)=\frac{\chi(r)}{Z_{a,b}}
 \qquad a>|b|.
 $$
 
-You can read the parameters without doing the integral. The number $a$ sets
-the average narrowness. The number $b$ says how unequal the two widths are.
-When $b=0$, the two widths match and orientation becomes irrelevant. As
-$|b|$ grows, the mark becomes more elongated and more sensitive to rotation.
+You can read the parameters off without doing the integral. $a$ sets the average
+narrowness; $b$ says how unequal the two widths are. At $b=0$ the mark is round
+and orientation is irrelevant. As $|b|$ grows it gets longer and thinner and
+cares more about which way it is turned. Throughout, $a=16$ and $r_c=1.2$, so the
+footprint's width is $1/\sqrt{a} = 0.25$ rad, which is 5 mm of arc on a 20 mm
+lollipop. That is about a tongue.
 
-The cutoff keeps the kernel inside a cap smaller than the antipodal distance.
-This avoids ambiguity in the logarithm map at the opposite pole. We use a
-smooth cutoff rather than an abrupt edge:
-
-$$
-\chi(r)=\exp\left[-\frac{r^2}{r_c^2-r^2}\right]
-\quad (r<r_c),
-$$
-
-with zero value outside. Its rapid decay makes the boundary smooth.
-
-The normalization makes the integral over the sphere equal to one. It must use
-the spherical area element,
+The factor $\chi$ is a smooth cutoff that keeps the kernel inside a cap:
 
 $$
-dA=\sin r\,dr\,d\phi,
+\chi(r)=\exp\left[-\frac{r^2}{r_c^2-r^2}\right]\quad (r<r_c),
 $$
 
-rather than the planar element. Otherwise the removal strength would depend on
-an incorrect mass normalization.
+zero outside. It is there because the logarithm map has no opinion about
+direction at the antipode, and rather than argue with the antipode, mathematics
+just went ahead and truncated. It is a fudge. I have never liked it. The
+normalisation $Z_{a,b}$ makes each footprint integrate to one over the sphere,
+using the spherical area element $dA=\sin r\,dr\,d\phi$ and not the flat one.
 
-The Gaussian is specified relative to the chosen frame. Rotating the frame
-while holding its principal-axis matrix fixed rotates the physical footprint.
-Rotating the coordinates and transforming the matrix at the same time would
-merely describe the same footprint in a different basis.
+That is everything needed to write down what happens when a lick gets turned.
 
-## Walk an arrow around the sphere
+## Parallel transport
 
-Imagine sliding an arrow along the lollipop. Keep it flat against the surface,
-and never deliberately rotate it left or right. This rule is called *parallel
-transport*. It is the curved-surface version of keeping an arrow parallel to
-itself while moving it across a sheet of paper.
-
-For a unit sphere embedded in ordinary three-dimensional space, the equation
-is particularly simple:
+Slide an arrow along the lollipop. Keep it flat against the surface and never
+deliberately twist it left or right. On a unit sphere sitting in ordinary space
+the rule is one line:
 
 $$
 \dot v=-(v\cdot\dot x)x.
 $$
 
-The derivative points along the normal. Its tangential component is zero,
-which expresses the absence of an imposed in-plane twist. Differentiating
-the dot product of the arrow and the normal shows that tangency is preserved.
-The arrow's length is preserved too.
+All the change is along the normal and none of it is in the tangent plane, which
+is the formal content of "no twisting." Differentiate $v\cdot x$ and you find
+tangency is preserved; differentiate $v\cdot v$ and you find length is too.
 
-Now take it around a closed latitude. The arrow returns to the same point,
-but generally at a different angle. Gauss–Bonnet relates this holonomy to
-the enclosed area. On a unit sphere,
+Now walk a full circle of latitude. You come back to the same point with the
+arrow pointing somewhere else. At colatitude 45° it is off by 105.4416°, or
+1.840302369021 radians if you want it that way, and the twelve digits are not
+showing off. They are the cheapest known way to catch an integrator bug, which
+is the only reason anyone ever prints twelve digits. Gauss–Bonnet says the angle
+is the enclosed cap area,
 
 $$
-\psi=2\pi(1-\cos\theta_0)\pmod{2\pi}.
+\psi=2\pi(1-\cos\theta_0)\pmod{2\pi},
 $$
 
-At a colatitude of 45 degrees the answer is approximately 1.840302369021
-radians, or 105.44 degrees.
-
-The phrase “without twisting” is local. It governs each tiny step, not the
-whole trip. Curvature prevents all those locally straight choices from fitting
+and the honest way to say what went wrong is that "without twisting" is a
+condition on each tiny step and not on the trip. Every step was locally
+straight. Curvature is the fact that locally straight choices do not fit
 together globally.
 
-<LollipopHolonomyExplorer client:visible />
+Nothing slipped. The sphere is curved, and that is the whole of it.
 
-## Turn the returning arrow into a measurable difference
+## How much damage a turn does
 
-Holonomy tells us an angle, but an angle is not yet a physical consequence. A
-perfectly circular lick can rotate by any amount and look identical. An
-elliptical lick changes. We need a number that measures how different the two
-removal patterns are.
+An angle is not yet a consequence. Rotate a round lick by any amount you like
+and it removes exactly the same candy, which means the holonomy angle I worked so
+hard for can be, for the wrong footprint, completely invisible. So: how different
+are two licks?
 
-Compare the original footprint with the rotated one at the same centre. Square
-their point-by-point difference and add it over the whole sphere:
+Compare the footprint you left with the footprint you would leave now, same
+centre, and integrate the squared difference:
 
 $$
 D_\psi^2=\int_{S^2}(K-K_\psi)^2\,dA.
 $$
 
-This is the $L^2$ mismatch: zero means identical removal everywhere, while a
-larger value means a larger total disagreement. It is easier to calculate the
-overlap first:
+The overlap $C(\psi)=\int_{S^2}KK_\psi\,dA$ is easier, and since rotation
+preserves the norm, $D_\psi^2 = 2(C(0)-C(\psi))$. Multiplying the two bell
+curves puts two cosines in one exponent, which collapse:
 
 $$
-C(\psi)=\int_{S^2}K K_\psi\,dA.
+\cos(2\phi)+\cos(2\phi-2\psi)=2\cos\psi\cos(2\phi-\psi).
 $$
 
-Rotation preserves the norm, so the mismatch is twice the difference between
-self-overlap and rotated overlap.
-
-The angular dependence looks awkward until we multiply the two bell curves.
-Their exponent contains two cosine terms, which combine through
-
-$$
-\cos(2\phi)+\cos(2\phi-2\psi)
-=2\cos\psi\cos(2\phi-\psi).
-$$
-
-The remaining angular average is a standard special function, the modified
-Bessel function $I_0$. Naming it lets a two-dimensional surface calculation
-collapse to one ordinary integral over distance from the contact centre:
-
-$$
-C(\psi)=\frac{2\pi}{Z_{a,b}^2}
-\int_0^{r_c}
-\chi(r)^2e^{-ar^2}I_0(br^2\cos\psi)\sin r\,dr.
-$$
-
-Consequently,
+The angular average of $e^{-u\cos\alpha}$ is the modified Bessel function
+$I_0(u)$, so a two-dimensional surface integral turns into one integral over
+distance from the contact centre:
 
 $$
 D_\psi^2=\frac{4\pi}{Z_{a,b}^2}
@@ -300,31 +344,33 @@ D_\psi^2=\frac{4\pi}{Z_{a,b}^2}
 \left[I_0(br^2)-I_0(br^2\cos\psi)\right]\sin r\,dr.
 $$
 
-This is the paper's central formula. A computer can evaluate it quickly, but
-its structure already tells us the important qualitative facts.
-The Bessel function is even and increases with the magnitude of its argument.
-The mismatch therefore vanishes exactly at multiples of a half-turn, and
-is largest at a quarter-turn modulo a half-turn.
+That is the formula. Read it for a moment before I tell you what is in it.
 
-<figure>
-  <img src="/images/physics/orientation-response.svg" alt="Contours of an elliptical kernel before and after a 105-degree frame rotation, beside a mismatch curve that peaks at 90 degrees and returns to zero at 180 degrees." loading="lazy" />
-  <figcaption>The same kernel before and after a latitude loop. The footprints are shown in logarithmic tangent coordinates. The response curve exposes the half-turn symmetry.</figcaption>
-</figure>
+$I_0$ is even and increases with the size of its argument. So $D_\psi$ vanishes
+at $\psi=0$ and $\psi=\pi$, peaks at $\psi=\pi/2$, and grows with $|b|$. Which
+means the worst route is the one with the most holonomy: walk a big loop, come
+back badly turned, leave a badly wrong mark.
 
-Here is the exception that a purely qualitative description can miss.
-At a colatitude of 60 degrees, the enclosed cap has area pi. The frame returns
-rotated by 180 degrees. Yet the removal footprint is exactly the same.
-Nonzero frame holonomy does not always mean nonzero actuation response.
+Except at 60°.
 
-## Almost circular means almost insensitive—but at what rate?
+At colatitude 60° the enclosed cap has area exactly $\pi$, so the frame comes
+back rotated by a full half-turn. Maximum possible insult. And the footprint is
+*identical*, because turning an ellipse through 180° maps both of its axes onto
+themselves reversed and an ellipse cannot tell. I spent an afternoon convinced
+the quadrature was broken. It was not broken. The geometry moved as far as it can
+move and nothing measurable happened at all.
 
-If a footprint is only slightly elongated, intuition says orientation should
-matter only slightly. That is true, but “slightly” could mean proportional to
-the elongation, its square, or something subtler. The overlap formula decides.
+I do not know whether that coincidence generalises, and I could not find it
+stated anywhere.
 
-The Bessel series begins with a constant and a quadratic term. After
-subtracting the two Bessel functions, the constant cancels. With a fixed
-mean precision and a fixed rotation angle,
+<LollipopHolonomyExplorer client:visible />
+
+The mismatch in that panel is the exact formula above, evaluated in your browser
+as you drag. Put the route at 60° and watch it go to zero while the
+frame rotation reads 180.00°.
+
+One more thing the formula gives away. Expand the Bessels in small $b$; the
+constants cancel when you subtract, and the leading term is quadratic:
 
 $$
 D_\psi^2=
@@ -333,160 +379,188 @@ D_\psi^2=
 +O(b^4).
 $$
 
-Thus the mismatch itself grows linearly with small elongation, while its square
-grows quadratically. The rotation contributes a sine factor: no response at
-zero and 180 degrees, and the strongest response at 90 degrees. The coefficient
-comes from the stated radial integral rather than a curve fit.
+So the *mismatch* is linear in the elongation, while its square is quadratic,
+and keeping those two straight is a small piece of bookkeeping that will
+otherwise cost you an afternoon. Writing $\varepsilon = b/a$ and taking the 45°
+loop, the expansion predicts $1.040885\,\varepsilon$ at leading order:
 
-In the numerical experiment, the mean precision is 16 and the cutoff radius
-is 1.2 radians. We use the 45-degree latitude loop and write the contrast as
-epsilon equal to b divided by a. The expansion predicts a mismatch of
-1.040885 times the absolute contrast at leading order.
-
-| Precision contrast | Relative mismatch |
+| $\varepsilon = b/a$ | Relative mismatch |
 | --- | --- |
-| 0 | 0 |
 | 0.01 | 0.008618 |
 | 0.02 | 0.017236 |
 | 0.10 | 0.086272 |
 | 0.40 | 0.350946 |
 | 0.60 | 0.539096 |
 
-Doubling the smallest contrast almost exactly doubles the mismatch. The
-measured logarithmic slope is 0.999973, extremely close to the predicted value
-of one. If we plotted the *squared* mismatch, the slope would be two; keeping
-those two quantities distinct is a small but important bookkeeping check.
+Doubling the smallest contrast doubles the mismatch. The measured log slope is
+0.999973. I wanted 1. The gap is quadrature error and it is boring, which is
+exactly what you want from that gap.
 
-## Can a stronger wrong-way lick compensate?
+## What a long axis is actually worth
 
-Suppose the desired mark points north–south, but the available contact points
-diagonally. Could we simply press harder—or, in the lollipop story, lick more?
+Here is where I expected orientation control to pay for itself, and it does the
+opposite.
 
-The best non-negative strength is the overlap divided by the self-overlap:
+Put the elliptical footprint back into the ring recipe. The closed form assumed
+a round kernel, because a round kernel makes the ring construction a genuine
+convolution. A tilted ellipse does not: the effective degree-two transfer now
+depends on the colatitude of the ring *and* on the tilt $\beta$ of the long axis,
+as $\bar k_2(\theta) + \Delta(\theta)\cos2\beta$. At 45° colatitude, a long axis
+lying along the meridian delivers 0.2234 of degree-two response per lick against
+0.1871 for one lying along the parallel. Meridian wins by 19%.
+
+Then you fit it and the meridian rule loses badly.
+
+| Footprint at each site | Licks | Shape error |
+| --- | --- | --- |
+| one tilt, along the meridian | 200 | $2.8\times10^{-2}$ |
+| four tilts, 0/45/90/135° | 1264 | $1.1\times10^{-3}$ |
+| eight tilts | 2528 | $4.1\times10^{-5}$ |
+| round | 316 | $5.0\times10^{-6}$ |
+
+A fixed tilt leaves azimuthal order $m=2$ in every footprint. The target has no
+$m=2$ in it, eleven ring strengths cannot cancel it, and going to 21 rings only
+gets you to $1.8\times10^{-2}$. It is a floor, not a convergence rate.
+
+Four tilts in equal measure kill orders 2, 4 and 6 exactly (the four phases sum
+to zero unless the order is a multiple of eight), and the first survivor is
+$m=8$, sitting at $5.6\times10^{-4}$ of the footprint. Which is, to within a
+factor of two, the error in the table. Eight tilts push the survivor out to
+$m=16$ and the error falls by another factor of twenty-five, at which point ring
+spacing is the limit again and anisotropy has stopped mattering.
+
+<LollipopFootprintExplorer client:visible />
+
+Averaging over four tilts leaves a footprint that is rotationally symmetric but
+radially fatter, with an $I_0$ factor smeared into its profile, so $k_2$ drops
+from 0.847721 to 0.820925 and you pay 1.2181 times the volume instead of 1.1796.
+That is the real cost of having a long axis: not a worse shape, just more candy.
+
+So for a target this smooth and this symmetric, directionality is a liability,
+and the best thing an orientable tongue can do is arrange to cancel its own
+orientation. That is not what I expected to find, and I want to be careful about
+how far it generalises: a zonal degree-two target is about the friendliest thing
+you could ask for. Ask for something with genuine directional structure and the
+accounting inverts.
+
+## Where the bill arrives
+
+Which brings back the arrow.
+
+Suppose you do commit to the meridian rule, because you have one tongue and it
+has one shape. You now have to hold the long axis on the meridian all the way
+around a ring, and *that* is not free. The parallel at colatitude $\theta$ has
+geodesic curvature $\cot\theta$ and arc length $\sin\theta$ per radian of
+longitude, so holding a fixed bearing costs you
 
 $$
-\alpha_\star=\frac{C(\psi)}{C(0)}.
+\frac{d\beta}{d\varphi}=\cos\theta
 $$
 
-Even after choosing that strength, the squared error is
+of deliberate twist. Over a full lap that is $2\pi\cos\theta$, which at 45° is
+254.56°. And what you decline to supply, curvature supplies for you: the
+remaining $2\pi(1-\cos\theta)$ is exactly the holonomy, 105.44°, the same number
+from three sections ago.
 
-$$
-C(0)-\frac{C(\psi)^2}{C(0)}.
-$$
+Foucault measured that number in 1851, in a church, with a 67-metre wire and a
+28-kilogram bob. A Foucault pendulum at latitude $\varphi$ precesses relative to
+the ground by $360^\circ\sin\varphi$ per day, and $\sin\varphi=\cos\theta$, so the
+precession he watched is exactly the twist you have to supply. The Earth turns a
+full circle; parallel transport keeps $2\pi(1-\cos\theta)$ of it; Foucault's
+pendulum shows you the change.
 
-Cauchy–Schwarz, a standard inequality comparing overlap with size, makes this
-error positive unless the two footprints are proportional.
-Because both integrate to one, proportionality would mean equality.
-A wrong orientation outside the half-turn symmetry therefore has an
-irreducible one-contact error. Admitting the right orientation reduces that
-error to zero.
+The holonomy formula is not a curiosity that happens to live near this problem.
+It is the correction term in the control law. Lick around a ring with a
+directional tongue and you are either paying $\cos\theta$ per radian or you are
+accepting $2\pi(1-\cos\theta)$ of drift, and there is no third option, because
+the sphere is curved.
 
-This is a deliberately controlled comparison: one target kernel, one available
-kernel, the same widths, and a freely adjustable non-negative strength.
-It gives a precise example of why orientation matters without claiming that
-every anisotropic strategy beats every isotropic strategy.
+Anyway, it's a lollipop.
 
-## From one lick to a strategy
+## What is actually proved
 
-One contact cannot build a planet. For a finite menu of possible locations and
-orientations, choose a non-negative strength for each footprint. The goal is to
-minimise shape error without using an unreasonable amount of total removal:
+Three checks. The second one is the only one I would defend in a seminar.
 
-$$
-J(\alpha)=
-\left\|d-\sum_j\alpha_jK_j\right\|_2^2+
-\lambda\sum_j\alpha_j,
-\qquad \alpha_j\geq0.
-$$
+The first is routine: integrate the transport equation with fourth-order
+Runge–Kutta, halve the step, watch the error fall like the fourth power. A
+20,000-step run lands within $8\times10^{-13}$ rad of the analytic angle. The
+second computes the mismatch twice, once through the one-dimensional Bessel
+formula and once by brute-force integration of the squared difference of the
+actual kernels over a radial and angular grid, with two independent
+normalisations. Worst disagreement in the table: $1.3\times10^{-14}$. That is
+double precision complaining, not a disagreement. The third checks the
+non-negative least-squares optimality conditions and re-evaluates the fitted
+strengths on a finer sphere grid, so the reported errors are not a
+pixel-resolution illusion.
 
-The paper proves that this finite optimisation has a solution. The key reason
-is physical as well as mathematical: all strengths are non-negative and every
-kernel has total mass one, so a bounded-error strategy cannot hide an
-unbounded amount of removal through cancellation.
+What none of that establishes is a route. The recipe is a spatial prescription:
+lick *here*, this hard, this many times. It says nothing about what order to do
+it in, and with a directional tongue the order matters, because transport changes
+the arrows you carry and therefore changes every footprint after the first. A
+tool that resets its own orientation at each contact makes the history
+dependence go away. A tongue does not.
 
-The resulting removal pattern is unique. The individual recipe need not be:
-two different combinations of overlapping contacts can paint the same final
-field. This is like mixing the same colour from different proportions of paint.
+## Prior work
 
-The numerical benchmark fits the dimensionless target equal to the square of
-the vertical coordinate. We fix twelve centres on the sphere. One dictionary
-offers a single orientation at each centre; the other offers four.
+Almost none of the geometry here is new, and it is worth being specific about
+which parts. Directional wavelets on the sphere go back decades, and
+[Antoine and collaborators](https://doi.org/10.1016/S1063-5203(02)00507-9) give
+an early implementation and analysis of orientation-sensitive functions on $S^2$.
+[Cohen and collaborators](https://proceedings.mlr.press/v97/cohen19d.html) make
+local frames explicit in gauge-equivariant convolution and are clear that
+transported filters are path dependent, which is the machine-learning version of
+the thing this essay is about.
+[Schonsheck, Dong, and Lai](https://doi.org/10.1137/21M1407616) build
+parallel-transport convolution on manifolds directly. The fact that makes the whole answer
+collapse into a division is older than any of it: the Funk–Hecke theorem, 1916,
+which says a zonal kernel acts on each spherical harmonic by multiplication, with
+the multiplier given by exactly the $k_\ell$ integral above. Meanwhile, in a
+literature that has never heard of any of this,
+[Tam and Cheng](https://doi.org/10.1016/j.jmatprotec.2010.01.012) show
+experimentally that polishing paths and elliptic contacts change material
+removal, which suggests the practitioners got to the important part first, as
+they usually do. Do Carmo's chapter on the intrinsic geometry of surfaces does
+parallel transport in general if you want it without the sphere's special
+structure. What I have not found anywhere is the particular bridge:
+the $\cos^2\theta/k_2$ density as the exact non-negative optimum once you stop
+fitting the constant, the explicit one-integral orientation response for this
+kernel, the 180° exception, and the fact that four tilts are rotationally
+symmetric through order seven and that this is why they work.
 
-| Candidate atoms | Active strengths | Relative error on fitting grid | Relative error on finer grid |
-| --- | --- | --- | --- |
-| 12 | 12 | 0.471593 | 0.471593 |
-| 48 | 20 | 0.436528 | 0.436528 |
+There is a [technical paper](/papers/anisotropic-kernel-control-s2.pdf), and the
+[code](https://github.com/hhungxun/physics-writeups/tree/main/sources/anisotropic-kernel-control-s2)
+reproduces every number above; `code/optimal_strategy.py` is the one that does
+the strategy.
 
-The 48-choice menu contains every option from the 12-choice menu, so its best
-error cannot become worse. The computation finds that it becomes modestly
-better. Repeating the evaluation on a finer grid checks that the improvement
-is not just a pixel-resolution illusion.
+## So, can you?
 
-These are fairly large residuals. Twelve fixed centres and a prescribed
-footprint do not approximate the global target particularly well.
-The experiment checks a finite fitting problem; it does not solve the
-original lollipop design problem.
+Yes. Lick in rings, hardest at the poles, tapering as $\cos^2\theta$, nothing at
+the equator, about three hundred times, and keep your tongue round or keep it
+turning. You will overshoot the minimum removal by 18% and finish four microns
+small, and the shape will be right to five parts in a million.
 
-<LollipopStrategyExplorer client:visible />
+What I got wrong at the start was not the arithmetic. It was thinking the answer
+lived in the amount. The amount is one number and it is the least interesting
+number in the problem. Everything that mattered was in the second question, and
+the whole third question turned out to be about a bill that curvature sends you
+for having a preferred direction, which is a thing I did not know a lollipop
+could be about.
 
-## What this calculation establishes—and what it does not
+[^model]: There is one caveat I cannot fold into that sentence, because it is
+    load-bearing: removal is assumed *additive*, so two
+    overlapping licks remove the sum of what each would remove alone. Real
+    dissolution saturates. Everything in this essay is a linear-response
+    calculation about the first instant.
 
-The result has three independent checks rather than one impressive-looking
-output number.
+[^second]: At second order in $f$ a $\cos^4\theta$ term appears, with coefficient
+    $-\tfrac32 f^2R_0$, which brings degree four into the target. The method in
+    the next section handles it without modification: add a $P_4$ note to the
+    density and divide by $k_4=0.575122$ instead of $k_2$. The correction is
+    0.34 µm on a 20 mm lollipop. I mention it only so you know the linearisation
+    is a choice and not a limitation.
 
-First, we integrated parallel transport and halved the step size repeatedly.
-The errors decrease at approximately fourth order. A 20,000-step run gives
-the latitude holonomy to about twelve decimal places.
-
-Second, we computed the mismatch two ways: through the one-dimensional
-Bessel formula and by integrating the squared difference of the actual
-kernels over radial and angular coordinates. The largest discrepancy in
-the table is below 1.3 times ten to the minus fourteen. Refining the direct
-quadrature produces the same displayed values.
-
-Third, we checked the non-negative fitting conditions and evaluated the
-fitted strengths on a finer sphere grid. These checks support the stated
-finite computations.
-
-The unresolved control problem is more ambitious: choose both the contacts
-**and the route that carries their orientations**. If all footprints were
-fixed in advance, their order would not matter. A route matters here because
-transport changes the attached arrows and therefore changes later footprints.
-An actuator that deliberately resets its orientation at every contact would
-remove this history dependence.
-
-An actual tool might twist, slip, remove material during travel, or alter
-the geometry enough that the reference sphere is no longer adequate.
-Those extensions require additional assumptions and calculations.
-The result here is narrower: for the specified fixed-sphere, additive-removal
-model, we can calculate exactly how a frame rotation changes one footprint and
-solve a finite non-negative fitting problem. It does not claim to solve the
-evolving physical lollipop.
-
-## What is new here, and what came before
-
-Directional wavelets already describe orientation-sensitive functions on the
-sphere. [Antoine and collaborators](https://doi.org/10.1016/S1063-5203(02)00507-9)
-provide an early implementation and analysis.
-
-[Cohen and collaborators](https://proceedings.mlr.press/v97/cohen19d.html)
-make the role of local frames explicit in gauge-equivariant convolution,
-including the path dependence of transported filters.
-[Schonsheck, Dong, and Lai](https://doi.org/10.1137/21M1407616) construct
-parallel-transport convolution on manifolds.
-
-In a different setting,
-[Tam and Cheng](https://doi.org/10.1016/j.jmatprotec.2010.01.012) show that
-polishing paths and elliptic contacts affect material removal.
-
-The geometry itself—directional functions on spheres, tangent frames, parallel
-transport, and holonomy—is established mathematics. The contribution of this
-note is the particular bridge between those ideas and a non-negative removal
-model: an explicit one-integral orientation response for the chosen kernel, its
-half-turn exception, its weak-anisotropy law, and a finite fitting benchmark.
-
-So, can we lick the spherical lollipop into Earth? This paper does not yet give
-a practical route. It does something earlier and cleaner: it shows why a route
-cannot be described by contact points alone. Once a lick has a long axis, the
-sphere remembers how that axis travelled. Curvature becomes part of the
-actuator.
+[^width]: $k_2$ depends on how wide the footprint is, and only on that. A
+    narrower tongue is closer to a delta function, so it smooths less and $k_2$
+    rises towards 1: at $a=64$ it is 0.955354 and the overshoot drops to 4.7%.
+    The cost of a wide tongue is entirely a cost in candy, which is a pleasant
+    thing for a cost to be.

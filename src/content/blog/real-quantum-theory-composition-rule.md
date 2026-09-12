@@ -5,7 +5,7 @@ date: 2026-09-06
 tags: [quantum foundations, division algebras, real quantum theory]
 lang: en
 side: physics
-draft: true
+draft: false
 ---
 
 *Status: a self-study literature overview, not original research. References

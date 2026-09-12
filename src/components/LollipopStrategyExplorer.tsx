@@ -1,162 +1,258 @@
 import { useId, useMemo, useState } from 'react';
+import data from '../data/lollipop-strategy.json';
 
-type Language = 'en' | 'zh';
-type Mode = 'one' | 'four';
+/* Every number here comes from code/optimal_strategy.py in the companion repository:
+   ring colatitudes, licks per ring, per-lick strengths, the achieved meridional
+   profile, and the relative shape error. Nothing is fitted by eye. */
 
-const centres = [
-  [0.9166666667, 0], [0.75, 2.3999632297], [0.5833333333, 4.7999264595],
-  [0.4166666667, 7.1998896892], [0.25, 9.5998529189], [0.0833333333, 11.9998161486],
-  [-0.0833333333, 14.3997793784], [-0.25, 16.7997426081], [-0.4166666667, 19.1997058378],
-  [-0.5833333333, 21.5996690676], [-0.75, 23.9996322973], [-0.9166666667, 26.399595527],
-] as const;
+type Ring = { colatitude: number; licks: number; strength: number; mass: number; kept: boolean };
+type Plan = { rings: number; licks: number; shapeError: number; ringList: Ring[]; profile: number[] };
 
-const oneStrengths = [
-  0.7445720286, 0.5131726243, 0.3419342314, 0.1683285553, 0.1146180824, 0.027941431,
-  0.0279414312, 0.1146180823, 0.1683285552, 0.3419342314, 0.5131726242, 0.7445720286,
-];
-
-const fourStrengths = [
-  0.3100006304, 0.2423659273, 0.0554154685, 0.2101795708,
-  0, 0.0762292388, 0.0080122716, 0.4632086446,
-  0, 0.3423825421, 0, 0,
-  0, 0, 0, 0.1408012254,
-  0.1045434503, 0, 0, 0,
-  0, 0, 0, 0,
-  0, 0, 0, 0,
-  0.1045434549, 0, 0, 0,
-  0, 0, 0, 0.1408012249,
-  0, 0.3423825416, 0, 0,
-  0, 0.0762292844, 0.0080121782, 0.4632086917,
-  0.3100006138, 0.2423659387, 0.0554154689, 0.2101795734,
-];
+const PLANS = data.plans as Plan[];
+const TARGET = data.target as number[];
+const THETA = data.thetaDeg as number[];
+const K2 = data.k2_iso as number;
 
 const copy = {
   en: {
-    eyebrow: 'Finite-dictionary strategy explorer',
-    title: 'Where does the best available recipe place its effort?',
-    prompt: 'The background is darker where the Earth-like target asks for more removal. Each ellipse is one selected contact: size and opacity show strength; its tilt shows the chosen local orientation.',
-    one: '12 contacts · one direction',
-    four: '48 candidates · four directions',
-    threshold: 'hide strengths below',
-    all: 'show all active contacts',
-    strong: 'show only stronger contacts',
-    active: 'active contacts',
-    error: 'relative fitting error',
-    candidate: 'candidate contacts',
-    total: 'total fitted strength',
-    note: 'This is the non-negative least-squares optimum for the paper’s fixed centres, kernel width, and candidate orientations. It is a spatial recipe, not an ordered travel route, and it is not a global optimum for shaping a real lollipop.',
-    target: 'target removal: high at poles, low at equator',
+    eyebrow: 'The recipe',
+    title: 'What the optimal strategy actually tells you to do',
+    prompt:
+      'Lick in rings. Each ring of latitude gets a total amount of removal proportional to cos² of its colatitude, split evenly around the circle. Drag the slider to add rings; watch the solid curve settle onto the dashed one.',
+    ringCount: 'rings of latitude',
+    coarse: 'a few',
+    fine: 'enough',
+    licks: 'licks in total',
+    error: 'shape error',
+    overshoot: 'candy removed vs. the minimum',
+    offset: 'uniform extra removal',
+    profileTitle: 'removal along a meridian',
+    achieved: 'this recipe',
+    want: 'the target, cos²θ',
+    mapTitle: 'where the licks go',
     north: 'north pole',
     south: 'south pole',
+    colat: 'colatitude',
+    lon: 'longitude',
+    note: (p: Plan) =>
+      `${p.rings} rings, ${p.licks} licks, shape error ${p.shapeError.toExponential(1)}. The solid curve sits above the dashed one by a constant, and a constant is the one thing that does not matter: it shaves the lollipop down evenly without touching its shape. That offset is why the recipe removes ${(1 / K2).toFixed(3)}× the bare volume difference.`,
+    equator: 'The equatorial ring gets nothing, so it is not drawn.',
   },
   zh: {
-    eyebrow: '有限候選集策略互動圖',
-    title: '在既定選項裡，最佳配方把力氣放在哪裡？',
-    prompt: '背景越深，代表類地球目標要求移除得越多。每個橢圓是一個被選中的接觸：大小與透明度表示強度，傾斜角表示局部方向。',
-    one: '12 個接觸 · 單一方向',
-    four: '48 個候選 · 四種方向',
-    threshold: '隱藏低於此強度者',
-    all: '顯示所有有效接觸',
-    strong: '只顯示較強接觸',
-    active: '顯示中的接觸',
-    error: '相對擬合誤差',
-    candidate: '候選接觸數',
-    total: '總擬合強度',
-    note: '這只是論文在固定中心、核寬與候選方向下的非負最小平方最佳解。它是一張空間配方，不是有先後次序的行走路線，也不是塑造真實棒棒糖的全域最佳方案。',
-    target: '目標移除量：兩極多，赤道少',
+    eyebrow: '配方',
+    title: '最佳策略到頭來叫你做什麼',
+    prompt:
+      '沿著一圈圈緯線舔。每一圈的總移除量正比於該緯線餘緯的 cos²，再平均分給圈上每一口。拉動滑桿加上更多圈，看實線怎麼貼上虛線。',
+    ringCount: '緯線圈數',
+    coarse: '幾圈',
+    fine: '夠了',
+    licks: '總共幾口',
+    error: '形狀誤差',
+    overshoot: '相對於最少量的移除量',
+    offset: '額外均勻移除',
+    profileTitle: '沿一條經線的移除量',
+    achieved: '這個配方',
+    want: '目標 cos²θ',
+    mapTitle: '每一口落在哪裡',
     north: '北極',
     south: '南極',
+    colat: '餘緯',
+    lon: '經度',
+    note: (p: Plan) =>
+      `${p.rings} 圈、${p.licks} 口，形狀誤差 ${p.shapeError.toExponential(1)}。實線比虛線高出一個常數，而常數恰好是唯一不要緊的東西：它只把棒棒糖整體削小，不動形狀。也正因為這段常數，配方的總移除量是體積差的 ${(1 / K2).toFixed(3)} 倍。`,
+    equator: '赤道那一圈分到零，所以沒有畫出來。',
   },
 } as const;
 
-export default function LollipopStrategyExplorer({ lang = 'en' }: { lang?: Language }) {
-  const [mode, setMode] = useState<Mode>('four');
-  const [threshold, setThreshold] = useState(0);
-  const thresholdId = useId();
+const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
+/* Rounded so server and client markup agree to the last digit. */
+const px = (value: number) => Math.round(value * 100) / 100;
+
+export default function LollipopStrategyExplorer({ lang = 'en' }: { lang?: 'en' | 'zh' }) {
+  const [index, setIndex] = useState(PLANS.length - 2);
+  const sliderId = useId();
   const t = copy[lang];
+  const plan = PLANS[index];
 
-  const contacts = useMemo(() => {
-    if (mode === 'one') {
-      return centres.map(([z, phi], centre) => ({ centre, z, phi, angle: 0, strength: oneStrengths[centre] }));
-    }
-    return centres.flatMap(([z, phi], centre) => [0, 45, 90, 135].map((angle, orientation) => ({
-      centre, z, phi, angle, strength: fourStrengths[centre * 4 + orientation],
-    })));
-  }, [mode]);
-
-  const active = contacts.filter((contact) => contact.strength > Math.max(1e-9, threshold));
-  const totalStrength = contacts.reduce((sum, contact) => sum + contact.strength, 0);
-  const error = mode === 'one' ? 0.471593 : 0.436528;
-  const maxStrength = Math.max(...contacts.map((contact) => contact.strength));
-
-  const project = (z: number, phi: number) => {
-    const longitude = ((phi % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-    const latitude = Math.asin(z);
-    return {
-      x: 36 + (longitude / (2 * Math.PI)) * 568,
-      y: 28 + ((Math.PI / 2 - latitude) / Math.PI) * 244,
-    };
-  };
+  const view = useMemo(() => {
+    const peak = Math.max(...plan.profile, ...TARGET);
+    const ax = (theta: number) => px(52 + (theta / 180) * 250);
+    const ay = (value: number) => px(150 - (value / peak) * 116);
+    const line = (series: number[]) =>
+      series.map((v, i) => `${i ? 'L' : 'M'}${ax(THETA[i]).toFixed(2)} ${ay(v).toFixed(2)}`).join(' ');
+    const drawn = plan.ringList.filter((ring) => ring.kept);
+    const maxStrength = Math.max(...drawn.map((ring) => ring.strength));
+    const dots = drawn.flatMap((ring) =>
+      Array.from({ length: ring.licks }, (_, j) => {
+        const stagger = ring.colatitude > 90 ? 0.5 : 0;
+        return {
+          key: `${ring.colatitude}-${j}`,
+          x: px(362 + ((j + stagger) / ring.licks) * 244),
+          y: px(34 + (ring.colatitude / 180) * 116),
+          r: px(1.4 + 2.9 * Math.sqrt(clamp01(ring.strength / maxStrength))),
+          strength: ring.strength,
+          colatitude: ring.colatitude,
+        };
+      }),
+    );
+    return { ax, achieved: line(plan.profile), want: line(TARGET), dots, drawn };
+  }, [plan]);
 
   return (
-    <section className="interactive strategy" lang={lang === 'zh' ? 'zh-Hant' : 'en'} aria-labelledby={`${thresholdId}-title`}>
+    <section
+      className="interactive strategy"
+      lang={lang === 'zh' ? 'zh-Hant' : 'en'}
+      aria-labelledby={`${sliderId}-title`}
+    >
       <div className="interactive__heading">
         <div>
           <span className="interactive__eyebrow">{t.eyebrow}</span>
-          <h3 id={`${thresholdId}-title`}>{t.title}</h3>
+          <h3 id={`${sliderId}-title`}>{t.title}</h3>
         </div>
-        <output className="interactive__readout">{(100 * error).toFixed(1)}%</output>
+        <output className="interactive__readout">{plan.shapeError.toExponential(1)}</output>
       </div>
 
       <p className="interactive__prompt">{t.prompt}</p>
 
-      <div className="strategy__modes" role="group" aria-label={lang === 'zh' ? '候選方向模式' : 'Candidate orientation mode'}>
-        <button type="button" aria-pressed={mode === 'one'} onClick={() => setMode('one')}>{t.one}</button>
-        <button type="button" aria-pressed={mode === 'four'} onClick={() => setMode('four')}>{t.four}</button>
-      </div>
-
-      <label className="interactive__control" htmlFor={thresholdId}>
-        {t.threshold}: {threshold.toFixed(2)}
-        <input id={thresholdId} type="range" min="0" max="0.3" step="0.01" value={threshold} onChange={(event) => setThreshold(Number(event.target.value))} />
-        <span className="interactive__range"><span>{t.all}</span><span>{t.strong}</span></span>
+      <label className="interactive__control" htmlFor={sliderId}>
+        {t.ringCount}: {plan.rings}
+        <input
+          id={sliderId}
+          type="range"
+          min="0"
+          max={PLANS.length - 1}
+          step="1"
+          value={index}
+          onChange={(event) => setIndex(Number(event.target.value))}
+        />
+        <span className="interactive__range">
+          <span>{t.coarse}</span>
+          <span>{t.fine}</span>
+        </span>
       </label>
 
       <div className="interactive__plot strategy__map">
-        <svg viewBox="0 0 640 320" role="img" aria-label={t.target}>
-          <defs>
-            <linearGradient id={`${thresholdId}-target`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="var(--accent)" stopOpacity="0.3" />
-              <stop offset="0.5" stopColor="var(--paper)" stopOpacity="0" />
-              <stop offset="1" stopColor="var(--accent)" stopOpacity="0.3" />
-            </linearGradient>
-          </defs>
-          <rect x="26" y="18" width="588" height="264" rx="128" fill={`url(#${thresholdId}-target)`} stroke="var(--line)" strokeWidth="1.5" />
-          {[0.25, 0.5, 0.75].map((fraction) => <line key={`v-${fraction}`} x1={26 + 588 * fraction} x2={26 + 588 * fraction} y1="28" y2="272" className="plot__axis" strokeDasharray="3 6" />)}
-          {[0.25, 0.5, 0.75].map((fraction) => <line key={`h-${fraction}`} x1="38" x2="602" y1={18 + 264 * fraction} y2={18 + 264 * fraction} className="plot__axis" strokeDasharray="3 6" />)}
-          {active.map((contact) => {
-            const point = project(contact.z, contact.phi);
-            const relative = contact.strength / maxStrength;
-            return (
-              <g key={`${contact.centre}-${contact.angle}`} transform={`translate(${point.x} ${point.y}) rotate(${contact.angle})`}>
-                <ellipse rx={7 + 15 * relative} ry={3.5 + 6 * relative} fill="color-mix(in srgb, var(--accent) 24%, transparent)" stroke="var(--accent)" strokeWidth={1 + 2 * relative} opacity={0.42 + 0.58 * relative}>
-                  <title>{`${lang === 'zh' ? '強度' : 'strength'} ${contact.strength.toFixed(3)} · ${contact.angle}°`}</title>
-                </ellipse>
-              </g>
-            );
-          })}
-          <text x="320" y="13" textAnchor="middle" className="plot__label">{t.north}</text>
-          <text x="320" y="306" textAnchor="middle" className="plot__label">{t.south}</text>
+        <svg
+          viewBox="0 0 640 210"
+          role="img"
+          aria-label={
+            lang === 'zh'
+              ? `${plan.rings} 圈緯線、${plan.licks} 口的配方，形狀誤差 ${plan.shapeError.toExponential(1)}`
+              : `A recipe of ${plan.rings} latitude rings and ${plan.licks} licks, with shape error ${plan.shapeError.toExponential(1)}`
+          }
+        >
+          {/* left: the meridional profile, target against achieved */}
+          <text x="52" y="22" className="plot__label">
+            {t.profileTitle}
+          </text>
+          <line x1="52" x2="302" y1="150" y2="150" className="plot__axis" />
+          <line x1="52" x2="52" y1="34" y2="150" className="plot__axis" />
+          {[0, 45, 90, 135, 180].map((tick) => (
+            <g key={tick}>
+              <line
+                x1={view.ax(tick)}
+                x2={view.ax(tick)}
+                y1="150"
+                y2="154"
+                className="plot__axis"
+              />
+              <text x={view.ax(tick)} y="167" textAnchor="middle" className="plot__tick">
+                {tick}
+              </text>
+            </g>
+          ))}
+          <text x="177" y="184" textAnchor="middle" className="plot__label">
+            {t.colat}
+          </text>
+          <path d={view.want} className="plot__line plot__line--force" />
+          <path d={view.achieved} className="plot__line plot__line--ll" />
+
+          {/* right: an equirectangular chart of the lick positions */}
+          <text x="362" y="22" className="plot__label">
+            {t.mapTitle}
+          </text>
+          <rect
+            x="362"
+            y="34"
+            width="244"
+            height="116"
+            fill="none"
+            stroke="var(--line)"
+            strokeWidth="1.2"
+          />
+          {view.drawn.map((ring) => (
+            <line
+              key={`guide-${ring.colatitude}`}
+              x1="362"
+              x2="606"
+              y1={px(34 + (ring.colatitude / 180) * 116)}
+              y2={px(34 + (ring.colatitude / 180) * 116)}
+              stroke="var(--line)"
+              strokeWidth="1"
+              strokeDasharray="2 6"
+            />
+          ))}
+          {view.dots.map((dot) => (
+            <circle
+              key={dot.key}
+              cx={dot.x}
+              cy={dot.y}
+              r={dot.r}
+              fill="var(--accent)"
+              opacity="0.78"
+            >
+              <title>
+                {`${lang === 'zh' ? '餘緯' : 'colatitude'} ${dot.colatitude.toFixed(1)}° · ${
+                  lang === 'zh' ? '強度' : 'strength'
+                } ${dot.strength.toFixed(4)}`}
+              </title>
+            </circle>
+          ))}
+          <text x="366" y="30" className="plot__tick">
+            {t.north}
+          </text>
+          <text x="366" y="164" className="plot__tick">
+            {t.south}
+          </text>
+          <text x="484" y="184" textAnchor="middle" className="plot__label">
+            {t.lon}
+          </text>
         </svg>
       </div>
 
-      <div className="interactive__metrics">
-        <div><span>{t.active}</span><strong>{active.length}</strong></div>
-        <div><span>{t.error}</span><strong>{error.toFixed(6)}</strong></div>
-        <div><span>{t.candidate}</span><strong>{contacts.length}</strong></div>
-        <div><span>{t.total}</span><strong>{totalStrength.toFixed(3)}</strong></div>
+      <div className="interactive__legend">
+        <span>
+          <i className="legend--ll" />
+          {t.achieved}
+        </span>
+        <span>
+          <i className="legend--force" />
+          {t.want}
+        </span>
       </div>
 
-      <p className="interactive__note">{t.note}</p>
+      <div className="interactive__metrics">
+        <div>
+          <span>{t.licks}</span>
+          <strong>{plan.licks}</strong>
+        </div>
+        <div>
+          <span>{t.error}</span>
+          <strong>{plan.shapeError.toExponential(2)}</strong>
+        </div>
+        <div>
+          <span>{t.overshoot}</span>
+          <strong>{(1 / K2).toFixed(3)}×</strong>
+        </div>
+        <div>
+          <span>{t.offset}</span>
+          <strong>{((1 / K2 - 1) / 3).toFixed(4)}</strong>
+        </div>
+      </div>
+
+      <p className="interactive__note">
+        {t.note(plan)} {t.equator}
+      </p>
     </section>
   );
 }

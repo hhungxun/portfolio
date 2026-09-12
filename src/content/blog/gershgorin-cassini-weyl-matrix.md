@@ -5,7 +5,7 @@ date: 2026-09-09
 tags: [spectral theory, structured matrices, research notes]
 lang: en
 side: physics
-draft: true
+draft: false
 ---
 
 This is a working note attached to an unpublished project. It explains the
