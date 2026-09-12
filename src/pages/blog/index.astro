@@ -3,7 +3,15 @@ import Base from '../../layouts/Base.astro';
 import PostCard from '../../components/PostCard.astro';
 import { getPosts, allTags } from '../../lib/content';
 
-const posts = await getPosts();
+const allPosts = await getPosts();
+// A translated edition is an alternate view of one article, not a second
+// entry in the index. Prefer the English edition when both are published.
+const posts = allPosts.filter((post) => {
+  const alternate = post.data.translation;
+  if (!alternate) return true;
+  const companion = allPosts.find((candidate) => candidate.id === alternate.slug);
+  return post.data.lang === 'en' || !companion || companion.data.lang !== 'en';
+});
 const tagCount = allTags(posts).length;
 ---
 

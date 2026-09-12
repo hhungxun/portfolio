@@ -10,7 +10,7 @@ interface Props {
   as?: 'h2' | 'h3';
 }
 const { post, showTags = true, as = 'h2' } = Astro.props;
-const { title, description, date, tags, lang, sample } = post.data;
+const { title, description, date, tags, lang, sample, translation } = post.data;
 const minutes = readingTime(post.body ?? '');
 const Heading = as;
 const zh = lang === 'zh';
@@ -31,6 +31,20 @@ const zh = lang === 'zh';
             </a>
           </>
         ))
+    }
+    {
+      translation && (
+        <>
+          <span aria-hidden="true" class="opacity-50">·</span>
+          <a
+            href={`/blog/${translation.slug}`}
+            class="no-underline text-accent hover:underline"
+            title={`Available in ${translation.label ?? (translation.lang === 'zh' ? '中文' : 'English')}`}
+          >
+            {translation.label ?? (translation.lang === 'zh' ? '中文' : 'English')}
+          </a>
+        </>
+      )
     }
     {
       sample && (

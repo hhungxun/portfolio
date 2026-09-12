@@ -12,23 +12,18 @@ const { current, alternate } = Astro.props;
 const labels = { en: 'English', zh: '中文' };
 ---
 
-<nav
-  class="mt-5 inline-flex items-center rounded-full border border-line bg-paper p-1 text-[0.82rem]"
-  aria-label={current === 'zh' ? '選擇文章語言' : 'Choose article language'}
+<a
+  class="mt-5 inline-flex items-center gap-1 rounded-full border border-line bg-paper p-1 text-[0.82rem] no-underline transition-colors hover:border-accent hover:text-accent"
+  href={`/blog/${alternate.slug}`}
+  hreflang={alternate.lang === 'zh' ? 'zh-Hant' : 'en'}
+  aria-label={current === 'zh' ? '切換到 English' : 'Switch to 中文'}
+  title={current === 'zh' ? '切換到 English' : 'Switch to 中文'}
 >
-  <span
-    class="rounded-full bg-ink px-3 py-1.5 text-paper"
-    lang={current === 'zh' ? 'zh-Hant' : 'en'}
-    aria-current="page"
-  >
+  <span class="rounded-full bg-ink px-3 py-1.5 text-paper" lang={current === 'zh' ? 'zh-Hant' : 'en'}>
     {labels[current]}
   </span>
-  <a
-    class="rounded-full px-3 py-1.5 no-underline text-ink-2 transition-colors hover:bg-paper-2 hover:text-ink"
-    href={`/blog/${alternate.slug}`}
-    hreflang={alternate.lang === 'zh' ? 'zh-Hant' : 'en'}
-    lang={alternate.lang === 'zh' ? 'zh-Hant' : 'en'}
-  >
+  <span aria-hidden="true" class="px-1 text-muted">↔</span>
+  <span class="px-2 py-1.5" lang={alternate.lang === 'zh' ? 'zh-Hant' : 'en'}>
     {alternate.label ?? labels[alternate.lang]}
-  </a>
-</nav>
+  </span>
+</a>
